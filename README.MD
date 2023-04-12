@@ -1,20 +1,15 @@
-# Compose Multiplatform Application
+# **Sentilens**
 
-## Before running!
- - install JDK 8 on your machine
- - add `local.properties` file to the project root and set a path to Android SDK there
+**Sentilens** - это мобильное приложение для управления заметками, которое поможет вам оставаться на позитивной волне. Создавайте, редактируйте, сохраняйте и удаляйте заметки. Главной особенностью Sentilens является его способность анализировать эмоциональную окраску текста в ваших заметках. После анализа, Sentilens предложит вам способы улучшения вашего настроения на основе обнаруженных эмоций в заметке. Например, если вы написали заметку, содержащую грустные эмоции, приложение может предложить послушать музыку, почитать что-то интересное или заняться любимым делом.
 
-### Android
-To run the application on android device/emulator:  
- - open project in Android Studio and run imported android run configuration
+    Использование кода из данного проекта в реальных проектах не рекомендуется, поскольку он предназначен для обучения и находится на стадии разработки. После завершения проекта, его использование возможно только с разрешения авторов и при соблюдении соответствующих лицензионных условий.
 
-To build the application bundle:
- - run `./gradlew :composeApp:assembleDebug`
- - find `.apk` file in `composeApp/build/outputs/apk/debug/composeApp-debug.apk`
+---
 
-### Desktop
-Run the desktop application: `./gradlew :composeApp:run`
+## Клиентская часть
 
-### Browser
-Run the browser application: `./gradlew :composeApp:jsBrowserDevelopmentRun`
+Данный репозиторий содержит приложение, которое реализовано с использованием [**Compose Multiplatform Framework**](https://github.com/JetBrains/compose-multiplatform/#readme). Это позволяет разрабатывать приложения для множества платформ, используя общий код на языке Kotlin. Это означает, что в проекте используется общий код для Android, Desktop и Web, что упрощает и ускоряет процесс разработки.
 
+## Серверная часть
+
+Серверная часть приложения реализуется другим автором на языке Python, с помощью фреймворка FastApi.
