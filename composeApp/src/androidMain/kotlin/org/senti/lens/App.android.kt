@@ -5,16 +5,27 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toComposeRect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.window.layout.WindowMetricsCalculator
+import cafe.adriel.voyager.navigator.Navigator
 import org.senti.lens.generalElements.WindowSize
+import org.senti.lens.models.notes
+import org.senti.lens.screens.editNote.EditNoteScreen
+import org.senti.lens.screens.homeNotes.elements.NoteItem
 import org.senti.lens.theme.background
 
 class AndroidApp : Application() {
@@ -56,3 +67,4 @@ private fun Activity.rememberWindowSize(): WindowSize {
     }
     return WindowSize.basedOnWidth(windowDpSize.width)
 }
+

@@ -1,20 +1,23 @@
 package org.senti.lens.models
 
+import androidx.compose.runtime.Stable
+
+@Stable
 data class Note(
     val title: String,
     val body: String,
     val date: String,
     val time: String,
-    val tags: List<String>
+    val tags: List<Tag>
 )
 
 val notes = listOf(
     Note(
         title = "Заметка 1",
-        body = "Текст первой заметки",
+        body = "Текст первой заметки awdadw",
         date = "12.04.2023",
         time = "10:00",
-        tags = listOf("важное", "работа")
+        tags = tags.subList(1,3)
     ),
     Note(
         title = "Книга 'Война и мир'",
@@ -25,7 +28,7 @@ val notes = listOf(
             """.trim(),
         date = "01.01.2023",
         time = "12:00",
-        tags = listOf("книги", "литература", "история")
+        tags = tags.subList(0,1)
     ),
     Note(
         title = "Заголовок второй заметки",
@@ -43,7 +46,7 @@ val notes = listOf(
         body = "Текст второй заметки",
         date = "13.04.2023",
         time = "14:30",
-        tags = listOf("личное")
+        tags = tags.subList(0,3)
     ),
     Note(
         title = "Пример заметки с длинным заголовком, который может занимать несколько строк",
@@ -54,7 +57,7 @@ val notes = listOf(
             """.trimIndent(),
         date = "15.04.2023",
         time = "12:00",
-        tags = listOf("тест", "пример")
+        tags = tags.subList(0,2)
     ),
     Note(
         title = "Заметка 3",
@@ -72,6 +75,6 @@ val notes = listOf(
             """.trimIndent(),
         date = "17.04.2023",
         time = "09:00",
-        tags = listOf("тест")
+        tags = tags.subList(0,1)
     )
 )

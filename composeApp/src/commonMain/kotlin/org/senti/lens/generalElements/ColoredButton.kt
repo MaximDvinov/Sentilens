@@ -61,7 +61,7 @@ fun PrimaryIconButton(
 ) {
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .shadow(elevation = 10.dp, shape = defaultShape, spotColor = color)
             .clip(defaultShape)
             .background(color)

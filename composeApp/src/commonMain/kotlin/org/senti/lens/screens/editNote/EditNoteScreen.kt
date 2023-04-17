@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -32,15 +31,23 @@ import org.senti.lens.theme.h1
 class EditNoteScreen(val note: Note? = null) : Screen {
     @Composable
     override fun Content() {
-        Column(modifier = Modifier.fillMaxSize()) {
-            TopBarEdit()
-            ContentNote(modifier = Modifier.weight(1f), note = note)
-            BottomBarEdit()
+        val navigator = LocalNavigator.currentOrThrow
+
+        EditNoteContent(modifier = Modifier.fillMaxSize(), note){
+            navigator.pop()
         }
 
     }
 }
 
+@Composable
+fun EditNoteContent(modifier: Modifier, note: Note?, onClick:() -> Unit) {
+    Column(modifier) {
+        TopBarEdit(onClick)
+        ContentNote(modifier = Modifier.weight(1f), note = note)
+        BottomBarEdit()
+    }
+}
 
 @Composable
 fun BottomBarEdit() {
@@ -117,7 +124,7 @@ fun TextField(
 }
 
 @Composable
-fun TopBarEdit() {
+fun TopBarEdit(onClick: () -> Unit) {
     val navigator = LocalNavigator.currentOrThrow
 
     Row(
@@ -125,7 +132,7 @@ fun TopBarEdit() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         SecondaryIconButton(
-            onClick = navigator::pop,
+            onClick = onClick,
         ) {
             Icon(Icons.Default.ArrowBack, "Back")
         }
