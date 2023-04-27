@@ -16,3 +16,22 @@ internal val onBackground = Color(0xffffffff)
 
 internal val surface = Color(0xFF0E121A)
 internal val onSurface = Color(0xffffffff)
+
+
+internal val lightPrimary = Color(0xFF3269FF)
+internal val lightOnPrimary = Color(0xffffffff)
+
+internal val lightSecondary = Color(0xFFF5F7FB)
+internal val lightOnSecondary = Color(0xff000000)
+
+internal val lightError = Color(0x1aff4500)
+internal val lightOnError = Color(0xFFFF4500)
+
+internal val lightBackground = Color(0xFFFFFFFF)
+internal val lightOnBackground = Color(0xff000000)
+
+internal val lightSurface = Color(0xFFFFFFFF)
+internal val lightOnSurface = Color(0xff000000)
+
+internal val tagColor = Color(0xFFEBF0FF)
+

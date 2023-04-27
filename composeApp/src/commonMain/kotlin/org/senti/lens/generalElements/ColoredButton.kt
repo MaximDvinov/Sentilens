@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import org.senti.lens.theme.defaultShape
@@ -28,7 +29,7 @@ fun SecondaryIconButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    color: Color = secondary,
+    color: Color = MaterialTheme.colors.secondary,
     content: @Composable () -> Unit,
 ) {
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
@@ -56,13 +57,17 @@ fun PrimaryIconButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    color: Color = primary,
+    color: Color = MaterialTheme.colors.primary,
     content: @Composable () -> Unit,
 ) {
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     Box(
         modifier = modifier
-            .shadow(elevation = 10.dp, shape = defaultShape, spotColor = color)
+            .shadow(
+                elevation = 10.dp,
+                shape = defaultShape,
+                spotColor = color,
+            )
             .clip(defaultShape)
             .background(color)
             .clickable(
@@ -86,15 +91,20 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    color: Color = primary,
+    color: Color = MaterialTheme.colors.primary,
+    shape: Shape = defaultShape,
     content: @Composable RowScope.() -> Unit,
 ) {
     Button(
         onClick = onClick,
         elevation = ButtonDefaults.elevation(5.dp),
-        shape = defaultShape,
+        shape = shape,
         colors = ButtonDefaults.buttonColors(backgroundColor = color),
-        modifier = modifier.defaultMinSize(minHeight = 48.dp),
+        modifier = modifier.defaultMinSize(minHeight = 48.dp).shadow(
+            elevation = 10.dp,
+            shape = defaultShape,
+            spotColor = color,
+        ),
         enabled = enabled,
         content = content
     )
@@ -105,7 +115,7 @@ fun SecondaryButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    color: Color = secondary,
+    color: Color = MaterialTheme.colors.secondary,
     content: @Composable RowScope.() -> Unit,
 ) {
     Button(

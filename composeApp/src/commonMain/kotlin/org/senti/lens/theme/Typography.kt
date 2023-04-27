@@ -4,10 +4,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import dev.icerock.moko.resources.compose.fontFamilyResource
+import org.senti.lens.MR
+
 
 val h1 = TextStyle(
     fontWeight = FontWeight.Bold,
     fontSize = 24.sp,
+//    fontFamily = fontFamilyResource(MR.fonts.Nunito.bold),
     color = Color.White
 )
 

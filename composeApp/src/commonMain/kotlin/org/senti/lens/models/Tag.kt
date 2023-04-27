@@ -1,10 +1,21 @@
 package org.senti.lens.models
 
+import androidx.compose.runtime.Stable
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
+import kotlinx.serialization.Serializable
+
+@Stable
+@Serializable
 data class Tag(
-    val id: Int,
-    val name: String
+    val id: Int? = null, val name: String
 )
 
+class TagEntity : RealmObject {
+    @PrimaryKey
+    var id: Int? = null
+    var name: String? = ""
+}
 
 val tags = listOf(
     Tag(id = 1, name = "Work"),

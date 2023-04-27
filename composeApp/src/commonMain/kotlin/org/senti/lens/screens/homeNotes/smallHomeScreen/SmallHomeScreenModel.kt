@@ -7,10 +7,10 @@ import org.senti.lens.ApiResult
 import org.senti.lens.LoadState
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.useCases.GetNotesAndTagsUseCase
+import org.senti.lens.screens.homeNotes.HomeNotesUseCase
 
 
-class SmallHomeScreenModel(private val getNotesAndTagsUseCase: GetNotesAndTagsUseCase) :
+class SmallHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
     StateScreenModel<SmallHomeScreenModel.UiState>(UiState()) {
 
     data class UiState(
@@ -34,7 +34,6 @@ class SmallHomeScreenModel(private val getNotesAndTagsUseCase: GetNotesAndTagsUs
     }
 
     fun processIntent(intent: Intent) {
-        mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
         coroutineScope.launch {
             mutableState.value = reduce(mutableState.value, intent)
         }
@@ -42,7 +41,11 @@ class SmallHomeScreenModel(private val getNotesAndTagsUseCase: GetNotesAndTagsUs
 
     private suspend fun reduce(oldState: UiState, intent: Intent): UiState {
         return when (intent) {
-            Intent.LoadDataIntent -> getData(oldState)
+            Intent.LoadDataIntent -> {
+                mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
+                getData(oldState)
+            }
+
             is Intent.SelectTag -> changeTag(intent.tag, oldState)
             is Intent.ChangeSearchQuery -> changeSearchQuery(
                 intent.query,
@@ -52,7 +55,7 @@ class SmallHomeScreenModel(private val getNotesAndTagsUseCase: GetNotesAndTagsUs
     }
 
     private suspend fun getData(currentState: UiState): UiState {
-        return when (val result = getNotesAndTagsUseCase()) {
+        return when (val result = homeNotesUseCase.getNotesAndTags()) {
             is ApiResult.Failure -> currentState.copy(loadState = LoadState.Error(result.message))
             is ApiResult.Success -> {
                 val (notes, tags) = result.data

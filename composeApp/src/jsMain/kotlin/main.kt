@@ -17,6 +17,8 @@ fun main() {
     onWasmReady {
         BrowserViewportWindow("Sentilens") {
             App(it)
+
+            
         }
     }
 }

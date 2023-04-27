@@ -7,3 +7,17 @@ plugins {
     alias(libs.plugins.kotlinx.serialization).apply(false)
     alias(libs.plugins.sqlDelight).apply(false)
 }
+
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        gradlePluginPortal()
+    }
+
+    val sqlDelightVersion = "1.5.5"
+    dependencies {
+        classpath(libs.mokoResourcesGeneratorGradle)
+        classpath(libs.sqldelight.gradle.plugin)
+    }
+}

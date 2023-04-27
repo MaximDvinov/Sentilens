@@ -8,17 +8,17 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import org.senti.lens.models.tags
 import org.senti.lens.screens.editNote.EditNoteScreen
-import org.senti.lens.screens.useCases.GetNotesAndTagsUseCase
+import org.senti.lens.screens.homeNotes.HomeNotesUseCase
 
 class SmallHomeScreen : Screen {
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
+        val navigator = LocalNavigator.current
 
         val screenModel = rememberScreenModel {
-            SmallHomeScreenModel(GetNotesAndTagsUseCase.instance)
+            SmallHomeScreenModel(HomeNotesUseCase.instance)
         }
 
         val state by screenModel.state.collectAsState()
@@ -30,11 +30,12 @@ class SmallHomeScreen : Screen {
                 screenModel.processIntent(SmallHomeScreenModel.Intent.SelectTag(it))
             },
             onClickNote = {
-                navigator.push(EditNoteScreen(it))
+                navigator?.push(EditNoteScreen(it, tags))
             },
             changeSearchQuery = {
                 screenModel.processIntent(SmallHomeScreenModel.Intent.ChangeSearchQuery(it))
-            }
+            },
+            onRefresh = { screenModel.processIntent(SmallHomeScreenModel.Intent.LoadDataIntent) }
         )
     }
 }

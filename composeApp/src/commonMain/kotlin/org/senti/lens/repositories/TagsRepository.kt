@@ -1,4 +1,4 @@
-package org.senti.lens.screens.repositories
+package org.senti.lens.repositories
 
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag

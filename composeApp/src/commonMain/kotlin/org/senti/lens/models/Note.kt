@@ -1,25 +1,47 @@
 package org.senti.lens.models
 
 import androidx.compose.runtime.Stable
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+
 
 @Stable
+@Serializable
 data class Note(
-    val title: String,
-    val body: String,
-    val date: String,
-    val time: String,
-    val tags: List<Tag>
+    val id: Int? = null,
+    val title: String = "",
+    val body: String = "",
+    val date: String = "",
+    val time: String = "",
+    val tags: List<Tag> = listOf()
 )
 
-val notes = listOf(
+class NoteEntity : RealmObject {
+    @PrimaryKey
+    var id: Int? = null
+    var title: String = ""
+    var body: String = ""
+    var date: String = ""
+    var time: String = ""
+    var tags: RealmList<TagEntity> = realmListOf()
+
+}
+
+val notes = mutableListOf(
     Note(
+        id = 1,
         title = "Заметка 1",
         body = "Текст первой заметки awdadw",
         date = "12.04.2023",
         time = "10:00",
-        tags = tags.subList(1,3)
+        tags = tags.subList(1, 3)
     ),
     Note(
+        id = 2,
         title = "Книга 'Война и мир'",
         body = """
             Книга Льва Николаевича Толстого, написанная с 1865 по 1869 годы и впервые опубликованная в 1869–1870 годах. 
@@ -28,9 +50,10 @@ val notes = listOf(
             """.trim(),
         date = "01.01.2023",
         time = "12:00",
-        tags = tags.subList(0,1)
+        tags = tags.subList(0, 1)
     ),
     Note(
+        id = 3,
         title = "Заголовок второй заметки",
         body = """
             Это текст второй заметки. Он может быть несколько короче, но все равно достаточно длинным,
@@ -42,13 +65,15 @@ val notes = listOf(
         tags = emptyList()
     ),
     Note(
+        id = 4,
         title = "Заметка 2",
         body = "Текст второй заметки",
         date = "13.04.2023",
         time = "14:30",
-        tags = tags.subList(0,3)
+        tags = tags.subList(0, 3)
     ),
     Note(
+        id = 5,
         title = "Пример заметки с длинным заголовком, который может занимать несколько строк",
         body = """
             Это тестовый текст для заметки, который может быть достаточно длинным, чтобы проверить,
@@ -57,9 +82,10 @@ val notes = listOf(
             """.trimIndent(),
         date = "15.04.2023",
         time = "12:00",
-        tags = tags.subList(0,2)
+        tags = tags.subList(0, 2)
     ),
     Note(
+        id = 6,
         title = "Заметка 3",
         body = "Текст третьей заметки",
         date = "14.04.2023",
@@ -67,6 +93,7 @@ val notes = listOf(
         tags = emptyList()
     ),
     Note(
+        id = 7,
         title = "Еще одна заметка",
         body = """
             Это текст для еще одной заметки. Мы можем использовать эту заметку для тестирования разных
@@ -75,6 +102,6 @@ val notes = listOf(
             """.trimIndent(),
         date = "17.04.2023",
         time = "09:00",
-        tags = tags.subList(0,1)
+        tags = tags.subList(0, 1)
     )
 )

@@ -8,6 +8,9 @@ plugins {
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.sqlDelight)
+
+    id("dev.icerock.mobile.multiplatform-resources")
+    id("io.realm.kotlin") version "1.7.0"
 }
 
 kotlin {
@@ -21,10 +24,10 @@ kotlin {
 
     jvm("desktop")
 
-    js {
-        browser()
-        binaries.executable()
-    }
+//    js {
+//        browser()
+//        binaries.executable()
+//    }
 
     sourceSets {
         val commonMain by getting {
@@ -39,12 +42,18 @@ kotlin {
                 implementation(libs.composeImageLoader)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.ktor.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.composeIcons.fontAwesome)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.multiplatformSettings)
                 implementation(libs.koin.core)
                 implementation(libs.kstore)
+                implementation(libs.mokoResources)
+                implementation(libs.mokoResourcesCompose)
+
+                implementation(libs.realm) // Add to only use the local database
             }
         }
 
@@ -62,6 +71,8 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.sqlDelight.driver.android)
+
+                compileOnly(libs.realm)
             }
         }
 
@@ -74,15 +85,21 @@ kotlin {
             }
         }
 
-        val jsMain by getting {
-            dependencies {
-                implementation(compose.html.core)
-                implementation(libs.sqlDelight.driver.sqljs)
-            }
-        }
+//        val jsMain by getting {
+//            dependencies {
+//                implementation(compose.html.core)
+//                implementation(libs.sqlDelight.driver.sqljs)
+//            }
+//        }
 
     }
 }
+
+multiplatformResources {
+    multiplatformResourcesPackage = "org.senti.lens" // required
+}
+
+val version = "1.0.0"
 
 android {
     namespace = "org.senti.lens"
@@ -94,7 +111,7 @@ android {
 
         applicationId = "org.senti.lens.androidApp"
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = version
     }
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -115,7 +132,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.senti.lens.desktopApp"
+            packageName = "Sentilens"
             packageVersion = "1.0.0"
         }
     }
@@ -133,22 +150,23 @@ libres {
 }
 tasks.getByPath("desktopProcessResources").dependsOn("libresGenerateResources")
 tasks.getByPath("desktopSourcesJar").dependsOn("libresGenerateResources")
-tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
+//tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
+
 dependencies {
     implementation("androidx.window:window:1.0.0")
 }
 
 buildConfig {
-  // BuildConfig configuration here.
-  // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
+    // BuildConfig configuration here.
+    // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
 }
 
 sqldelight {
-  databases {
-    create("MyDatabase") {
-      // Database configuration here.
-      // https://cashapp.github.io/sqldelight
-      packageName.set("org.senti.lens.db")
+    databases {
+        create("Database") {
+            // Database configuration here.
+            // https://cashapp.github.io/sqldelight
+            packageName.set("org.senti")
+        }
     }
-  }
 }

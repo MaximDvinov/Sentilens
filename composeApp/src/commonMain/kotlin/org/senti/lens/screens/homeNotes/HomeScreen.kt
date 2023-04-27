@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.FadeTransition
 import cafe.adriel.voyager.transitions.SlideTransition
 import org.senti.lens.generalElements.WindowSize
 import org.senti.lens.screens.homeNotes.expandedHomeScreen.ExpandedHomeScreen
@@ -15,11 +16,11 @@ class HomeScreen(private val windowSize: WindowSize) : Screen {
     override fun Content() {
         if (windowSize != WindowSize.COMPACT) {
             Navigator(ExpandedHomeScreen()) {
-                SlideTransition(it)
+                FadeTransition(it)
             }
         } else {
             Navigator(SmallHomeScreen()) {
-                SlideTransition(it)
+                FadeTransition(it)
             }
         }
     }
