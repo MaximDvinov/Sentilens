@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import org.senti.lens.models.tags
 import org.senti.lens.screens.editNote.EditNoteScreen
 import org.senti.lens.screens.homeNotes.HomeNotesUseCase
+import org.senti.lens.screens.setting.SettingScreen
 
 class SmallHomeScreen : Screen {
     @Composable
@@ -30,12 +30,15 @@ class SmallHomeScreen : Screen {
                 screenModel.processIntent(SmallHomeScreenModel.Intent.SelectTag(it))
             },
             onClickNote = {
-                navigator?.push(EditNoteScreen(it, tags))
+                navigator?.push(EditNoteScreen(it.uuid.toString()))
             },
             changeSearchQuery = {
                 screenModel.processIntent(SmallHomeScreenModel.Intent.ChangeSearchQuery(it))
             },
-            onRefresh = { screenModel.processIntent(SmallHomeScreenModel.Intent.LoadDataIntent) }
+            onRefresh = { screenModel.processIntent(SmallHomeScreenModel.Intent.LoadDataIntent) },
+            onClickSetting = {
+                navigator?.push(SettingScreen())
+            }
         )
     }
 }

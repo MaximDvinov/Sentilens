@@ -1,12 +1,11 @@
 package org.senti.lens
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,10 +13,12 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -27,6 +28,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.window.WindowDraggableArea
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -35,22 +38,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.window.Dialog
 import org.senti.lens.generalElements.fadingEdge
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.commons.ui.DialogContent
 import org.senti.lens.screens.homeNotes.elements.NoteItem
 import org.senti.lens.screens.homeNotes.elements.TagItem
-import org.senti.lens.theme.background
 import org.senti.lens.theme.defaultShape
-import org.senti.lens.theme.onBackground
-import org.senti.lens.theme.primary
-import org.senti.lens.theme.secondary
 import java.awt.Dimension
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -66,11 +64,10 @@ actual fun PlatformGrid(
 
     LaunchedEffect(key1 = currentNote) {
         if (currentNote != null) {
-            val index = notes.indexOfFirst { currentNote.id == it.id }
+            val index = notes.indexOfFirst { currentNote.uuid == it.uuid }
             if (index >= 0) {
                 state.animateScrollToItem(index)
             }
-
         }
     }
 
@@ -88,23 +85,24 @@ actual fun PlatformGrid(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
         ) {
+
             notes.forEach {
                 item {
-                    key(it.id) {
-                        val color by animateColorAsState(if (currentNote?.id == it.id) MaterialTheme.colors.primary else MaterialTheme.colors.secondary)
-                        val width by animateDpAsState(if (currentNote?.id == it.id) 2.dp else 0.dp)
+                    key(it.uuid) {
+                        val color by animateColorAsState(if (currentNote?.uuid == it.uuid) MaterialTheme.colors.primary else MaterialTheme.colors.secondary)
+//                        val width by animateDpAsState(if (currentNote?.id == it.id) 2.dp else 0.dp)
 
                         NoteItem(
                             modifier = Modifier.height(200.dp).border(
-                                width = width,
+                                width = 2.dp,
                                 color = color,
                                 shape = defaultShape
-                            ), note = it
+                            ).animateItemPlacement(animationSpec = spring(stiffness = 500f)),
+                            note = it
                         ) {
                             onClick(it)
                         }
                     }
-
                 }
             }
 
@@ -114,7 +112,7 @@ actual fun PlatformGrid(
         }
 
         VerticalScrollbar(
-            modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight().padding(end = 6.dp),
+            modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight().padding(end = 2.dp),
             adapter = rememberScrollbarAdapter(state),
             style = LocalScrollbarStyle.current.copy(
                 hoverColor = MaterialTheme.colors.onBackground.copy(
@@ -143,7 +141,7 @@ actual fun ColumnScope.BodyText(
                 alpha = 0.7f
             )
         ),
-        maxLines = 16,
+        maxLines = 4,
         overflow = TextOverflow.Ellipsis
     )
 }
@@ -167,7 +165,7 @@ actual fun TagsList(
                 TagItem(
                     Modifier,
                     selected = isSelected,
-                    text = tag.name,
+                    text = tag.title,
                     defaultColor = MaterialTheme.colors.secondary,
                     onSelect = { onClickTag(tag) })
             }
@@ -191,32 +189,36 @@ actual fun TagsList(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-actual fun TagsDialog(
+actual fun PlatformDialog(
     modifier: Modifier,
-    tags: List<Tag>?,
     visible: Boolean,
-    selectedTags: List<Tag>?,
-    onSaveClick: (List<Tag>) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    size: Pair<Int, Int>,
+    content: @Composable () -> Unit
 ) {
-    Dialog(
-        visible = visible,
-        onCloseRequest = onDismissRequest,
-        undecorated = true,
-        transparent = true,
-        resizable = false
-    ) {
-        window.size = Dimension(350, 200)
-
-        WindowDraggableArea {
-            DialogContent(
-                modifier = modifier.fillMaxSize().background(MaterialTheme.colors.secondary),
-                tags = tags,
-                selectedTags = selectedTags,
-                onSaveClick = onSaveClick,
-                onDismissRequest = onDismissRequest
-            )
-        }
+//    Dialog(
+//        visible = visible,
+//        onCloseRequest = onDismissRequest,
+//        undecorated = true,
+//        transparent = true,
+//        resizable = false
+//    ) {
+//        window.size = Dimension(size.first, size.second)
+//
+//        WindowDraggableArea {
+//            content()
+//        }
+//    }
+//
+    if (visible) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            modifier = modifier.width(size.first.dp),
+            buttons = {
+                content()
+            }
+        )
     }
 }

@@ -13,12 +13,12 @@ import org.senti.lens.models.notes
 import org.senti.lens.screens.editNote.EditNoteScreen
 import org.senti.lens.screens.homeNotes.elements.NoteItem
 
-fun main() {
-    onWasmReady {
-        BrowserViewportWindow("Sentilens") {
-            App(it)
-
-            
-        }
-    }
-}
+//fun main() {
+//    onWasmReady {
+//        BrowserViewportWindow("Sentilens") {
+//            App(it)
+//
+//
+//        }
+//    }
+//}

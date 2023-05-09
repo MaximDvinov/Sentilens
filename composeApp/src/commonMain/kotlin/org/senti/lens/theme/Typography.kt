@@ -27,7 +27,7 @@ val body = TextStyle(
 )
 
 val small = TextStyle(
-    fontSize = 12.sp,
+    fontSize = 14.sp,
     color = Color.White
 )
 

@@ -21,11 +21,9 @@ import org.senti.lens.generalElements.PrimaryIconButton
 import org.senti.lens.generalElements.fadingEdge
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.models.tags
 import org.senti.lens.screens.editNote.EditNoteScreen
 import org.senti.lens.screens.homeNotes.elements.NotesList
 import org.senti.lens.screens.homeNotes.elements.TopBar
-import org.senti.lens.theme.background
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -35,7 +33,8 @@ fun SmallHomeContent(
     onClickTag: (Tag) -> Unit,
     onClickNote: (Note) -> Unit,
     changeSearchQuery: (String) -> Unit,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onClickSetting: () -> Unit
 ) {
     val navigator = LocalNavigator.currentOrThrow
 
@@ -53,7 +52,8 @@ fun SmallHomeContent(
                     bottom = 8.dp
                 ),
                 searchQuery = state.searchQuery,
-                changeSearchQuery = changeSearchQuery
+                changeSearchQuery = changeSearchQuery,
+                onClickSetting = onClickSetting
             )
             if (!state.tags.isNullOrEmpty()) {
                 TagsList(
@@ -84,8 +84,8 @@ fun SmallHomeContent(
         )
 
         PrimaryIconButton(
-            modifier = Modifier.padding(8.dp).align(Alignment.BottomEnd),
-            onClick = { navigator.push(EditNoteScreen(note = Note(), tags = tags)) }) {
+            modifier = Modifier.padding(16.dp).align(Alignment.BottomEnd),
+            onClick = { navigator.push(EditNoteScreen(id = null)) }) {
             Icon(Icons.Default.Add, "", tint = MaterialTheme.colors.onPrimary)
         }
     }

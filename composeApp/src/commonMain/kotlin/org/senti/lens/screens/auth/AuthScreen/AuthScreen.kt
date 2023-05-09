@@ -84,7 +84,11 @@ fun AuthScreenContent(windowSize: WindowSize) {
             PrimaryButton(modifier = Modifier.fillMaxWidth().height(54.dp), onClick = {
                 navigator.replace(HomeScreen(windowSize = windowSize))
             }) {
-                Text("Войти", style = MaterialTheme.typography.body1)
+                Text(
+                    "Войти",
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onPrimary
+                )
             }
 
             SecondaryButton(modifier = Modifier.fillMaxWidth().height(54.dp), onClick = {}) {

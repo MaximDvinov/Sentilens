@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -29,45 +31,45 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
-import org.senti.lens.generalElements.fadingEdge
 import org.senti.lens.models.Tag
 import org.senti.lens.screens.homeNotes.elements.TagItem
 import org.senti.lens.theme.defaultShape
-import org.senti.lens.theme.primary
-import org.senti.lens.theme.secondary
+import java.util.UUID
 
 
 @Composable
 fun DialogContent(
-    modifier: Modifier = Modifier.background(MaterialTheme.colors.secondary),
+    modifier: Modifier = Modifier,
     tags: List<Tag>?,
     selectedTags: List<Tag>?,
     onSaveClick: (List<Tag>) -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    var tagsState by remember { mutableStateOf(tags) }
-    var selectedTagsState by remember { mutableStateOf(selectedTags) }
+    var tagsState by remember(tags) { mutableStateOf(tags) }
+    var selectedTagsState by remember(selectedTags) { mutableStateOf(selectedTags) }
     val (tagName, onChangeTagName) = remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.clip(defaultShape).then(modifier),
+        modifier = modifier.wrapContentHeight().clip(defaultShape)
+            .background(MaterialTheme.colors.background),
     ) {
         HeaderDialog(selectedTagsState, onSaveClick, onDismissRequest)
 
         TagsDialog(tagsState, selectedTagsState) { tag ->
-            selectedTagsState = if (selectedTagsState?.contains(tag) == true) {
+            selectedTagsState = if (selectedTagsState?.find { tag.title == it.title } != null) {
                 selectedTagsState?.minus(tag)
             } else {
                 selectedTagsState?.plus(tag)
             }
         }
 
-        TextFieldDialog(tagName, onChangeTagName) {
-            tagsState = tagsState?.plus(Tag(name = tagName))
+        TextFieldDialog(tagName, onChangeTagName) { tag ->
+            if (selectedTagsState?.find { tag.title == it.title } == null) {
+                tagsState = tagsState?.plus(tag)
+            }
+
         }
     }
 }
@@ -117,7 +119,7 @@ fun TextFieldDialog(
                     .clip(defaultShape)
                     .clickable {
                         if (tagName.isNotBlank()) {
-                            onChangeTagsState(Tag(name = tagName))
+                            onChangeTagsState(Tag(title = tagName))
                             onChangeTagName("")
                         }
                     }
@@ -140,21 +142,34 @@ fun TagsDialog(
     selectedTagsState: List<Tag>?,
     changeSelectedTags: (Tag) -> Unit
 ) {
-    FlowRow(
-        modifier = Modifier.fillMaxWidth().height(100.dp)
+    TagsFlow(
+        tagsState, modifier = Modifier.fillMaxWidth().height(167.dp)
             .padding(horizontal = 16.dp)
             .verticalScroll(
                 rememberScrollState()
-            ),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            ), selectedTagsState, changeSelectedTags
+    )
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun TagsFlow(
+    tagsState: List<Tag>?,
+    modifier: Modifier = Modifier,
+    selectedTagsState: List<Tag>?,
+    changeSelectedTags: (Tag) -> Unit,
+) {
+    FlowRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = { size, space -> 10 }
     ) {
-        tagsState?.forEach {
+        tagsState?.forEach { tag ->
             TagItem(
                 modifier = Modifier.padding(bottom = 8.dp),
-                text = it.name,
-                selected = selectedTagsState?.contains(it) == true,
-                onSelect = { changeSelectedTags(it) })
+                text = tag.title,
+                selected = selectedTagsState?.find { tag.title == it.title } != null,
+                onSelect = { changeSelectedTags(tag) })
         }
     }
 }
@@ -178,6 +193,7 @@ fun HeaderDialog(
             style = MaterialTheme.typography.body1,
             color = MaterialTheme.colors.primary,
             modifier = Modifier
+                .clip(defaultShape)
                 .clickable {
                     selectedTagsState1?.let { onSaveClick(it) }
                     onDismissRequest()

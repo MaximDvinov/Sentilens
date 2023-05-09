@@ -1,21 +1,18 @@
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,76 +20,108 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.colorspace.ColorModel
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
-import androidx.compose.ui.window.MenuBar
+import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.mayakapps.compose.windowstyler.WindowFrameStyle
+import com.mayakapps.compose.windowstyler.WindowStyle
+import com.russhwolf.settings.ObservableSettings
+import com.russhwolf.settings.PreferencesSettings
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.SettingsListener
+import com.russhwolf.settings.set
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Minus
 import compose.icons.feathericons.Square
 import compose.icons.feathericons.X
 import dev.icerock.moko.resources.compose.fontFamilyResource
 import dev.icerock.moko.resources.compose.painterResource
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.context.startKoin
 import org.senti.lens.App
 import org.senti.lens.MR
 import org.senti.lens.generalElements.WindowSize
+import org.senti.lens.platformModule
 import org.senti.lens.theme.AppTheme
 import org.senti.lens.theme.background
 import org.senti.lens.theme.body
-import org.senti.lens.theme.defaultShape
-import org.senti.lens.theme.h2
+import org.senti.lens.theme.lightBackground
 import org.senti.lens.theme.onBackground
-import org.senti.lens.theme.onPrimary
-import org.senti.lens.theme.onSecondary
-import org.senti.lens.theme.primary
-import org.senti.lens.theme.secondary
 import java.awt.Dimension
+import java.util.prefs.Preferences
+
+
+private lateinit var settingsListener: SettingsListener
 
 fun main() = application {
-    val windowState = rememberWindowState()
+    val koin = startKoin {
+        modules(platformModule)
+    }.koin
+
+
+    val windowState = rememberWindowState(size = DpSize(1000.dp, 800.dp))
+
+    val settings: ObservableSettings by koin.inject()
+
+    var isDarkTheme by remember { mutableStateOf(settings.getBoolean("theme", false)) }
+
+    LaunchedEffect(Unit) {
+        settingsListener = settings.addBooleanListener("theme", false) {
+            isDarkTheme = it
+        }
+    }
+
+    System.setProperty("skiko.renderApi", "OPENGL")
+
+    Tray(icon = painterResource(MR.images.icon), onAction = {
+        settings["theme"] = !isDarkTheme
+    }, menu = {
+        Item(if (!isDarkTheme) "Темная тема" else "Светлая тема",
+
+            onClick = {
+                settings["theme"] = !isDarkTheme
+            })
+    }, tooltip = "Светлая тема")
+
+
     Window(
         title = "Sentilens",
         state = windowState,
-        onCloseRequest = ::exitApplication,
-//        undecorated = true,
-//        transparent = true,
-//        icon = painterResource(MR.images.icon)
+        icon = painterResource(MR.images.icon),
+        onCloseRequest = {
+            if (::settingsListener.isInitialized) {
+                settingsListener.deactivate()
+            }
+            exitApplication()
+        },
     ) {
         window.minimumSize = Dimension(600, 600)
 
-        AppTheme(true) {
+        AppTheme(isDarkTheme) {
+            WindowStyle(
+                isDarkTheme = isDarkTheme, frameStyle = WindowFrameStyle(
+                    borderColor = if (isDarkTheme) background else lightBackground,
+                    titleBarColor = if (isDarkTheme) background else lightBackground
+                )
+            )
+
             App(windowSize = WindowSize.basedOnWidth(windowState.size.width))
         }
-
-//        Column(
-//            modifier = Modifier
-//                    .clip(if (windowState.placement == WindowPlacement.Maximized) RectangleShape else defaultShape)
-//                    .background(color = MaterialTheme.colors.background)
-//        ) {
-//                window.isResizable = windowState.placement != WindowPlacement.Maximized
-//                if (windowState.placement != WindowPlacement.Maximized) {
-//                    WindowDraggableArea {
-//                        AppBar(windowState)
-//                    }
-//                } else {
-//                    AppBar(windowState)
-//                }
-//
-//        }
-
-
     }
 }
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

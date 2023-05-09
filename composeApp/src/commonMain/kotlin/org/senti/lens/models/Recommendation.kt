@@ -1,11 +1,13 @@
 package org.senti.lens.models
 
+import cafe.adriel.voyager.core.lifecycle.JavaSerializable
+
 data class Recommendation(
     val title: String,
     val description: String,
     val url: String? = null,
     val imageUrl: String? = null,
-)
+) : JavaSerializable
 
 val recommendation1 = Recommendation(
     "Посмотрите фильм",

@@ -1,15 +1,15 @@
-package org.senti.lens.screens.commons.ui
+package org.senti.lens.screens.editNote.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
-import org.senti.lens.theme.body
+import androidx.compose.ui.text.input.KeyboardCapitalization
 
 @Composable
 fun TextField(
@@ -19,7 +19,8 @@ fun TextField(
     style: TextStyle = MaterialTheme.typography.body1,
     placeholder: String = ""
 ) {
-    BasicTextField(modifier = modifier,
+    BasicTextField(
+        modifier = modifier,
         value = text,
         onValueChange = onTextChange,
         textStyle = style,
@@ -28,10 +29,13 @@ fun TextField(
             Box {
                 if (text.isEmpty()) {
                     Text(
-                        text = placeholder, style = style.copy(color = MaterialTheme.colors.onSecondary.copy(0.6f))
+                        text = placeholder,
+                        style = style.copy(color = MaterialTheme.colors.onSecondary.copy(0.6f))
                     )
                 }
                 innerTextField()
             }
-        })
+        },
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+    )
 }

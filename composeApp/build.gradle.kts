@@ -72,6 +72,8 @@ kotlin {
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.sqlDelight.driver.android)
 
+                implementation("io.insert-koin:koin-android:3.4.0")
+
                 compileOnly(libs.realm)
             }
         }
@@ -82,6 +84,8 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.sqlDelight.driver.sqlite)
+
+                implementation(libs.window.styler)
             }
         }
 
@@ -106,7 +110,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 26
         targetSdk = 33
 
         applicationId = "org.senti.lens.androidApp"
@@ -134,6 +138,10 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Sentilens"
             packageVersion = "1.0.0"
+
+            windows {
+                iconFile.set(project.file("src/commonMain/resources/icon.ico"))
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ import org.senti.lens.theme.AppTheme
 @Composable
 internal fun App(windowSize: WindowSize) {
     Surface {
-        Navigator(AuthScreen(windowSize)) {
+        Navigator(HomeScreen(windowSize)) {
             FadeTransition(it)
         }
     }

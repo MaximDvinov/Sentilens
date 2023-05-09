@@ -2,23 +2,21 @@ package org.senti.lens.screens.homeNotes.expandedHomeScreen
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.senti.lens.ApiResult
 import org.senti.lens.LoadState
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.repositories.NotesRepositoryImpl
-import org.senti.lens.repositories.TagsRepositoryImpl
-import org.senti.lens.screens.editNote.EditNoteModel
+import org.senti.lens.repositories.DbNotesRepositoryImpl
+import org.senti.lens.repositories.DbTagsRepositoryImpl
 import org.senti.lens.screens.editNote.EditNoteUseCase
 import org.senti.lens.screens.homeNotes.HomeNotesUseCase
-import org.senti.lens.screens.homeNotes.smallHomeScreen.SmallHomeScreenModel
 
 class ExpandedHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
     StateScreenModel<ExpandedHomeScreenModel.UiState>(UiState()) {
 
     val useCase: EditNoteUseCase =
-        EditNoteUseCase(NotesRepositoryImpl.instance, TagsRepositoryImpl.instance)
+        EditNoteUseCase(DbNotesRepositoryImpl.instance, DbTagsRepositoryImpl.instance)
 
     data class UiState(
         val currentNote: Note? = null,
@@ -27,17 +25,27 @@ class ExpandedHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
         val noteTags: List<Tag> = listOf(),
         val searchQuery: String = "",
         val loadState: LoadState = LoadState.Idle,
+        val noteLoadState: LoadState = LoadState.Idle,
         val filteredNotes: List<Note>? = notes
     )
 
     init {
         coroutineScope.launch {
-            mutableState.value = getData(mutableState.value)
+            homeNotesUseCase.getNotesAndTags().collect {
+                mutableState.value = mutableState.value.copy(
+                    notes = it?.first,
+                    tags = it?.second?.map { tag -> tag to false },
+                    filteredNotes = it?.first
+                )
+            }
         }
     }
 
     fun processIntent(intent: Intent) {
         coroutineScope.launch {
+            if (intent is Intent.SaveNote) {
+                mutableState.value = mutableState.value.copy(noteLoadState = LoadState.Loading)
+            }
             mutableState.value = reduce(mutableState.value, intent)
         }
     }
@@ -46,7 +54,6 @@ class ExpandedHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
         object SaveNote : Intent()
         data class ChangeTitle(val title: String) : Intent()
         data class ChangeBody(val body: String) : Intent()
-        data class SelectNoteTag(val tag: Tag) : Intent()
         object DeleteNote : Intent()
         object LoadDataIntent : Intent()
         data class SelectTag(val tag: Tag) : Intent()
@@ -60,7 +67,7 @@ class ExpandedHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
     ): UiState {
         return when (intent) {
             is Intent.ChangeBody -> {
-                oldState.copy(currentNote = oldState.currentNote?.copy(body = intent.body))
+                oldState.copy(currentNote = oldState.currentNote?.copy(content = intent.body))
             }
 
             is Intent.ChangeTitle -> {
@@ -69,29 +76,30 @@ class ExpandedHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
 
             Intent.SaveNote -> {
                 if (oldState.currentNote == null) return oldState
-                if (oldState.currentNote.id == null) {
-                    useCase.createNote(oldState.currentNote)
+                delay(300)
+                if (oldState.currentNote.uuid == null) {
+                    oldState.copy(
+                        currentNote = useCase.createNote(oldState.currentNote),
+                        noteLoadState = LoadState.Success
+                    )
                 } else {
-                    useCase.updateNote(oldState.currentNote)
+                    oldState.copy(
+                        currentNote = useCase.updateNote(oldState.currentNote),
+                        noteLoadState = LoadState.Success
+                    )
                 }
-                oldState
-            }
-
-            is Intent.SelectNoteTag -> {
-                oldState.copy(noteTags = oldState.noteTags + intent.tag)
             }
 
             Intent.DeleteNote -> {
                 if (oldState.currentNote != null) {
                     useCase.deleteNote(oldState.currentNote)
                 }
-
                 oldState.copy(currentNote = null)
             }
 
             Intent.LoadDataIntent -> {
-                mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
                 getData(oldState)
+                oldState
             }
 
             is Intent.SelectTag -> changeTag(intent.tag, oldState)
@@ -100,7 +108,9 @@ class ExpandedHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
             )
 
             is Intent.SelectNote -> {
-                oldState.copy(currentNote = intent.note)
+                oldState.copy(
+                    currentNote = intent.note
+                )
             }
 
             is Intent.SaveTags -> {
@@ -109,16 +119,18 @@ class ExpandedHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
         }
     }
 
-    private suspend fun getData(currentState: UiState): UiState {
-        return when (val result = homeNotesUseCase.getNotesAndTags()) {
-            is ApiResult.Failure -> currentState.copy(loadState = LoadState.Error(result.message))
-            is ApiResult.Success -> {
-                val (notes, tags) = result.data
-                currentState.copy(
-                    notes = notes, tags = tags.map { tag -> tag to false }, filteredNotes = notes
-                )
-            }
-        }
+    private suspend fun getData(currentState: UiState) {
+//        return when (val result = homeNotesUseCase.getNotesAndTags()) {
+//            is ApiResult.Failure -> currentState.copy(loadState = LoadState.Error(result.message))
+//            is ApiResult.Success -> {
+//                val (notes, tags) = result.data
+//                notes.c
+//                currentState.copy(
+//                    notes = notes, tags = tags.map { tag -> tag to false }, filteredNotes = notes
+//                )
+//            }
+//        }
+
     }
 
 
@@ -149,7 +161,7 @@ class ExpandedHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
         notes?.filter { note ->
             note.tags.containsAll(filteredTag)
         }?.filter { note ->
-            note.title.contains(query) || note.body.contains(query)
+            note.title.contains(query) || note.content?.contains(query) == true
         }
     } else notes
 

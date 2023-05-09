@@ -31,11 +31,10 @@ expect fun TagsList(
 )
 
 @Composable
-expect fun TagsDialog(
-    modifier: Modifier = Modifier,
-    tags: List<Tag>?,
-    visible: Boolean = false,
-    selectedTags: List<Tag>?,
-    onSaveClick: (List<Tag>) -> Unit,
-    onDismissRequest: () -> Unit
+expect fun PlatformDialog(
+    modifier: Modifier,
+    visible: Boolean,
+    onDismissRequest: () -> Unit,
+    size: Pair<Int, Int> = 350 to 300,
+    content: @Composable () -> Unit
 )

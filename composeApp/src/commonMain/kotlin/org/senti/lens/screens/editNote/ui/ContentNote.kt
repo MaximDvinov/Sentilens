@@ -1,4 +1,4 @@
-package org.senti.lens.screens.commons.ui
+package org.senti.lens.screens.editNote.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,12 +25,12 @@ fun ContentNote(
     // temporary fix for a text input problem
     // TODO: get rid of storing state in two places
 
-    val (title, onChangeTitle) = remember(currentNote?.id) {
+    val (title, onChangeTitle) = remember(currentNote?.uuid) {
         mutableStateOf(
             currentNote?.title ?: ""
         )
     }
-    val (body, onChangeBody) = remember(currentNote?.id) { mutableStateOf(currentNote?.body ?: "") }
+    val (body, onChangeBody) = remember(currentNote?.uuid) { mutableStateOf(currentNote?.content ?: "") }
 
     Column(
         modifier = modifier.verticalScroll(rememberScrollState())
@@ -44,7 +44,8 @@ fun ContentNote(
                 onChangeTitleNote(it)
             },
             placeholder = "Введите заголовок...",
-            style = MaterialTheme.typography.h1.copy(MaterialTheme.colors.onSecondary)
+            style = MaterialTheme.typography.h1.copy(MaterialTheme.colors.onSecondary),
+
         )
         TextField(
             modifier = Modifier.weight(1f).fillMaxSize(),

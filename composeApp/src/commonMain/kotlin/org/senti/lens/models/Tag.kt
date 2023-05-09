@@ -1,29 +1,19 @@
 package org.senti.lens.models
 
 import androidx.compose.runtime.Stable
+import cafe.adriel.voyager.core.lifecycle.JavaSerializable
 import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.RealmUUID
 import io.realm.kotlin.types.annotations.PrimaryKey
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.UUID
 
 @Stable
 @Serializable
 data class Tag(
-    val id: Int? = null, val name: String
-)
+    @SerialName("uuid")
+    @Serializable(UUIDSerializer::class)
+    val uuid: UUID? = null, val title: String
+) : JavaSerializable
 
-class TagEntity : RealmObject {
-    @PrimaryKey
-    var id: Int? = null
-    var name: String? = ""
-}
-
-val tags = listOf(
-    Tag(id = 1, name = "Work"),
-    Tag(id = 2, name = "Personal"),
-    Tag(id = 3, name = "Travel"),
-    Tag(id = 4, name = "Shopping"),
-    Tag(id = 3, name = "Blog"),
-    Tag(id = 4, name = "Univer"),
-    Tag(id = 3, name = "Что-то еще"),
-    Tag(id = 4, name = "тег")
-)

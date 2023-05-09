@@ -6,18 +6,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import dev.icerock.moko.resources.compose.fontFamilyResource
+import kotlinx.datetime.toJavaLocalDateTime
 import org.senti.lens.BodyText
+import org.senti.lens.MR
 import org.senti.lens.PlatformGrid
+import org.senti.lens.dateFormat
+import org.senti.lens.dateFormatter
 import org.senti.lens.models.Note
 import org.senti.lens.theme.*
-import org.senti.lens.theme.primary
-import org.senti.lens.theme.secondary
+import org.senti.lens.timeFormat
+import org.senti.lens.timeFormatter
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -46,22 +54,26 @@ fun NoteItem(
     ) {
         Text(
             note.title,
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.h2.copy(
+                fontSize = 18.sp, fontFamily = fontFamilyResource(
+                    MR.fonts.Nunito.bold
+                )
+            ),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colors.onSecondary
         )
 
-        BodyText(note.body)
+        BodyText(note.content ?: "")
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
-                note.date,
+                note.updatedAt.dateFormat(),
                 style = MaterialTheme.typography.caption,
                 color = MaterialTheme.colors.onSecondary.copy(alpha = 0.6f)
             )
             Text(
-                note.time,
+                note.updatedAt.timeFormat(),
                 style = MaterialTheme.typography.caption,
                 color = MaterialTheme.colors.onSecondary.copy(alpha = 0.6f)
             )
@@ -69,8 +81,10 @@ fun NoteItem(
 
         if (note.tags.isNotEmpty()) {
             Text(
-                note.tags.joinToString(", ") { it.name },
-                style = MaterialTheme.typography.caption.copy(color = MaterialTheme.colors.primary)
+                note.tags.joinToString(", ") { it.title },
+                style = MaterialTheme.typography.caption.copy(color = MaterialTheme.colors.primary),
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

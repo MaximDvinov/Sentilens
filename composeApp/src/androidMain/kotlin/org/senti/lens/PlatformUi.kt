@@ -1,8 +1,10 @@
 package org.senti.lens
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,17 +16,17 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.commons.ui.DialogContent
 import org.senti.lens.screens.homeNotes.elements.NoteItem
 import org.senti.lens.screens.homeNotes.elements.TagItem
+import org.senti.lens.theme.defaultShape
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -44,7 +46,16 @@ actual fun PlatformGrid(
     ) {
         notes.forEach {
             item {
-                NoteItem(modifier = Modifier.animateContentSize(), it) {
+                val color by animateColorAsState(if (currentNote?.uuid == it.uuid) MaterialTheme.colors.primary else MaterialTheme.colors.secondary)
+                val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 2.dp else 0.dp)
+
+                NoteItem(
+                    modifier = Modifier.animateContentSize().border(
+                        width = width,
+                        color = color,
+                        shape = defaultShape
+                    ), it
+                ) {
                     onClick(it)
                 }
             }
@@ -85,34 +96,25 @@ actual fun TagsList(
             TagItem(
                 Modifier,
                 selected = isSelected,
-                defaultColor = MaterialTheme.colors.secondary,
-                text = tag.name,
+                text = tag.title,
                 onSelect = { onClickTag(tag) })
         }
     }
 }
 
 @Composable
-actual fun TagsDialog(
+actual fun PlatformDialog(
     modifier: Modifier,
-    tags: List<Tag>?,
     visible: Boolean,
-    selectedTags: List<Tag>?,
-    onSaveClick: (List<Tag>) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    size: Pair<Int, Int>,
+    content: @Composable () -> Unit
 ) {
-
     if (visible) {
         Dialog(
             onDismissRequest = onDismissRequest
         ) {
-            DialogContent(
-                modifier = modifier.background(MaterialTheme.colors.background),
-                tags = tags,
-                selectedTags = selectedTags,
-                onSaveClick = onSaveClick,
-                onDismissRequest = onDismissRequest
-            )
+            content()
         }
     }
 

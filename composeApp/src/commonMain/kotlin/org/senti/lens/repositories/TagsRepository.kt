@@ -1,21 +1,31 @@
 package org.senti.lens.repositories
 
-import org.senti.lens.models.Note
+import kotlinx.coroutines.flow.Flow
+import org.senti.lens.db.dao.TagDaoImpl
 import org.senti.lens.models.Tag
-import org.senti.lens.models.notes
-import org.senti.lens.models.tags
 
 interface TagsRepository {
-    suspend fun getTags(): List<Tag>
+    fun getTags(): Flow<List<Tag>>
 
+    suspend fun deleteTag(tag: Tag)
+    suspend fun deleteTags(map: List<Tag>?)
 }
 
-class TagsRepositoryImpl : TagsRepository {
-    override suspend fun getTags(): List<Tag> {
-        return tags
+class DbTagsRepositoryImpl : TagsRepository {
+    private val tagDao by lazy {
+        TagDaoImpl()
+    }
+
+    override fun getTags(): Flow<List<Tag>> {
+        return tagDao.getAllTags()
+    }
+
+    override suspend fun deleteTag(tag: Tag) = tagDao.deleteTag(tag)
+    override suspend fun deleteTags(tags: List<Tag>?) {
+        tagDao.deleteTags(tags)
     }
 
     companion object {
-        val instance = TagsRepositoryImpl()
+        val instance = DbTagsRepositoryImpl()
     }
 }

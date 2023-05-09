@@ -2,12 +2,14 @@ package org.senti.lens.screens.homeNotes.smallHomeScreen
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.senti.lens.ApiResult
 import org.senti.lens.LoadState
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
 import org.senti.lens.screens.homeNotes.HomeNotesUseCase
+import org.senti.lens.screens.homeNotes.expandedHomeScreen.ExpandedHomeScreenModel
 
 
 class SmallHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
@@ -29,7 +31,13 @@ class SmallHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
 
     init {
         coroutineScope.launch {
-            mutableState.value = getData(mutableState.value)
+            homeNotesUseCase.getNotesAndTags().collect {
+                mutableState.value = mutableState.value.copy(
+                    notes = it?.first,
+                    tags = it?.second?.map { tag -> tag to false },
+                    filteredNotes = it?.first
+                )
+            }
         }
     }
 
@@ -42,36 +50,26 @@ class SmallHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
     private suspend fun reduce(oldState: UiState, intent: Intent): UiState {
         return when (intent) {
             Intent.LoadDataIntent -> {
-                mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
+                mutableState.value = oldState.copy(loadState = LoadState.Loading)
                 getData(oldState)
             }
 
             is Intent.SelectTag -> changeTag(intent.tag, oldState)
             is Intent.ChangeSearchQuery -> changeSearchQuery(
-                intent.query,
-                oldState
+                intent.query, oldState
             )
         }
     }
 
     private suspend fun getData(currentState: UiState): UiState {
-        return when (val result = homeNotesUseCase.getNotesAndTags()) {
-            is ApiResult.Failure -> currentState.copy(loadState = LoadState.Error(result.message))
-            is ApiResult.Success -> {
-                val (notes, tags) = result.data
-                currentState.copy(
-                    notes = notes,
-                    tags = tags.map { tag -> tag to false },
-                    filteredNotes = notes
-                )
-            }
-        }
+        delay(1000)
+        return currentState.copy(loadState = LoadState.Success)
     }
 
 
     private fun changeTag(tag: Tag, currentState: UiState): UiState {
         val newTags =
-            currentState.tags?.map { (it, isSelected) -> if (it == tag) it to !isSelected else it to isSelected }
+            currentState.tags?.map { (it, isSelected) -> if (it.uuid == tag.uuid) it to !isSelected else it to isSelected }
 
         val newFilteredNotes = filterList(currentState.notes, newTags, currentState.searchQuery)
 
@@ -85,16 +83,14 @@ class SmallHomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
     }
 
     private fun filterList(
-        notes: List<Note>?,
-        tags: List<Pair<Tag, Boolean>>?,
-        query: String
+        notes: List<Note>?, tags: List<Pair<Tag, Boolean>>?, query: String
     ) = if (!tags.isNullOrEmpty()) {
         val filteredTag = tags.filter { it.second }.map { it.first }
 
         notes?.filter { note ->
             note.tags.containsAll(filteredTag)
         }?.filter { note ->
-            note.title.contains(query) || note.body.contains(query)
+            note.title.contains(query) || note.content?.contains(query) == true
         }
     } else notes
 
