@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -34,9 +33,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.homeNotes.elements.TagItem
+import org.senti.lens.screens.home.ui.TagItem
 import org.senti.lens.theme.defaultShape
-import java.util.UUID
 
 
 @Composable

@@ -55,10 +55,12 @@ class NoteDaoImpl() : NoteDao {
                 this.content = note.content
                 this.createdAt = note.createdAt
                 this.updatedAt = note.updatedAt
-                this.sentiment = SentimentEntity().apply {
-                    title = note.sentiment?.title
-                    description = note.sentiment?.description
-                    smile = note.sentiment?.smile
+                if (note.sentiment != null){
+                    this.sentiment = SentimentEntity().apply {
+                        title = note.sentiment.title
+                        description = note.sentiment.description
+                        smile = note.sentiment.smile
+                    }
                 }
                 this.tags = upsertTags(note)
 
@@ -83,10 +85,12 @@ class NoteDaoImpl() : NoteDao {
                 this.content = note.content
                 this.createdAt = note.createdAt
                 this.updatedAt = now.toLocalDateTime(TimeZone.currentSystemDefault())
-                this.sentiment = SentimentEntity().apply {
-                    title = note.sentiment?.title
-                    description = note.sentiment?.description
-                    smile = note.sentiment?.smile
+                if (note.sentiment != null){
+                    this.sentiment = SentimentEntity().apply {
+                        title = note.sentiment.title
+                        description = note.sentiment.description
+                        smile = note.sentiment.smile
+                    }
                 }
 
                 this.tags = upsertTags(note)

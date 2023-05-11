@@ -21,8 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.DpSize
@@ -37,8 +35,6 @@ import androidx.compose.ui.window.rememberWindowState
 import com.mayakapps.compose.windowstyler.WindowFrameStyle
 import com.mayakapps.compose.windowstyler.WindowStyle
 import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.PreferencesSettings
-import com.russhwolf.settings.Settings
 import com.russhwolf.settings.SettingsListener
 import com.russhwolf.settings.set
 import compose.icons.FeatherIcons
@@ -47,20 +43,18 @@ import compose.icons.feathericons.Square
 import compose.icons.feathericons.X
 import dev.icerock.moko.resources.compose.fontFamilyResource
 import dev.icerock.moko.resources.compose.painterResource
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.senti.lens.App
 import org.senti.lens.MR
-import org.senti.lens.generalElements.WindowSize
+import org.senti.lens.screens.commons.ui.WindowSize
 import org.senti.lens.platformModule
 import org.senti.lens.theme.AppTheme
 import org.senti.lens.theme.background
 import org.senti.lens.theme.body
 import org.senti.lens.theme.lightBackground
 import org.senti.lens.theme.onBackground
+import java.awt.Cursor
 import java.awt.Dimension
-import java.util.prefs.Preferences
 
 
 private lateinit var settingsListener: SettingsListener
@@ -82,6 +76,7 @@ fun main() = application {
             isDarkTheme = it
         }
     }
+
 
     System.setProperty("skiko.renderApi", "OPENGL")
 
@@ -107,7 +102,7 @@ fun main() = application {
             exitApplication()
         },
     ) {
-        window.minimumSize = Dimension(600, 600)
+        window.minimumSize = Dimension(400, 500)
 
         AppTheme(isDarkTheme) {
             WindowStyle(
@@ -117,7 +112,12 @@ fun main() = application {
                 )
             )
 
-            App(windowSize = WindowSize.basedOnWidth(windowState.size.width))
+            App(
+                windowSize = WindowSize.basedOnWidth(
+                    windowState.size.width,
+                    windowState.size.height
+                )
+            )
         }
     }
 }

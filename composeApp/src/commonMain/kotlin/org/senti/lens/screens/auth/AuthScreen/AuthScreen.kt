@@ -20,12 +20,11 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.senti.lens.generalElements.PrimaryButton
-import org.senti.lens.generalElements.SecondaryButton
-import org.senti.lens.generalElements.WindowSize
+import org.senti.lens.screens.commons.ui.PrimaryButton
+import org.senti.lens.screens.commons.ui.SecondaryButton
+import org.senti.lens.screens.commons.ui.WindowSize
 import org.senti.lens.screens.auth.ui.AuthTextField
-import org.senti.lens.screens.homeNotes.HomeScreen
-import org.senti.lens.theme.body
+import org.senti.lens.screens.home.HomeScreen
 
 class AuthScreen(val windowSize: WindowSize) : Screen {
     @Composable
@@ -82,7 +81,7 @@ fun AuthScreenContent(windowSize: WindowSize) {
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)) {
             PrimaryButton(modifier = Modifier.fillMaxWidth().height(54.dp), onClick = {
-                navigator.replace(HomeScreen(windowSize = windowSize))
+                navigator.replace(HomeScreen())
             }) {
                 Text(
                     "Войти",

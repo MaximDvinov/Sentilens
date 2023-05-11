@@ -28,19 +28,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.seiko.imageloader.ImageRequestState
 import com.seiko.imageloader.model.ImageRequest
 import com.seiko.imageloader.model.ImageRequestEvent
 import com.seiko.imageloader.rememberAsyncImagePainter
-import org.senti.lens.generalElements.PrimaryButton
-import org.senti.lens.generalElements.SecondaryIconButton
+import org.senti.lens.RecommendationScreenContent
+import org.senti.lens.screens.commons.ui.PrimaryButton
+import org.senti.lens.screens.commons.ui.SecondaryIconButton
 import org.senti.lens.models.Recommendation
 import org.senti.lens.models.recommendationsList
 import org.senti.lens.theme.defaultShape
 
 class RecommendationScreen : Screen {
+    override val key = uniqueScreenKey
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -68,11 +72,6 @@ class RecommendationScreen : Screen {
 
     }
 }
-
-@Composable
-expect fun RecommendationScreenContent(
-    modifier: Modifier = Modifier, recommendationList: List<Recommendation>
-)
 
 @Composable
 fun RecommendationItem(recommendation: Recommendation) {

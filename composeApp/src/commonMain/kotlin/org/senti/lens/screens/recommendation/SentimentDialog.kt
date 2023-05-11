@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.X
-import org.senti.lens.generalElements.PrimaryButton
-import org.senti.lens.generalElements.SecondaryIconButton
+import org.senti.lens.screens.commons.ui.PrimaryButton
+import org.senti.lens.screens.commons.ui.SecondaryIconButton
 import org.senti.lens.theme.defaultShape
 
 @Composable

@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.russhwolf.settings.ObservableSettings
@@ -41,14 +42,15 @@ import compose.icons.feathericons.Sun
 import compose.icons.feathericons.Tablet
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.senti.lens.generalElements.SecondaryButton
-import org.senti.lens.generalElements.SecondaryIconButton
+import org.senti.lens.screens.commons.ui.SecondaryButton
+import org.senti.lens.screens.commons.ui.SecondaryIconButton
 import org.senti.lens.models.Tag
 import org.senti.lens.screens.commons.ui.TagsFlow
-import org.senti.lens.theme.h1
-import org.senti.lens.theme.h2
 
 class SettingScreen : Screen, KoinComponent {
+
+    override val key = uniqueScreenKey
+
     @Composable
     override fun Content() {
         val settingScreenModel = rememberScreenModel { SettingScreenModel() }

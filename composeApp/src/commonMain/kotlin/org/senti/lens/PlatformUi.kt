@@ -38,3 +38,12 @@ expect fun PlatformDialog(
     size: Pair<Int, Int> = 350 to 300,
     content: @Composable () -> Unit
 )
+
+@Composable
+expect fun SettingNoteMenu(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onTagsClick: () -> Unit,
+    modifier: Modifier
+)

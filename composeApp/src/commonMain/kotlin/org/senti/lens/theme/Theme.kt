@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import dev.icerock.moko.resources.compose.fontFamilyResource
 import org.senti.lens.MR
+import org.senti.lens.SetColorStatusBar
 
 private val darkColors = darkColors(
     primary = primary,
@@ -77,7 +78,6 @@ internal fun AppTheme(
 
     SetColorStatusBar(darkTheme, colors)
 
-
     MaterialTheme(
         colors = colors.switch(),
         typography = Typography(
@@ -109,6 +109,3 @@ internal fun AppTheme(
         }
     )
 }
-
-@Composable
-expect fun SetColorStatusBar(darkTheme: Boolean, colors: Colors)
