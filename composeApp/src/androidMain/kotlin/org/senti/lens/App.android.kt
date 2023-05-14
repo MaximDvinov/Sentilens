@@ -7,7 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +25,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.window.layout.WindowMetricsCalculator
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SettingsListener
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -41,7 +46,7 @@ class AndroidApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@AndroidApp)
-            modules(platformModule)
+            modules(platformModule, commonModule)
         }
     }
 }
@@ -52,6 +57,8 @@ class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setUpEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        Napier.base(DebugAntilog())
 
         val settings: ObservableSettings by inject()
 
@@ -75,7 +82,7 @@ class AppActivity : ComponentActivity() {
                         .navigationBarsPadding()
                         .imePadding()
                 ) {
-                    App(windowSize = rememberWindowSize())
+                    App()
                 }
             }
         }

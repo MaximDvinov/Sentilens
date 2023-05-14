@@ -1,10 +1,12 @@
 package org.senti.lens.screens.home.ui
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +25,7 @@ fun TagItem(
     selected: Boolean,
     onSelect: () -> Unit,
     selectedColor: Color = MaterialTheme.colors.primary,
-    defaultColor: Color = MaterialTheme.colors.primary.copy(alpha = 0.1f)
+    defaultColor: Color = MaterialTheme.colors.primaryVariant
 ) {
 
     val color by animateColorAsState(if (selected) selectedColor else defaultColor)
@@ -32,10 +34,10 @@ fun TagItem(
         modifier
             .shadow(
                 elevation = if (color == defaultColor) 0.dp else 10.dp,
-                shape = defaultShape,
+                shape = RoundedCornerShape(50),
                 spotColor = if (color == defaultColor) MaterialTheme.colors.background else color,
             )
-            .clip(defaultShape)
+            .clip(RoundedCornerShape(50))
             .background(color = color)
             .clickable {
                 onSelect()

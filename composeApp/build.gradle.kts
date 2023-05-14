@@ -128,6 +128,11 @@ android {
     packagingOptions {
         resources.excludes.add("META-INF/**")
     }
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
 }
 
 compose.desktop {

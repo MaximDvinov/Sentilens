@@ -9,9 +9,7 @@ import org.senti.lens.singlePush
 
 @Composable
 fun TwoPane(
-    state: HomeScreenModel.UiState,
-    screenModel: HomeScreenModel,
-    navigator: Navigator?
+    state: HomeScreenModel.UiState, screenModel: HomeScreenModel, navigator: Navigator?
 ) {
     TwoPaneContent(state, onBackClick = {
         screenModel.processIntent(
@@ -55,7 +53,11 @@ fun TwoPane(
         )
     }, onClickAnalyze = {
         navigator?.singlePush(RecommendationScreen())
-    }, onSaveTagsClick = { tag ->
-        screenModel.processIntent(intent = HomeScreenModel.Intent.SaveTags(tag))
+    }, onClickTagInDialog = {
+        screenModel.processIntent(
+            intent = HomeScreenModel.Intent.AddTagInNote(
+                it
+            )
+        )
     })
 }

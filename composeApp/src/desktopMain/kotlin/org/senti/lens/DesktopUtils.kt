@@ -17,7 +17,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.isMetaPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
 import com.russhwolf.settings.PreferencesSettings
 import com.russhwolf.settings.Settings
@@ -34,11 +39,20 @@ actual fun getTypeDevice(): TypeDevice {
     return TypeDevice.DESKTOP
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun PlatformBackHandler(
     backHandlingEnabled: Boolean,
     onBack: () -> Unit
 ) {
+    Box(modifier = Modifier.onPreviewKeyEvent {
+        if (it.key == Key.Escape) {
+            onBack()
+            true
+        } else {
+            false
+        }
+    })
 }
 
 @Composable

@@ -1,6 +1,5 @@
 package org.senti.lens.screens.home.editNote.ui
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -8,8 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -40,8 +37,10 @@ fun ContentNote(
         )
     }
 
+
+
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState())
+        modifier = modifier
             .padding(start = 16.dp, end = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
@@ -55,8 +54,8 @@ fun ContentNote(
                 },
                 placeholder = "Введите заголовок...",
                 style = MaterialTheme.typography.h1.copy(MaterialTheme.colors.onSecondary),
-
-                )
+                maxLines = 3,
+            )
         }
 
 
@@ -68,12 +67,9 @@ fun ContentNote(
                     onChangeBody(it)
                     onChangeBodyNote(it)
                 },
-                placeholder = "Введите текст заметки...",
-                style = MaterialTheme.typography.body1.copy(MaterialTheme.colors.onSecondary)
+                style = MaterialTheme.typography.body1.copy(MaterialTheme.colors.onSecondary),
+                placeholder = "Введите текст заметки..."
             )
         }
-
-
     }
-
 }

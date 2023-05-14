@@ -38,30 +38,31 @@ import org.senti.lens.theme.defaultShape
 
 
 @Composable
-fun DialogContent(
+fun TagDialog(
     modifier: Modifier = Modifier,
     tags: List<Tag>?,
     selectedTags: List<Tag>?,
-    onSaveClick: (List<Tag>) -> Unit,
+    onClickTag: (Tag) -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    var tagsState by remember(tags) { mutableStateOf(tags) }
-    var selectedTagsState by remember(selectedTags) { mutableStateOf(selectedTags) }
+    var tagsState by remember(tags) {
+        if (tags?.containsAll(selectedTags ?: listOf()) == false) {
+            mutableStateOf(tags)
+        } else {
+            mutableStateOf(tags)
+        }
+        mutableStateOf(tags)
+    }
+    val selectedTagsState by remember(selectedTags) { mutableStateOf(selectedTags) }
     val (tagName, onChangeTagName) = remember { mutableStateOf("") }
 
     Column(
         modifier = modifier.wrapContentHeight().clip(defaultShape)
             .background(MaterialTheme.colors.background),
     ) {
-        HeaderDialog(selectedTagsState, onSaveClick, onDismissRequest)
+        HeaderDialog(selectedTagsState, { }, onDismissRequest)
 
-        TagsDialog(tagsState, selectedTagsState) { tag ->
-            selectedTagsState = if (selectedTagsState?.find { tag.title == it.title } != null) {
-                selectedTagsState?.minus(tag)
-            } else {
-                selectedTagsState?.plus(tag)
-            }
-        }
+        TagsDialog(tagsState, selectedTagsState, onClickTag = onClickTag)
 
         TextFieldDialog(tagName, onChangeTagName) { tag ->
             if (selectedTagsState?.find { tag.title == it.title } == null) {
@@ -138,14 +139,14 @@ fun TextFieldDialog(
 fun TagsDialog(
     tagsState: List<Tag>?,
     selectedTagsState: List<Tag>?,
-    changeSelectedTags: (Tag) -> Unit
+    onClickTag: (Tag) -> Unit
 ) {
     TagsFlow(
         tagsState, modifier = Modifier.fillMaxWidth().height(167.dp)
             .padding(horizontal = 16.dp)
             .verticalScroll(
                 rememberScrollState()
-            ), selectedTagsState, changeSelectedTags
+            ), selectedTagsState, onClickTag
     )
 }
 

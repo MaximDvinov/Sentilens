@@ -29,8 +29,9 @@ fun NotesList(
     notes: List<Note>,
     cellsDp: Dp = 175.dp,
     currentNote: Note?,
+    contentPadding: PaddingValues,
 ) {
-    PlatformGrid(modifier, onClick, notes, cellsDp, currentNote)
+    PlatformGrid(modifier, onClick, notes, cellsDp, currentNote, contentPadding)
 }
 
 

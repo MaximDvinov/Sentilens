@@ -1,5 +1,6 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,6 +47,7 @@ import dev.icerock.moko.resources.compose.painterResource
 import org.koin.core.context.startKoin
 import org.senti.lens.App
 import org.senti.lens.MR
+import org.senti.lens.commonModule
 import org.senti.lens.screens.commons.ui.WindowSize
 import org.senti.lens.platformModule
 import org.senti.lens.theme.AppTheme
@@ -61,7 +63,7 @@ private lateinit var settingsListener: SettingsListener
 
 fun main() = application {
     val koin = startKoin {
-        modules(platformModule)
+        modules(platformModule, commonModule)
     }.koin
 
 
@@ -102,22 +104,17 @@ fun main() = application {
             exitApplication()
         },
     ) {
+        WindowStyle(
+            isDarkTheme = isDarkTheme, frameStyle = WindowFrameStyle(
+                borderColor = if (isDarkTheme) background else lightBackground,
+                titleBarColor = if (isDarkTheme) background else lightBackground
+            )
+        )
+
         window.minimumSize = Dimension(400, 500)
 
         AppTheme(isDarkTheme) {
-            WindowStyle(
-                isDarkTheme = isDarkTheme, frameStyle = WindowFrameStyle(
-                    borderColor = if (isDarkTheme) background else lightBackground,
-                    titleBarColor = if (isDarkTheme) background else lightBackground
-                )
-            )
-
-            App(
-                windowSize = WindowSize.basedOnWidth(
-                    windowState.size.width,
-                    windowState.size.height
-                )
-            )
+            App()
         }
     }
 }
@@ -132,12 +129,12 @@ fun ApplicationScope.AppBar(windowState: WindowState) {
         horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.End),
         verticalAlignment = Alignment.CenterVertically
     ) {
-//        Icon(
-//            painter = painterResource(MR.images.icon),
-//            modifier = Modifier.size(20.dp),
-//            contentDescription = "icon",
-//            tint = primary
-//        )
+        Icon(
+            painter = painterResource(MR.images.icon),
+            modifier = Modifier.size(20.dp),
+            contentDescription = "icon",
+            tint = MaterialTheme.colors.onBackground
+        )
 
         Text(
             "Sentiles",
@@ -153,7 +150,7 @@ fun ApplicationScope.AppBar(windowState: WindowState) {
             .onPointerEvent(PointerEventType.Enter) { activeMinimize = true }
             .onPointerEvent(PointerEventType.Exit) { activeMinimize = false },
             contentPadding = PaddingValues(4.dp),
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(4.dp),
             elevation = null,
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = if (!activeMinimize) Color.Transparent else MaterialTheme.colors.primary
@@ -174,18 +171,22 @@ fun ApplicationScope.AppBar(windowState: WindowState) {
             .onPointerEvent(PointerEventType.Exit) { activePlacement = false },
             contentPadding = PaddingValues(4.dp),
             elevation = null,
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(4.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = if (!activePlacement) Color.Transparent else MaterialTheme.colors.primary
+                backgroundColor = if (!activePlacement) Color.Transparent else MaterialTheme.colors.primary,
             ),
             onClick = {
-                windowState.placement = if (windowState.placement == WindowPlacement.Maximized) {
+                windowState.placement = if (windowState.placement == WindowPlacement.Fullscreen) {
                     WindowPlacement.Floating
                 } else {
-                    WindowPlacement.Maximized
+                    WindowPlacement.Fullscreen
                 }
             }) {
-            Icon(FeatherIcons.Square, contentDescription = "close", tint = onBackground)
+            Icon(
+                FeatherIcons.Square,
+                contentDescription = "close",
+                tint = MaterialTheme.colors.onBackground
+            )
         }
 
         var activeClose by remember { mutableStateOf(false) }
@@ -194,7 +195,7 @@ fun ApplicationScope.AppBar(windowState: WindowState) {
             .onPointerEvent(PointerEventType.Exit) { activeClose = false },
             onClick = ::exitApplication,
             contentPadding = PaddingValues(4.dp),
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(4.dp),
             elevation = null,
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = if (!activeClose) Color.Transparent else Color.Red

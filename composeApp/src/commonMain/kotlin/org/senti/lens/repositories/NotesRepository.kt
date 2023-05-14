@@ -1,6 +1,7 @@
 package org.senti.lens.repositories
 
 import kotlinx.coroutines.flow.Flow
+import org.senti.lens.db.dao.NoteDao
 import org.senti.lens.db.dao.NoteDaoImpl
 import org.senti.lens.models.Note
 import java.util.UUID
@@ -15,11 +16,7 @@ interface NotesRepository {
     suspend fun getNote(id: UUID): Note?
 }
 
-class DbNotesRepositoryImpl : NotesRepository {
-    private val noteDao by lazy {
-        NoteDaoImpl()
-    }
-
+class DbNotesRepositoryImpl(private val noteDao: NoteDao) : NotesRepository {
     override fun getNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes()
     }
@@ -38,9 +35,5 @@ class DbNotesRepositoryImpl : NotesRepository {
 
     override suspend fun getNote(id: UUID): Note? {
         return noteDao.getNote(id)
-    }
-
-    companion object {
-        val instance = DbNotesRepositoryImpl()
     }
 }

@@ -64,6 +64,7 @@ actual fun PlatformGrid(
     notes: List<Note>,
     cellsDp: Dp,
     currentNote: Note?,
+    contentPadding: PaddingValues,
 ) {
     val state = rememberLazyGridState()
 
@@ -88,7 +89,7 @@ actual fun PlatformGrid(
             state = state,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
+            contentPadding = contentPadding
         ) {
 
             notes.forEach {
@@ -102,7 +103,9 @@ actual fun PlatformGrid(
                                 width = 2.dp,
                                 color = color,
                                 shape = defaultShape
-                            ).animateItemPlacement(animationSpec = spring(stiffness = 500f)),
+                            )
+//                                .animateItemPlacement(animationSpec = spring(stiffness = 500f))
+                            ,
                             note = it
                         ) {
                             onClick(it)

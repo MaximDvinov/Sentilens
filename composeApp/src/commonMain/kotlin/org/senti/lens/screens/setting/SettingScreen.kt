@@ -41,6 +41,7 @@ import compose.icons.feathericons.Moon
 import compose.icons.feathericons.Sun
 import compose.icons.feathericons.Tablet
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.senti.lens.screens.commons.ui.SecondaryButton
 import org.senti.lens.screens.commons.ui.SecondaryIconButton
@@ -53,7 +54,7 @@ class SettingScreen : Screen, KoinComponent {
 
     @Composable
     override fun Content() {
-        val settingScreenModel = rememberScreenModel { SettingScreenModel() }
+        val settingScreenModel = rememberScreenModel { SettingScreenModel(get()) }
         val state by settingScreenModel.state.collectAsState()
         val settings: ObservableSettings by inject()
         val navigator = LocalNavigator.currentOrThrow

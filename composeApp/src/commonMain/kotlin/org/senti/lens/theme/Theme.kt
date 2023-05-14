@@ -26,6 +26,7 @@ private val darkColors = darkColors(
     onBackground = onBackground,
     surface = surface,
     onSurface = onSurface,
+    primaryVariant = tagColor
 )
 
 private val lightColors = lightColors(
@@ -39,6 +40,7 @@ private val lightColors = lightColors(
     onBackground = lightOnBackground,
     surface = lightSurface,
     onSurface = lightOnSurface,
+    primaryVariant = lightTagColor
 )
 
 @Composable

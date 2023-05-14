@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.RotateCcw
 import compose.icons.feathericons.Settings
+import io.github.aakira.napier.Napier
 import org.senti.lens.LoadState
 import org.senti.lens.TypeDevice
 import org.senti.lens.screens.commons.ui.PrimaryIconButton
@@ -67,10 +70,10 @@ fun TopBar(
 
     val focusRequester = remember { FocusRequester() }
 
+
     Row(
         modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
 
         SearchText(searchable, focusRequester, text, onChangeText)
@@ -83,6 +86,7 @@ fun TopBar(
                     onChangeText("")
                 }
             },
+            modifier = Modifier.padding(start = 6.dp)
         ) {
             AnimatedContent(searchable) {
                 if (it) {
@@ -97,6 +101,7 @@ fun TopBar(
             AnimatedVisibility(!searchable) {
                 SecondaryIconButton(
                     onClick = onRefresh,
+                    modifier = Modifier.padding(start = 6.dp)
                 ) {
                     Icon(FeatherIcons.RotateCcw, "Refresh")
                 }
@@ -105,8 +110,10 @@ fun TopBar(
 
 
         AnimatedVisibility(!searchable) {
+            Spacer(Modifier.width(6.dp))
             SecondaryIconButton(
                 onClick = onClickSetting,
+                modifier = Modifier.padding(start = 6.dp)
             ) {
                 Icon(FeatherIcons.Settings, "Setting")
             }

@@ -7,15 +7,9 @@ import kotlinx.coroutines.launch
 import org.senti.lens.LoadState
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.repositories.DbNotesRepositoryImpl
-import org.senti.lens.repositories.DbTagsRepositoryImpl
-import org.senti.lens.screens.home.editNote.EditNoteUseCase
 
 class HomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
     StateScreenModel<HomeScreenModel.UiState>(UiState()) {
-
-    val useCase: EditNoteUseCase =
-        EditNoteUseCase(DbNotesRepositoryImpl.instance, DbTagsRepositoryImpl.instance)
 
     data class UiState(
         val currentNote: Note? = null,
@@ -59,6 +53,7 @@ class HomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
         data class ChangeSearchQuery(val query: String) : Intent()
         class SelectNote(val note: Note?) : Intent()
         class SaveTags(val tags: List<Tag>) : Intent()
+        class AddTagInNote(val tag: Tag) : Intent()
     }
 
     private suspend fun reduce(
@@ -78,12 +73,12 @@ class HomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
                 delay(300)
                 if (oldState.currentNote.uuid == null) {
                     oldState.copy(
-                        currentNote = useCase.createNote(oldState.currentNote),
+                        currentNote = homeNotesUseCase.createNote(oldState.currentNote),
                         noteLoadState = LoadState.Success
                     )
                 } else {
                     oldState.copy(
-                        currentNote = useCase.updateNote(oldState.currentNote),
+                        currentNote = homeNotesUseCase.updateNote(oldState.currentNote),
                         noteLoadState = LoadState.Success
                     )
                 }
@@ -91,7 +86,7 @@ class HomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
 
             Intent.DeleteNote -> {
                 if (oldState.currentNote != null) {
-                    useCase.deleteNote(oldState.currentNote)
+                    homeNotesUseCase.deleteNote(oldState.currentNote)
                 }
                 oldState.copy(currentNote = null)
             }
@@ -114,6 +109,17 @@ class HomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
 
             is Intent.SaveTags -> {
                 oldState.copy(currentNote = oldState.currentNote?.copy(tags = intent.tags))
+            }
+
+            is Intent.AddTagInNote -> {
+                var newTags = oldState.currentNote?.tags ?: listOf()
+
+                newTags = if (newTags.contains(intent.tag)) {
+                    newTags.minus(intent.tag)
+                } else {
+                    newTags.plus(intent.tag)
+                }
+                oldState.copy(currentNote = oldState.currentNote?.copy(tags = newTags))
             }
         }
     }

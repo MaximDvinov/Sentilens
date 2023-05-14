@@ -12,7 +12,7 @@ import org.senti.lens.screens.home.HomeScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-internal fun App(windowSize: WindowSize) {
+internal fun App() {
     Surface {
         Navigator(HomeScreen()) {
             FadeTransition(it)

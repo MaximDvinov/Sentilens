@@ -52,7 +52,7 @@ fun NotesListContent(
                 onClickSetting = onClickSetting,
                 onRefresh = onRefresh
             )
-            if (!state.tags.isNullOrEmpty()) {
+            if (state.tags != null) {
                 TagsList(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).fadingEdge(
                         startingColor = MaterialTheme.colors.background,
@@ -64,10 +64,16 @@ fun NotesListContent(
                 )
             }
 
-            if (!state.filteredNotes.isNullOrEmpty()) {
+            if (state.filteredNotes != null) {
                 NotesList(
-                    modifier = Modifier,
+                    modifier = Modifier.weight(1f),
                     onClick = onClickNote,
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 8.dp,
+                        bottom = 40.dp
+                    ),
                     notes = state.filteredNotes,
                     currentNote = null
                 )

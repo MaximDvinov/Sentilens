@@ -33,5 +33,7 @@ internal val lightOnBackground = Color(0xff000000)
 internal val lightSurface = Color(0xFFFFFFFF)
 internal val lightOnSurface = Color(0xff000000)
 
-internal val tagColor = Color(0xFFEBF0FF)
+internal val lightTagColor = Color(0xFFEBF0FF)
+
+internal val tagColor = Color(0xFF121A30)
 

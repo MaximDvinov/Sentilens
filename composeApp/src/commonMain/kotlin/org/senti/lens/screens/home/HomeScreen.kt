@@ -11,36 +11,34 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.senti.lens.screens.commons.ui.WindowSize
 import org.senti.lens.screens.commons.ui.WindowSize.Companion.basedOnWidth
 import org.senti.lens.screens.home.onepane.OnePane
 import org.senti.lens.screens.home.twopane.TwoPane
 
-class HomeScreen() : Screen {
+class HomeScreen : Screen, KoinComponent {
     override val key = uniqueScreenKey
 
-    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.current
 
         val screenModel = rememberScreenModel {
-            HomeScreenModel(HomeNotesUseCase.instance)
+            HomeScreenModel(get())
         }
 
         val state by screenModel.state.collectAsState()
 
         BoxWithConstraints {
-            Crossfade(basedOnWidth(maxWidth, maxHeight) == WindowSize.COMPACT){
+            Crossfade(basedOnWidth(maxWidth, maxHeight) == WindowSize.COMPACT) {
                 if (it) {
                     OnePane(state, screenModel, navigator)
                 } else {
                     TwoPane(state, screenModel, navigator)
                 }
             }
-
         }
     }
-
-
 }

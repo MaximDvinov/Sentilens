@@ -19,9 +19,7 @@ import org.senti.lens.singlePush
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun OnePane(
-    state: HomeScreenModel.UiState,
-    screenModel: HomeScreenModel,
-    navigator: Navigator?
+    state: HomeScreenModel.UiState, screenModel: HomeScreenModel, navigator: Navigator?
 ) {
     PlatformBackHandler(state.currentNote != null) {
         screenModel.processIntent(
@@ -89,10 +87,10 @@ fun OnePane(
                 onClickAnalyze = {
                     navigator?.singlePush(RecommendationScreen())
                 },
-                onSaveTagsClick = { tag ->
+                onClickTagInDialog = {
                     screenModel.processIntent(
-                        intent = HomeScreenModel.Intent.SaveTags(
-                            tag
+                        intent = HomeScreenModel.Intent.AddTagInNote(
+                            it
                         )
                     )
                 },

@@ -5,9 +5,11 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.launch
 import org.senti.lens.models.Tag
 import org.senti.lens.repositories.DbTagsRepositoryImpl
+import org.senti.lens.repositories.TagsRepository
 
 
-class SettingScreenModel : StateScreenModel<SettingScreenModel.UiState>(UiState()) {
+class SettingScreenModel(private val tagsRepository: TagsRepository) :
+    StateScreenModel<SettingScreenModel.UiState>(UiState()) {
     data class UiState(
         val tags: List<Pair<Tag, Boolean>>? = null,
     )
@@ -16,8 +18,6 @@ class SettingScreenModel : StateScreenModel<SettingScreenModel.UiState>(UiState(
         data class SelectTag(val tag: Tag) : Intent()
         object DeleteTags : Intent()
     }
-
-    private val tagsRepository = DbTagsRepositoryImpl.instance
 
     init {
         coroutineScope.launch {

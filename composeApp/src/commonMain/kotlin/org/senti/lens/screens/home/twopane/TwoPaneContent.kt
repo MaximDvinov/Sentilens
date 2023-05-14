@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -101,7 +102,7 @@ fun TwoPaneContent(
     changeSearchQuery: (String) -> Unit,
     onRefresh: () -> Unit,
     onClickAnalyze: () -> Unit,
-    onSaveTagsClick: (List<Tag>) -> Unit,
+    onClickTagInDialog: (Tag) -> Unit
 ) {
 
     Column {
@@ -135,10 +136,10 @@ fun TwoPaneContent(
                     ), tags = state.tags ?: listOf(), onClickTag = onSelectTag
                 )
                 NotesList(
-                    notes = state.filteredNotes ?: listOf(),
                     onClick = onSelectNote,
-                    cellsDp = 300.dp,
-                    currentNote = state.currentNote
+                    notes = state.filteredNotes ?: listOf(),
+                    currentNote = state.currentNote,
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 40.dp)
                 )
             }
 
@@ -155,8 +156,8 @@ fun TwoPaneContent(
                 onChangeBody = onChangeBody,
                 onDeleteClick = onDeleteClick,
                 onClickAnalyze = onClickAnalyze,
-                onSaveTagsClick = onSaveTagsClick,
-                loadState = state.noteLoadState
+                loadState = state.noteLoadState,
+                onClickTagInDialog = onClickTagInDialog,
             )
 
 

@@ -55,7 +55,7 @@ class NoteDaoImpl() : NoteDao {
                 this.content = note.content
                 this.createdAt = note.createdAt
                 this.updatedAt = note.updatedAt
-                if (note.sentiment != null){
+                if (note.sentiment != null) {
                     this.sentiment = SentimentEntity().apply {
                         title = note.sentiment.title
                         description = note.sentiment.description
@@ -85,7 +85,7 @@ class NoteDaoImpl() : NoteDao {
                 this.content = note.content
                 this.createdAt = note.createdAt
                 this.updatedAt = now.toLocalDateTime(TimeZone.currentSystemDefault())
-                if (note.sentiment != null){
+                if (note.sentiment != null) {
                     this.sentiment = SentimentEntity().apply {
                         title = note.sentiment.title
                         description = note.sentiment.description
@@ -123,8 +123,10 @@ class NoteDaoImpl() : NoteDao {
 
     override suspend fun deleteNote(note: Note) {
         realm.write {
+            if (note.uuid == null) return@write
             val noteEntity: NoteEntity? =
-                query<NoteEntity>("_id == $0", RealmUUID.from(note.uuid.toString())).first().find()
+                query<NoteEntity>("_id == $0", RealmUUID.from(note.uuid.toString())).first()
+                    .find()
 
             if (noteEntity != null) {
                 delete(noteEntity)

@@ -35,6 +35,7 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Tag
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
+import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.screens.home.ui.NoteItem
 import org.senti.lens.screens.home.ui.TagItem
 import org.senti.lens.theme.defaultShape
@@ -47,14 +48,20 @@ actual fun PlatformGrid(
     onClick: (Note) -> Unit,
     notes: List<Note>,
     cellsDp: Dp,
-    currentNote: Note?
+    currentNote: Note?,
+    contentPadding: PaddingValues
 ) {
     LazyVerticalStaggeredGrid(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().fadingEdge(
+            startingColor = MaterialTheme.colors.background,
+            length = 0f,
+            length1 = 150f,
+            horizontal = false
+        ),
         columns = StaggeredGridCells.Adaptive(cellsDp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalItemSpacing = 10.dp,
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
+        contentPadding = contentPadding
     ) {
         notes.forEach {
             item {
