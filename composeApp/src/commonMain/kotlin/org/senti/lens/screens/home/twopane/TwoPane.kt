@@ -9,55 +9,62 @@ import org.senti.lens.singlePush
 
 @Composable
 fun TwoPane(
-    state: HomeScreenModel.UiState, screenModel: HomeScreenModel, navigator: Navigator?
+    state: HomeScreenModel.NoteListUiState,
+    editState: HomeScreenModel.NoteEditorUiStat,
+    screenModel: HomeScreenModel,
+    navigator: Navigator?
 ) {
-    TwoPaneContent(state, onBackClick = {
+    TwoPaneContent(state, editState, onBackClick = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.SelectNote(null)
+            HomeScreenModel.EditNoteIntent.SelectNote(null)
         )
     }, onClickSetting = {
         navigator?.singlePush(SettingScreen())
     }, onSaveClick = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.SaveNote
+            HomeScreenModel.EditNoteIntent.SaveNote
         )
     }, onChangeTitle = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.ChangeTitle(it)
+            HomeScreenModel.EditNoteIntent.ChangeTitle(it)
         )
     }, onChangeBody = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.ChangeBody(it)
+            HomeScreenModel.EditNoteIntent.ChangeBody(it)
         )
     }, onDeleteClick = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.DeleteNote
+            HomeScreenModel.EditNoteIntent.DeleteNote
         )
     }, onSelectNote = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.SelectNote(it)
+            HomeScreenModel.EditNoteIntent.SelectNote(it)
         )
     }, onSelectTag = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.SelectTag(it)
+            HomeScreenModel.NoteListIntent.SelectTag(it)
         )
     }, changeSearchQuery = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.ChangeSearchQuery(
+            HomeScreenModel.NoteListIntent.ChangeSearchQuery(
                 it
             )
         )
     }, onRefresh = {
         screenModel.processIntent(
-            HomeScreenModel.Intent.LoadDataIntent
+            HomeScreenModel.NoteListIntent.LoadData
         )
-    }, onClickAnalyze = {
-        navigator?.singlePush(RecommendationScreen())
-    }, onClickTagInDialog = {
+    }, onClickAnalyze = {}, onClickTagInDialog = {
         screenModel.processIntent(
-            intent = HomeScreenModel.Intent.AddTagInNote(
+            HomeScreenModel.EditNoteIntent.AddTagInNote(
                 it
             )
+        )
+    }, onClickRecommendation = { id: String ->
+        navigator?.singlePush(RecommendationScreen(id))
+    }, onCreateTagClick = {
+        screenModel.processIntent(
+            HomeScreenModel.NoteListIntent.CreateTag(it)
         )
     })
 }

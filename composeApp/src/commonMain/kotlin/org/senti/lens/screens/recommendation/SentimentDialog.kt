@@ -18,13 +18,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.X
+import org.senti.lens.models.Sentiment
 import org.senti.lens.screens.commons.ui.PrimaryButton
 import org.senti.lens.screens.commons.ui.SecondaryIconButton
 import org.senti.lens.theme.defaultShape
 
 @Composable
 fun SentimentDialog(
-    modifier: Modifier, onCloseClick: () -> Unit, onRecommendationClick: () -> Unit
+    modifier: Modifier,
+    onCloseClick: () -> Unit,
+    onRecommendationClick: () -> Unit,
+    sentiment: Sentiment
 ) {
 
     Box(
@@ -50,27 +54,30 @@ fun SentimentDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(text = "\uD83D\uDE25", fontSize = 80.sp)
+                Text(text = sentiment.smile ?: "\uD83D\uDE42", fontSize = 80.sp)
                 Text(
-                    text = "Негативное",
+                    text = sentiment.title ?: "",
                     style = MaterialTheme.typography.h2,
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = "В вашей заметке присутствуют негативные эмоции.",
+                    text = sentiment.description ?: "",
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.onSecondary.copy(0.7f)
                 )
             }
 
-            PrimaryButton(onClick = onRecommendationClick) {
-                Text(
-                    text = "Открыть советы",
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onPrimary
-                )
+            if (!sentiment.advices.isNullOrEmpty()) {
+                PrimaryButton(onClick = onRecommendationClick) {
+                    Text(
+                        text = "Открыть советы",
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
             }
+
         }
     }
 

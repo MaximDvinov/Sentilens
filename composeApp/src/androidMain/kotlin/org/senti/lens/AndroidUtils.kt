@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.SharedPreferencesSettings
-import org.senti.lens.models.Recommendation
+import org.senti.lens.models.Advice
 import org.senti.lens.screens.recommendation.RecommendationItem
 
 actual fun getSettings(delegate: Any): Settings {
@@ -45,7 +45,7 @@ actual fun PlatformBackHandler(
 @Composable
 actual fun RecommendationScreenContent(
     modifier: Modifier,
-    recommendationList: List<Recommendation>
+    recommendationList: List<Advice?>
 ) {
     val pagerState = rememberPagerState()
 
@@ -59,7 +59,7 @@ actual fun RecommendationScreenContent(
             Box(
                 Modifier.padding(8.dp).fillMaxSize()
             ) {
-                RecommendationItem(recommendationList[page])
+                recommendationList[page]?.let { RecommendationItem(it) }
             }
         }
     }

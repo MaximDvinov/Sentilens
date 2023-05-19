@@ -1,66 +1,116 @@
 package org.senti.lens.screens.home.onepane
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.senti.lens.LoadState
 import org.senti.lens.TagsList
-import org.senti.lens.screens.commons.ui.PrimaryIconButton
-import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
+import org.senti.lens.screens.commons.ui.PrimaryIconButton
+import org.senti.lens.screens.commons.ui.fadingEdge
+import org.senti.lens.screens.home.HomeScreenModel
 import org.senti.lens.screens.home.ui.NotesList
 import org.senti.lens.screens.home.ui.TopBar
-import org.senti.lens.screens.home.HomeScreenModel
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun NotesListContent(
     modifier: Modifier = Modifier,
-    state: HomeScreenModel.UiState,
+    state: HomeScreenModel.NoteListUiState,
     onClickTag: (Tag) -> Unit,
     onClickNote: (Note) -> Unit,
     changeSearchQuery: (String) -> Unit,
     onRefresh: () -> Unit,
     onClickSetting: () -> Unit,
 ) {
-    val refreshState = rememberPullRefreshState(state.loadState == LoadState.Loading, onRefresh)
+    val refreshState = rememberPullRefreshState(
+        state.loadState == LoadState.Loading,
+        onRefresh,
+        refreshThreshold = 80.dp
+    )
+    val offset by animateDpAsState(
+        if (state.loadState == LoadState.Loading) 58.dp else minOf(
+            (refreshState.progress * 80).dp + 8.dp,
+            80.dp
+        ), animationSpec = tween(300)
+    )
 
-    Box(modifier.pullRefresh(refreshState)) {
+    AnimatedContent(state.loadState == LoadState.Loading, Modifier.fillMaxWidth()) {
         Column(
-            modifier = modifier.fillMaxSize()
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.height(offset).fillMaxWidth().padding(2.dp)
+        ) {
+            if (refreshState.progress > 0f || it) {
+                Text(
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.caption,
+                    text = if (it) "Синхронизация" else "Синхронизировать",
+                    color = MaterialTheme.colors.onBackground.copy(0.3f)
+                )
+            }
+
+            Spacer(Modifier.height(3.dp))
+            if (it) {
+                LinearProgressIndicator(
+                    modifier = Modifier.width(60.dp).height(2.dp),
+                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f),
+                    backgroundColor = MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
+                    strokeCap = StrokeCap.Round,
+                )
+            }
+        }
+    }
+
+    Box(modifier.pullRefresh(refreshState).padding(top = offset)) {
+        Column(
+            modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)
         ) {
             TopBar(
                 modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp,
-                    bottom = 8.dp
+                    start = 16.dp, end = 16.dp, top = 0.dp, bottom = 8.dp
                 ),
                 searchQuery = state.searchQuery,
                 changeSearchQuery = changeSearchQuery,
                 onClickSetting = onClickSetting,
                 onRefresh = onRefresh
             )
-            if (state.tags != null) {
+            if (state.tags?.isNotEmpty() == true) {
                 TagsList(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).fadingEdge(
                         startingColor = MaterialTheme.colors.background,
                         length = 60f,
                         horizontal = true
-                    ),
-                    tags = state.tags,
-                    onClickTag = onClickTag
+                    ), tags = state.tags, onClickTag = onClickTag
                 )
             }
 
@@ -69,10 +119,7 @@ fun NotesListContent(
                     modifier = Modifier.weight(1f),
                     onClick = onClickNote,
                     contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 8.dp,
-                        bottom = 40.dp
+                        start = 16.dp, end = 16.dp, top = 8.dp, bottom = 40.dp
                     ),
                     notes = state.filteredNotes,
                     currentNote = null
@@ -80,19 +127,11 @@ fun NotesListContent(
             }
         }
 
-        PullRefreshIndicator(
-            state.loadState == LoadState.Loading,
-            refreshState,
-            Modifier.align(Alignment.TopCenter)
-        )
-
-        PrimaryIconButton(
-            modifier = Modifier.padding(16.dp).align(Alignment.BottomEnd),
+        PrimaryIconButton(modifier = Modifier.padding(16.dp).align(Alignment.BottomEnd),
             onClick = { onClickNote(Note()) }) {
             Icon(Icons.Default.Add, "", tint = MaterialTheme.colors.onPrimary)
         }
     }
-
 }
 
 

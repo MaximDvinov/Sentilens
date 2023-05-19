@@ -12,10 +12,10 @@ class RealmDateTimeConversion() : RealmObject {
 
     public var timestamp: LocalDateTime?
         get() {
-            return _timestamp?.toInstant()?.toLocalDateTime(TimeZone.currentSystemDefault())
+            return _timestamp?.toInstant()?.toLocalDateTime(TimeZone.UTC)
         }
         set(value) {
-            _timestamp = value?.toInstant(TimeZone.currentSystemDefault())?.toRealmInstant()
+            _timestamp = value?.toInstant(TimeZone.UTC)?.toRealmInstant()
         }
 }
 

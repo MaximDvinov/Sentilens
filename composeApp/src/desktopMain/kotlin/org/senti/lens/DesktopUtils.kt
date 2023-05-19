@@ -20,13 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.isMetaPressed
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
 import com.russhwolf.settings.PreferencesSettings
 import com.russhwolf.settings.Settings
-import org.senti.lens.models.Recommendation
+import org.senti.lens.models.Advice
 import org.senti.lens.screens.recommendation.RecommendationItem
 import org.senti.lens.theme.defaultShape
 import java.util.prefs.Preferences
@@ -57,7 +56,7 @@ actual fun PlatformBackHandler(
 
 @Composable
 actual fun RecommendationScreenContent(
-    modifier: Modifier, recommendationList: List<Recommendation>
+    modifier: Modifier, recommendationList: List<Advice?>
 ) {
     val state = rememberLazyListState()
 
@@ -72,7 +71,9 @@ actual fun RecommendationScreenContent(
                 item {
                     key(it) {
                         Box(modifier = Modifier.widthIn(max = 300.dp)) {
-                            RecommendationItem(it)
+                            if (it != null) {
+                                RecommendationItem(it)
+                            }
                         }
                     }
 

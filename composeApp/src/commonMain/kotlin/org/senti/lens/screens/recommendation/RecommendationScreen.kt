@@ -21,12 +21,15 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -35,19 +38,25 @@ import com.seiko.imageloader.ImageRequestState
 import com.seiko.imageloader.model.ImageRequest
 import com.seiko.imageloader.model.ImageRequestEvent
 import com.seiko.imageloader.rememberAsyncImagePainter
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.senti.lens.RecommendationScreenContent
+import org.senti.lens.models.Advice
 import org.senti.lens.screens.commons.ui.PrimaryButton
 import org.senti.lens.screens.commons.ui.SecondaryIconButton
-import org.senti.lens.models.Recommendation
-import org.senti.lens.models.recommendationsList
 import org.senti.lens.theme.defaultShape
 
-class RecommendationScreen : Screen {
+class RecommendationScreen(private val id: String) : Screen, KoinComponent {
     override val key = uniqueScreenKey
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val screenModel = rememberScreenModel {
+            RecommendationScreenModel(get(), id)
+        }
+
+        val state by screenModel.state.collectAsState()
 
         Column {
             Row(
@@ -66,7 +75,7 @@ class RecommendationScreen : Screen {
 
             RecommendationScreenContent(
                 modifier = Modifier,
-                recommendationList = recommendationsList
+                recommendationList = state.currentNote?.sentiment?.advices ?: listOf()
             )
         }
 
@@ -74,7 +83,7 @@ class RecommendationScreen : Screen {
 }
 
 @Composable
-fun RecommendationItem(recommendation: Recommendation) {
+fun RecommendationItem(recommendation: Advice) {
     LazyColumn(
         modifier = Modifier.clip(defaultShape).background(MaterialTheme.colors.secondary),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -90,18 +99,17 @@ fun RecommendationItem(recommendation: Recommendation) {
                 if (recommendation.imageUrl != null) {
                     ImageItem(
                         modifier = Modifier.padding(horizontal = 40.dp).heightIn(max = 130.dp)
-                            .aspectRatio(1f),
-                        url = recommendation.imageUrl
+                            .aspectRatio(1f), url = recommendation.imageUrl
                     )
                 }
 
                 Text(
-                    recommendation.title,
+                    recommendation.title ?: "",
                     style = MaterialTheme.typography.h2,
                     color = MaterialTheme.colors.onSecondary
                 )
                 Text(
-                    recommendation.description,
+                    recommendation.description ?: "",
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onSecondary
                 )
@@ -117,7 +125,7 @@ fun RecommendationItem(recommendation: Recommendation) {
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        recommendation.title,
+                        recommendation.title ?: "",
                         style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.onPrimary
                     )

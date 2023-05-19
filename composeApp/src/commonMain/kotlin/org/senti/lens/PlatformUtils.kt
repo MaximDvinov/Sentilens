@@ -4,7 +4,7 @@ import androidx.compose.material.Colors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.russhwolf.settings.Settings
-import org.senti.lens.models.Recommendation
+import org.senti.lens.models.Advice
 
 expect fun getSettings(delegate: Any): Settings
 
@@ -17,7 +17,7 @@ expect fun getTypeDevice(): TypeDevice
 
 @Composable
 expect fun RecommendationScreenContent(
-    modifier: Modifier = Modifier, recommendationList: List<Recommendation>
+    modifier: Modifier = Modifier, recommendationList: List<Advice?>
 )
 
 @Composable

@@ -1,12 +1,10 @@
 package org.senti.lens.db.dao
 
+import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmUUID
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
-import org.senti.lens.db.RealmConfig.realm
+import kotlinx.coroutines.flow.Flow
+import org.senti.lens.db.asFlowMap
 import org.senti.lens.db.models.TagEntity
 import org.senti.lens.models.Tag
 import java.util.UUID
@@ -14,41 +12,39 @@ import java.util.UUID
 
 interface TagDao {
 
-    fun getAllTags(): MutableStateFlow<List<Tag>>
+    fun getAllTags(): Flow<List<Tag>>
     suspend fun createTag(tag: Tag): Tag
     suspend fun getTag(uuid: UUID): Tag?
     suspend fun updateTag(tag: Tag): Tag?
     suspend fun deleteTag(tag: Tag)
-    suspend fun deleteTags(map: List<Tag>?)
+    suspend fun deleteTags(tags: List<Tag>?)
+    suspend fun getAllTagsSync(): List<Tag>
+    suspend fun upsertTag(tag: Tag)
+    suspend fun finallyDeleteTag(tag: Tag)
 }
 
-class TagDaoImpl : TagDao {
-    override fun getAllTags(): MutableStateFlow<List<Tag>> {
-        val result = realm.query<TagEntity>()
-        val flow: MutableStateFlow<List<Tag>> = MutableStateFlow(listOf())
-
-        CoroutineScope(Dispatchers.Default).launch {
-            val resultFlow = result.asFlow()
-            val resultSubscription = resultFlow.collect { changes ->
-                flow.value = changes.list.map {
-                    it.toTag()
-                }
-            }
+class TagDaoImpl(private val realm: Realm) : TagDao {
+    override fun getAllTags(): Flow<List<Tag>> =
+        realm.asFlowMap<TagEntity, Tag>(query = "isDeleted == false") {
+            it.toTag()
         }
 
-        return flow
-    }
 
     override suspend fun createTag(tag: Tag): Tag {
         return realm.write {
             this.copyToRealm(TagEntity().apply {
+                this.uuid = RealmUUID.from(tag.uuid?.toString() ?: UUID.randomUUID().toString())
                 this.title = tag.title
+                this.isNew = tag.isNew
             })
         }.toTag()
     }
 
     override suspend fun getTag(uuid: UUID): Tag? {
-        return realm.query<TagEntity>("uuid == $0", RealmUUID.from(uuid.toString())).first().find()
+        return realm.query<TagEntity>(
+            "uuid == $0 AND isDeleted == false",
+            RealmUUID.from(uuid.toString())
+        ).first().find()
             ?.toTag()
     }
 
@@ -60,11 +56,22 @@ class TagDaoImpl : TagDao {
 
             tagEntity?.apply {
                 this.title = tag.title
+                this.isNew = tag.isNew
             }
         }?.toTag()
     }
 
     override suspend fun deleteTag(tag: Tag) {
+        realm.write {
+            query<TagEntity>("uuid == $0", RealmUUID.from(tag.uuid.toString())).first()
+                .find()?.apply {
+                    isDeleted = true
+                }
+
+        }
+    }
+
+    override suspend fun finallyDeleteTag(tag: Tag) {
         realm.write {
             val tagEntity =
                 query<TagEntity>("uuid == $0", RealmUUID.from(tag.uuid.toString())).first()
@@ -79,16 +86,47 @@ class TagDaoImpl : TagDao {
     override suspend fun deleteTags(tags: List<Tag>?) {
         realm.write {
             tags?.forEach { tag ->
-                val tagEntity =
-                    findLatest(
-                        query<TagEntity>("uuid == $0", RealmUUID.from(tag.uuid.toString()))
-                            .find().first()
-                    )
-
-                if (tagEntity != null) {
-                    delete(tagEntity)
+                findLatest(
+                    query<TagEntity>("uuid == $0", RealmUUID.from(tag.uuid.toString()))
+                        .find().first()
+                )?.apply {
+                    isDeleted = true
                 }
             }
+        }
+    }
+
+    override suspend fun getAllTagsSync(): List<Tag> {
+        return realm.query<TagEntity>().find().map {
+            it.toTag()
+        }
+    }
+
+    override suspend fun upsertTag(tag: Tag) {
+        realm.write {
+            var tagEntity = if (tag.uuid == null) null else {
+                findLatest(
+                    realm.query<TagEntity>(
+                        "uuid == $0", RealmUUID.from(tag.uuid.toString())
+                    ).find().first()
+                )
+                    ?.apply {
+                        this.title = tag.title
+                        this.isNew = tag.isNew
+                    }
+            }
+
+            if (tagEntity == null) {
+                tagEntity = TagEntity().apply {
+                    this.uuid = RealmUUID.from(
+                        tag.uuid?.toString() ?: UUID.randomUUID().toString()
+                    )
+                    this.title = tag.title
+                    this.isNew = tag.isNew
+                }
+            }
+
+            tagEntity
         }
     }
 }

@@ -1,6 +1,5 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,18 +47,17 @@ import org.koin.core.context.startKoin
 import org.senti.lens.App
 import org.senti.lens.MR
 import org.senti.lens.commonModule
-import org.senti.lens.screens.commons.ui.WindowSize
 import org.senti.lens.platformModule
+import org.senti.lens.screens.auth.login.TOKEN
 import org.senti.lens.theme.AppTheme
 import org.senti.lens.theme.background
 import org.senti.lens.theme.body
 import org.senti.lens.theme.lightBackground
-import org.senti.lens.theme.onBackground
-import java.awt.Cursor
 import java.awt.Dimension
 
 
 private lateinit var settingsListener: SettingsListener
+private lateinit var tokenListener: SettingsListener
 
 fun main() = application {
     val koin = startKoin {
@@ -73,9 +71,17 @@ fun main() = application {
 
     var isDarkTheme by remember { mutableStateOf(settings.getBoolean("theme", false)) }
 
+    var isLogin by remember {
+        mutableStateOf(settings.getStringOrNull(TOKEN))
+    }
+
     LaunchedEffect(Unit) {
         settingsListener = settings.addBooleanListener("theme", false) {
             isDarkTheme = it
+        }
+
+        tokenListener = settings.addStringOrNullListener(TOKEN) {
+            isLogin = it
         }
     }
 
@@ -114,7 +120,7 @@ fun main() = application {
         window.minimumSize = Dimension(400, 500)
 
         AppTheme(isDarkTheme) {
-            App()
+            App(isLogin)
         }
     }
 }

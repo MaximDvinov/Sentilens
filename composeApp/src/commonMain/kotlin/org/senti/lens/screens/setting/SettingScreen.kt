@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
@@ -54,7 +55,7 @@ class SettingScreen : Screen, KoinComponent {
 
     @Composable
     override fun Content() {
-        val settingScreenModel = rememberScreenModel { SettingScreenModel(get()) }
+        val settingScreenModel = rememberScreenModel { SettingScreenModel(get(), get()) }
         val state by settingScreenModel.state.collectAsState()
         val settings: ObservableSettings by inject()
         val navigator = LocalNavigator.currentOrThrow
@@ -89,7 +90,9 @@ class SettingScreen : Screen, KoinComponent {
                 }
             }
 
-        }) { navigator.pop() }
+        }, onBackClick = { navigator.pop() }, onLogoutClick = {
+            settingScreenModel.processIntent(SettingScreenModel.Intent.Logout)
+        })
 
     }
 }
@@ -102,7 +105,8 @@ fun SettingScreenContent(
     state: SettingScreenModel.UiState,
     onChangeTag: (Tag) -> Unit,
     onChangeTheme: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
@@ -159,8 +163,7 @@ fun SettingScreenContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 TagsFlow(
-                    modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp)
-                        .padding()
+                    modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp).padding()
                         .verticalScroll(
                             rememberScrollState()
                         ),
@@ -178,8 +181,25 @@ fun SettingScreenContent(
                         )
                     }
                 }
-
             }
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        SecondaryButton(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            onClick = onLogoutClick,
+            color = MaterialTheme.colors.error,
+        ){
+            Text(
+                "Выйти",
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.onError,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        }
+
+
     }
 }

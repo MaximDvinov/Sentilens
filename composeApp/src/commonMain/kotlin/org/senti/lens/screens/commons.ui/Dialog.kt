@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,18 +40,11 @@ import org.senti.lens.theme.defaultShape
 fun TagDialog(
     modifier: Modifier = Modifier,
     tags: List<Tag>?,
+    onCreteTagClick: (Tag) -> Unit,
     selectedTags: List<Tag>?,
     onClickTag: (Tag) -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    var tagsState by remember(tags) {
-        if (tags?.containsAll(selectedTags ?: listOf()) == false) {
-            mutableStateOf(tags)
-        } else {
-            mutableStateOf(tags)
-        }
-        mutableStateOf(tags)
-    }
     val selectedTagsState by remember(selectedTags) { mutableStateOf(selectedTags) }
     val (tagName, onChangeTagName) = remember { mutableStateOf("") }
 
@@ -62,13 +54,10 @@ fun TagDialog(
     ) {
         HeaderDialog(selectedTagsState, { }, onDismissRequest)
 
-        TagsDialog(tagsState, selectedTagsState, onClickTag = onClickTag)
+        TagsDialog(tags, selectedTagsState, onClickTag = onClickTag)
 
         TextFieldDialog(tagName, onChangeTagName) { tag ->
-            if (selectedTagsState?.find { tag.title == it.title } == null) {
-                tagsState = tagsState?.plus(tag)
-            }
-
+            onCreteTagClick(tag)
         }
     }
 }
@@ -118,7 +107,10 @@ fun TextFieldDialog(
                     .clip(defaultShape)
                     .clickable {
                         if (tagName.isNotBlank()) {
-                            onChangeTagsState(Tag(title = tagName))
+                            onChangeTagsState(Tag(
+                                title = tagName,
+                                isNew = true,
+                            ))
                             onChangeTagName("")
                         }
                     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Icon
 import androidx.compose.material.LinearProgressIndicator
@@ -23,12 +24,13 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.CloudOff
 import compose.icons.feathericons.Settings
 import org.senti.lens.LoadState
 import org.senti.lens.SettingNoteMenu
 import org.senti.lens.dateTimeFormat
-import org.senti.lens.screens.commons.ui.SecondaryIconButton
 import org.senti.lens.models.Note
+import org.senti.lens.screens.commons.ui.SecondaryIconButton
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -37,7 +39,7 @@ fun TopBarEdit(
     onDeleteClick: () -> Unit,
     onTagsClick: () -> Unit,
     note: Note?,
-    loadState: LoadState
+    loadState: LoadState,
 ) {
     val (expandedMenu, onChangeExpanded) = remember {
         mutableStateOf(false)
@@ -61,11 +63,17 @@ fun TopBarEdit(
         ) {
             when (it) {
                 is LoadState.Error -> {
-                    Text(it.message, style = MaterialTheme.typography.caption, maxLines = 2)
+                    Text(
+                        it.message,
+                        style = MaterialTheme.typography.caption,
+                        maxLines = 2,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
 
                 LoadState.Idle -> {
-                    StatusNote(note, modifier = Modifier)
+                    StatusNote(note, modifier = Modifier.padding(horizontal = 10.dp))
                 }
 
                 LoadState.Loading -> {
@@ -78,7 +86,7 @@ fun TopBarEdit(
                 }
 
                 LoadState.Success -> {
-                    StatusNote(note, modifier = Modifier.weight(1f))
+                    StatusNote(note, modifier = Modifier.weight(1f).padding(horizontal = 10.dp))
                 }
             }
         }
@@ -114,25 +122,36 @@ fun TopBarEdit(
 
 @Composable
 private fun StatusNote(note: Note?, modifier: Modifier) {
-    if (note != null) {
-        if (note.updatedAt != null) {
-            Column(
-                modifier = modifier,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("сохранено в", style = MaterialTheme.typography.caption)
-                Text(
-                    text = note.updatedAt.dateTimeFormat(),
-                    style = MaterialTheme.typography.caption
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        if (note != null) {
+            if (note.isNew == true) {
+                Icon(
+                    FeatherIcons.CloudOff,
+                    "",
+                    modifier = Modifier.align(Alignment.CenterEnd).size(16.dp),
+                    tint = MaterialTheme.colors.onBackground.copy(0.3f)
                 )
             }
-        } else {
-            Text(
-                "не сохранено",
-                style = MaterialTheme.typography.caption,
-                modifier = modifier,
-                textAlign = TextAlign.Center
-            )
+
+            if (note.updatedAt != null) {
+                Column(
+                    modifier = Modifier,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("сохранено в", style = MaterialTheme.typography.caption)
+                    Text(
+                        text = note.updatedAt.dateTimeFormat(),
+                        style = MaterialTheme.typography.caption
+                    )
+                }
+            } else {
+                Text(
+                    "не сохранено",
+                    style = MaterialTheme.typography.caption,
+                    modifier = modifier,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 

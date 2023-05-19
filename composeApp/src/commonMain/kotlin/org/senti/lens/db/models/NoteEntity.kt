@@ -11,17 +11,16 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.serialization.SerialName
-import org.senti.lens.db.RealmDateTimeConversion
 import org.senti.lens.db.toInstant
 import org.senti.lens.db.toRealmInstant
+import org.senti.lens.models.Advice
 import org.senti.lens.models.Note
 import org.senti.lens.models.Sentiment
 import java.util.UUID
 
 class NoteEntity() : RealmObject {
     @PrimaryKey
-    private var _id: RealmUUID = RealmUUID.random()
+    var _id: RealmUUID = RealmUUID.random()
     var title: String = ""
     var content: String? = ""
     private var _createdAt: RealmInstant? = RealmInstant.from(0, 0)
@@ -29,32 +28,34 @@ class NoteEntity() : RealmObject {
     var tags: RealmList<TagEntity>? = realmListOf()
     var sentiment: SentimentEntity? = null
     var isNew: Boolean = true
+    var isDeleted: Boolean = false
 
     public var createdAt: LocalDateTime?
         get() {
-            return _createdAt?.toInstant()?.toLocalDateTime(TimeZone.currentSystemDefault())
+            return _createdAt?.toInstant()?.toLocalDateTime(TimeZone.UTC)
         }
         set(value) {
-            _createdAt = value?.toInstant(TimeZone.currentSystemDefault())?.toRealmInstant()
+            _createdAt = value?.toInstant(TimeZone.UTC)?.toRealmInstant()
         }
 
     public var updatedAt: LocalDateTime?
         get() {
-            return _updatedAt?.toInstant()?.toLocalDateTime(TimeZone.currentSystemDefault())
+            return _updatedAt?.toInstant()?.toLocalDateTime(TimeZone.UTC)
         }
         set(value) {
-            _updatedAt = value?.toInstant(TimeZone.currentSystemDefault())?.toRealmInstant()
+            _updatedAt = value?.toInstant(TimeZone.UTC)?.toRealmInstant()
         }
 
     fun toNote(): Note {
-        return Note(
-            uuid = UUID.fromString(_id.toString()),
+        return Note(uuid = UUID.fromString(_id.toString()),
             title = title,
             content = content,
             createdAt = createdAt,
             updatedAt = updatedAt,
             sentiment = sentiment?.toSentiment(),
-            tags = tags?.toList()?.map { it.toTag() } ?: listOf()
+            tags = tags?.toList()?.map { it.toTag() } ?: listOf(),
+            isNew = isNew,
+            isDeleted = isDeleted
         )
     }
 }
@@ -63,12 +64,31 @@ class SentimentEntity : EmbeddedRealmObject {
     var description: String? = null
     var smile: String? = null
     var title: String? = null
+    var advices: RealmList<AdviceEntity>? = realmListOf()
 
     fun toSentiment(): Sentiment {
         return Sentiment(
             description = description,
             smile = smile,
-            title = title
+            title = title,
+            advices = advices?.toList()?.map { it.toAdvice() }
+        )
+    }
+}
+
+class AdviceEntity : RealmObject {
+    @PrimaryKey
+    var title: String? = null
+    var description: String? = null
+    var url: String? = null
+    var imageUrl: String? = null
+
+    fun toAdvice(): Advice {
+        return Advice(
+            title = title,
+            description = description,
+            url = url,
+            imageUrl = imageUrl
         )
     }
 }

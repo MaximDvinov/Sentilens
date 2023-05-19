@@ -7,10 +7,10 @@ compose = "1.4.0"
 androidx-appcompat = "1.6.1"
 androidx-activityCompose = "1.7.1"
 compose-uitooling = "1.4.3"
+ktorClientLogging = "1.6.4"
 realm = "1.7.0"
 napier = "2.6.1"
 libres = "1.1.8"
-sqlDelightVersion = "1.5.5"
 voyager = "1.0.0-rc05"
 composeImageLoader = "1.3.1"
 kotlinx-coroutines = "1.6.4"
@@ -22,12 +22,11 @@ kotlinx-datetime = "0.4.0"
 multiplatformSettings = "1.0.0"
 koin = "3.4.0"
 kstore = "0.5.0"
-sqlDelight = "2.0.0-alpha05"
 mokoResourcesVersion = "0.21.2"
 windowStyler = "0.3.2"
 ztExec = "1.12"
 org-jetbrains-kotlin-android = "1.8.0"
-core-ktx = "1.9.0"
+core-ktx = "1.10.1"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
@@ -36,11 +35,12 @@ material = "1.9.0"
 [libraries]
 
 jSystemThemeDetector = { module = "com.github.Dansoftowner:jSystemThemeDetector", version.ref = "jSystemThemeDetector" }
-sqldelight-gradle-plugin = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqlDelightVersion" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 realm = { module = "io.realm.kotlin:library-base", version.ref = "realm" }
 
 mokoResources = { module = "dev.icerock.moko:resources", version.ref = "mokoResourcesVersion" }
-mokoResourcesCompose = {module = "dev.icerock.moko:resources-compose", version.ref = "mokoResourcesVersion"}
+mokoResourcesCompose = { module = "dev.icerock.moko:resources-compose", version.ref = "mokoResourcesVersion" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-uitooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-uitooling" }
@@ -54,18 +54,15 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
-ktor-serialization-kotlinx-json = {module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor"}
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 composeIcons-fontAwesome = { module = "br.com.devsrsouza.compose.icons:feather", version.ref = "composeIcons" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
-sqlDelight-driver-sqlite = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
-sqlDelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
-sqlDelight-driver-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
-sqlDelight-driver-sqljs = { module = "app.cash.sqldelight:sqljs-driver", version.ref = "sqlDelight" }
 
 mokoResourcesGeneratorGradle = { module = "dev.icerock.moko:resources-generator", version.ref = "mokoResourcesVersion" }
 window-styler = { module = "com.mayakapps.compose:window-styler", version.ref = "windowStyler" }
@@ -85,5 +82,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 libres = { id = "io.github.skeptick.libres", version.ref = "libres" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }

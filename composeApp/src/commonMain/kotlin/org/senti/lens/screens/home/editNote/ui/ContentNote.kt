@@ -1,6 +1,6 @@
 package org.senti.lens.screens.home.editNote.ui
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,14 +37,12 @@ fun ContentNote(
         )
     }
 
-
-
     Column(
         modifier = modifier
             .padding(start = 16.dp, end = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        AnimatedVisibility(currentNote != null) {
+        AnimatedContent(currentNote?.uuid) { _ ->
             TextField(
                 Modifier.fillMaxWidth(),
                 text = title,
@@ -58,8 +56,7 @@ fun ContentNote(
             )
         }
 
-
-        AnimatedVisibility(currentNote != null) {
+        AnimatedContent(currentNote?.uuid) { _ ->
             TextField(
                 modifier = Modifier.weight(1f).fillMaxSize(),
                 text = body,

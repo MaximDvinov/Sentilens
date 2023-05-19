@@ -4,10 +4,8 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.libres)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.sqlDelight)
 
     id("dev.icerock.mobile.multiplatform-resources")
     id("io.realm.kotlin") version "1.7.0"
@@ -24,11 +22,6 @@ kotlin {
 
     jvm("desktop")
 
-//    js {
-//        browser()
-//        binaries.executable()
-//    }
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -36,7 +29,6 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(libs.napier)
-                implementation(libs.libres)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
                 implementation(libs.composeImageLoader)
@@ -49,11 +41,11 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.multiplatformSettings)
                 implementation(libs.koin.core)
-                implementation(libs.kstore)
                 implementation(libs.mokoResources)
                 implementation(libs.mokoResourcesCompose)
-
-                implementation(libs.realm) // Add to only use the local database
+                implementation(libs.ktor.client.auth)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.realm)
             }
         }
 
@@ -70,9 +62,8 @@ kotlin {
                 implementation(libs.compose.uitooling)
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.ktor.client.okhttp)
-                implementation(libs.sqlDelight.driver.android)
 
-                implementation("io.insert-koin:koin-android:3.4.0")
+                implementation(libs.koin.android)
 
                 compileOnly(libs.realm)
             }
@@ -83,19 +74,10 @@ kotlin {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
                 implementation(libs.ktor.client.okhttp)
-                implementation(libs.sqlDelight.driver.sqlite)
 
                 implementation(libs.window.styler)
             }
         }
-
-//        val jsMain by getting {
-//            dependencies {
-//                implementation(compose.html.core)
-//                implementation(libs.sqlDelight.driver.sqljs)
-//            }
-//        }
-
     }
 }
 
@@ -155,15 +137,6 @@ compose.experimental {
     web.application {}
 }
 
-libres {
-    generatedClassName = "MainRes" // "Res" by default
-    generateNamedArguments = true // false by default
-    baseLocaleLanguageCode = "ru" // "en" by default
-    camelCaseNamesForAppleFramework = true // false by default
-}
-tasks.getByPath("desktopProcessResources").dependsOn("libresGenerateResources")
-tasks.getByPath("desktopSourcesJar").dependsOn("libresGenerateResources")
-//tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
 
 dependencies {
     implementation("androidx.window:window:1.0.0")
@@ -172,14 +145,4 @@ dependencies {
 buildConfig {
     // BuildConfig configuration here.
     // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
-}
-
-sqldelight {
-    databases {
-        create("Database") {
-            // Database configuration here.
-            // https://cashapp.github.io/sqldelight
-            packageName.set("org.senti")
-        }
-    }
 }

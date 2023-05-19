@@ -31,6 +31,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
+import org.senti.lens.screens.auth.login.TOKEN
 import org.senti.lens.screens.commons.ui.WindowSize
 import org.senti.lens.theme.AppTheme
 
@@ -53,6 +54,7 @@ class AndroidApp : Application() {
 
 class AppActivity : ComponentActivity() {
     private lateinit var settingsListener: SettingsListener
+    private lateinit var tokenListener: SettingsListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setUpEdgeToEdge()
@@ -67,9 +69,17 @@ class AppActivity : ComponentActivity() {
                 mutableStateOf(settings.getBooleanOrNull("theme"))
             }
 
+            var isLogin by remember {
+                mutableStateOf(settings.getStringOrNull(TOKEN))
+            }
+
             LaunchedEffect(Unit) {
                 settingsListener = settings.addBooleanOrNullListener("theme") {
                     isDarkTheme = it
+                }
+
+                tokenListener = settings.addStringOrNullListener(TOKEN) {
+                    isLogin = it
                 }
             }
 
@@ -82,7 +92,7 @@ class AppActivity : ComponentActivity() {
                         .navigationBarsPadding()
                         .imePadding()
                 ) {
-                    App()
+                    App(isLogin)
                 }
             }
         }

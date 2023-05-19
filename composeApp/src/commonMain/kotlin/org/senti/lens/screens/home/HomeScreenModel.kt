@@ -2,25 +2,65 @@ package org.senti.lens.screens.home
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.senti.lens.ApiResult
 import org.senti.lens.LoadState
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
+import org.senti.lens.network.SyncUseCase
 
-class HomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
-    StateScreenModel<HomeScreenModel.UiState>(UiState()) {
+interface Intent
 
-    data class UiState(
-        val currentNote: Note? = null,
+class HomeScreenModel(
+    private val homeNotesUseCase: HomeNotesUseCase,
+    private val syncUseCase: SyncUseCase
+) : StateScreenModel<HomeScreenModel.NoteListUiState>(NoteListUiState()) {
+
+    private val _editNoteState = MutableStateFlow(NoteEditorUiStat())
+    val editNoteState: StateFlow<NoteEditorUiStat>
+        get() = _editNoteState
+
+
+    data class NoteListUiState(
         val notes: List<Note>? = null,
         val tags: List<Pair<Tag, Boolean>>? = null,
-        val noteTags: List<Tag> = listOf(),
         val searchQuery: String = "",
         val loadState: LoadState = LoadState.Idle,
-        val noteLoadState: LoadState = LoadState.Idle,
-        val filteredNotes: List<Note>? = notes
+        val filteredNotes: List<Note>? = notes,
     )
+
+    data class NoteEditorUiStat(
+        val currentNote: Note? = null,
+        val noteTags: List<Tag> = listOf(),
+        val loadState: LoadState = LoadState.Idle,
+    )
+
+
+    sealed class NoteListIntent : Intent {
+        object LoadData : NoteListIntent()
+        data class SelectTag(val tag: Tag) : NoteListIntent()
+        data class CreateTag(val tag: Tag) : NoteListIntent()
+        data class ChangeSearchQuery(val query: String) : NoteListIntent()
+        object CloseErrorMessage : NoteListIntent()
+    }
+
+    sealed class EditNoteIntent : Intent {
+        object SaveNote : EditNoteIntent()
+        object DeleteNote : EditNoteIntent()
+        data class ChangeTitle(val title: String) : EditNoteIntent()
+        data class ChangeBody(val body: String) : EditNoteIntent()
+        class AddTagInNote(val tag: Tag) : EditNoteIntent()
+        class SaveTags(val tags: List<Tag>) : EditNoteIntent()
+        class SelectNote(val note: Note?) : EditNoteIntent()
+    }
 
     init {
         coroutineScope.launch {
@@ -32,116 +72,224 @@ class HomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
                 )
             }
         }
+
+        coroutineScope.launch {
+            delay(50)
+
+            mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
+
+            when (val result = syncUseCase.sync()) {
+                is ApiResult.Failure -> {
+                    mutableState.value =
+                        mutableState.value.copy(loadState = LoadState.Error(message = result.message))
+                }
+
+                is ApiResult.ServerError -> {
+                    mutableState.value =
+                        mutableState.value.copy(loadState = LoadState.Error(message = result.message))
+                }
+
+                is ApiResult.Success -> {
+                    mutableState.value = mutableState.value.copy(loadState = LoadState.Success)
+                }
+            }
+
+        }
     }
 
     fun processIntent(intent: Intent) {
         coroutineScope.launch {
-            if (intent is Intent.SaveNote) {
-                mutableState.value = mutableState.value.copy(noteLoadState = LoadState.Loading)
+            if (intent is NoteListIntent) {
+                if (intent is NoteListIntent.LoadData) {
+                    mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
+                }
+                mutableState.value = reduceListState(mutableState.value, intent)
             }
-            mutableState.value = reduce(mutableState.value, intent)
+
+            if (intent is EditNoteIntent) {
+                if (intent is EditNoteIntent.SaveNote) _editNoteState.value =
+                    _editNoteState.value.copy(loadState = LoadState.Loading)
+                _editNoteState.value = reduceEditState(_editNoteState.value, intent)
+            }
         }
     }
 
-    sealed class Intent {
-        object SaveNote : Intent()
-        data class ChangeTitle(val title: String) : Intent()
-        data class ChangeBody(val body: String) : Intent()
-        object DeleteNote : Intent()
-        object LoadDataIntent : Intent()
-        data class SelectTag(val tag: Tag) : Intent()
-        data class ChangeSearchQuery(val query: String) : Intent()
-        class SelectNote(val note: Note?) : Intent()
-        class SaveTags(val tags: List<Tag>) : Intent()
-        class AddTagInNote(val tag: Tag) : Intent()
-    }
 
-    private suspend fun reduce(
-        oldState: UiState, intent: Intent
-    ): UiState {
-        return when (intent) {
-            is Intent.ChangeBody -> {
-                oldState.copy(currentNote = oldState.currentNote?.copy(content = intent.body))
-            }
+    private suspend fun reduceListState(
+        noteListUiState: NoteListUiState, noteListIntent: NoteListIntent
+    ): NoteListUiState {
+        return when (noteListIntent) {
 
-            is Intent.ChangeTitle -> {
-                oldState.copy(currentNote = oldState.currentNote?.copy(title = intent.title))
-            }
+            NoteListIntent.LoadData -> {
+                when (val result = syncUseCase.sync()) {
+                    is ApiResult.Failure -> {
+                        mutableState.value.copy(loadState = LoadState.Error(message = result.message))
+                    }
 
-            Intent.SaveNote -> {
-                if (oldState.currentNote == null) return oldState
-                delay(300)
-                if (oldState.currentNote.uuid == null) {
-                    oldState.copy(
-                        currentNote = homeNotesUseCase.createNote(oldState.currentNote),
-                        noteLoadState = LoadState.Success
-                    )
-                } else {
-                    oldState.copy(
-                        currentNote = homeNotesUseCase.updateNote(oldState.currentNote),
-                        noteLoadState = LoadState.Success
-                    )
+                    is ApiResult.ServerError -> {
+                        mutableState.value.copy(loadState = LoadState.Error(message = result.message))
+                    }
+
+                    is ApiResult.Success -> {
+                        mutableState.value.copy(loadState = LoadState.Success)
+                    }
                 }
             }
 
-            Intent.DeleteNote -> {
-                if (oldState.currentNote != null) {
-                    homeNotesUseCase.deleteNote(oldState.currentNote)
-                }
-                oldState.copy(currentNote = null)
-            }
-
-            Intent.LoadDataIntent -> {
-                getData(oldState)
-                oldState
-            }
-
-            is Intent.SelectTag -> changeTag(intent.tag, oldState)
-            is Intent.ChangeSearchQuery -> changeSearchQuery(
-                intent.query, oldState
+            is NoteListIntent.SelectTag -> changeTag(noteListIntent.tag, noteListUiState)
+            is NoteListIntent.ChangeSearchQuery -> changeSearchQuery(
+                noteListIntent.query, noteListUiState
             )
 
-            is Intent.SelectNote -> {
-                oldState.copy(
-                    currentNote = intent.note
-                )
+            NoteListIntent.CloseErrorMessage -> {
+                noteListUiState.copy(loadState = LoadState.Idle)
             }
 
-            is Intent.SaveTags -> {
-                oldState.copy(currentNote = oldState.currentNote?.copy(tags = intent.tags))
-            }
-
-            is Intent.AddTagInNote -> {
-                var newTags = oldState.currentNote?.tags ?: listOf()
-
-                newTags = if (newTags.contains(intent.tag)) {
-                    newTags.minus(intent.tag)
-                } else {
-                    newTags.plus(intent.tag)
-                }
-                oldState.copy(currentNote = oldState.currentNote?.copy(tags = newTags))
+            is NoteListIntent.CreateTag -> {
+                homeNotesUseCase.createTag(noteListIntent.tag)
+                noteListUiState
             }
         }
     }
 
-    private suspend fun getData(currentState: UiState) {
-//        return when (val result = homeNotesUseCase.getNotesAndTags()) {
-//            is ApiResult.Failure -> currentState.copy(loadState = LoadState.Error(result.message))
-//            is ApiResult.Success -> {
-//                val (notes, tags) = result.data
-//                notes.c
-//                currentState.copy(
-//                    notes = notes, tags = tags.map { tag -> tag to false }, filteredNotes = notes
-//                )
-//            }
-//        }
+    private suspend fun reduceEditState(
+        editNoteUiState: NoteEditorUiStat, editNoteIntent: EditNoteIntent
+    ): NoteEditorUiStat {
+        return when (editNoteIntent) {
+            is EditNoteIntent.AddTagInNote -> {
+                var newTags = editNoteUiState.currentNote?.tags ?: listOf()
 
+                newTags = if (newTags.contains(editNoteIntent.tag)) {
+                    newTags.minus(editNoteIntent.tag)
+                } else {
+                    newTags.plus(editNoteIntent.tag)
+                }
+                editNoteUiState.copy(currentNote = editNoteUiState.currentNote?.copy(tags = newTags))
+
+            }
+
+            is EditNoteIntent.ChangeBody -> {
+                editNoteUiState.copy(currentNote = editNoteUiState.currentNote?.copy(content = editNoteIntent.body))
+            }
+
+            is EditNoteIntent.ChangeTitle -> {
+                editNoteUiState.copy(currentNote = editNoteUiState.currentNote?.copy(title = editNoteIntent.title))
+            }
+
+            EditNoteIntent.DeleteNote -> {
+                if (editNoteUiState.currentNote != null) {
+                    homeNotesUseCase.deleteNote(editNoteUiState.currentNote)
+                }
+                editNoteUiState.copy(currentNote = null)
+            }
+
+            EditNoteIntent.SaveNote -> {
+                val now: Instant = Clock.System.now()
+
+                if (editNoteUiState.currentNote == null) return editNoteUiState
+                delay(300)
+                if (editNoteUiState.currentNote.uuid == null) {
+                    val result =
+                        homeNotesUseCase.createNoteAndAnalayze(
+                            editNoteUiState.currentNote.copy(
+                                updatedAt = now.toLocalDateTime(
+                                    TimeZone.UTC
+                                ),
+                                createdAt = now.toLocalDateTime(TimeZone.UTC)
+                            )
+                        )
+                    when (val resultApi = result.first) {
+                        is ApiResult.Failure -> {
+                            editNoteUiState.copy(
+                                loadState = LoadState.Error(message = resultApi.message),
+                                currentNote = result.second
+                            )
+                        }
+
+                        is ApiResult.ServerError -> {
+                            editNoteUiState.copy(
+                                loadState = LoadState.Error(message = resultApi.message),
+                                currentNote = result.second
+                            )
+                        }
+
+                        is ApiResult.Success -> {
+                            editNoteUiState.copy(
+                                loadState = LoadState.Success,
+                                currentNote = result.second
+                            )
+                        }
+                    }
+                } else {
+                    when (val result =
+                        homeNotesUseCase.updateNoteAndAnalyze(
+                            editNoteUiState.currentNote.copy(
+                                updatedAt = now.toLocalDateTime(
+                                    TimeZone.UTC
+                                ),
+                            )
+                        )) {
+                        is ApiResult.Failure -> {
+                            editNoteUiState.copy(loadState = LoadState.Error(message = result.message))
+                        }
+
+                        is ApiResult.ServerError -> {
+                            if (result.status == HttpStatusCode.NotFound) {
+                                when (val result2 =
+                                    homeNotesUseCase.createNoteInServer(
+                                        editNoteUiState.currentNote.copy(
+                                            updatedAt = now.toLocalDateTime(
+                                                TimeZone.UTC
+                                            ),
+                                            createdAt = now.toLocalDateTime(TimeZone.UTC)
+                                        )
+                                    )) {
+                                    is ApiResult.Failure -> {
+                                        editNoteUiState.copy(loadState = LoadState.Error(message = result2.message))
+                                    }
+
+                                    is ApiResult.ServerError -> {
+                                        editNoteUiState.copy(loadState = LoadState.Error(message = result2.message))
+                                    }
+
+                                    is ApiResult.Success -> {
+                                        editNoteUiState.copy(
+                                            loadState = LoadState.Success,
+                                            currentNote = result2.data
+                                        )
+                                    }
+                                }
+                            } else {
+                                editNoteUiState.copy(loadState = LoadState.Error(message = result.message))
+                            }
+                        }
+
+                        is ApiResult.Success -> {
+                            editNoteUiState.copy(
+                                loadState = LoadState.Success,
+                                currentNote = result.data
+                            )
+                        }
+                    }
+                }
+            }
+
+            is EditNoteIntent.SaveTags -> {
+                editNoteUiState.copy(currentNote = editNoteUiState.currentNote?.copy(tags = editNoteIntent.tags))
+
+            }
+
+            is EditNoteIntent.SelectNote -> {
+                editNoteUiState.copy(
+                    currentNote = editNoteIntent.note, loadState = LoadState.Idle
+                )
+            }
+        }
     }
 
-
     private fun changeTag(
-        tag: Tag, currentState: UiState
-    ): UiState {
+        tag: Tag, currentState: NoteListUiState
+    ): NoteListUiState {
         val newTags =
             currentState.tags?.map { (it, isSelected) -> if (it == tag) it to !isSelected else it to isSelected }
 
@@ -151,8 +299,8 @@ class HomeScreenModel(private val homeNotesUseCase: HomeNotesUseCase) :
     }
 
     private fun changeSearchQuery(
-        query: String, currentState: UiState
-    ): UiState {
+        query: String, currentState: NoteListUiState
+    ): NoteListUiState {
         val newFilteredNotes = filterList(currentState.notes, currentState.tags, query)
 
         return currentState.copy(searchQuery = query, filteredNotes = newFilteredNotes)

@@ -29,7 +29,9 @@ fun EditNoteContent(
     onDeleteClick: () -> Unit,
     onClickAnalyze: () -> Unit,
     onClickTagInDialog: (Tag) -> Unit,
-    loadState: LoadState
+    loadState: LoadState,
+    onClickRecommendation: (String) -> Unit,
+    onCreteTagClick: (Tag) -> Unit
 ) {
     var tagDialogShowed by remember { mutableStateOf(false) }
     var sentimentDialogShowed by remember { mutableStateOf(false) }
@@ -69,27 +71,31 @@ fun EditNoteContent(
         TagDialog(
             modifier = Modifier,
             tags = tags,
+            onCreteTagClick = onCreteTagClick,
             selectedTags = currentNote?.tags,
-            onClickTag = onClickTagInDialog,
-            onDismissRequest = { tagDialogShowed = false }
-        )
+            onClickTag = onClickTagInDialog
+        ) { tagDialogShowed = false }
     }
 
-    PlatformDialog(
-        modifier = Modifier,
-        visible = sentimentDialogShowed,
-        size = 300 to 450,
-        onDismissRequest = { sentimentDialogShowed = false },
-    ) {
-        SentimentDialog(
-            Modifier,
-            onCloseClick = { sentimentDialogShowed = false },
-            onRecommendationClick = {
-                sentimentDialogShowed = false
-                onClickAnalyze()
-            }
-        )
+    if (currentNote?.sentiment != null) {
+        PlatformDialog(
+            modifier = Modifier,
+            visible = sentimentDialogShowed,
+            size = 300 to 450,
+            onDismissRequest = { sentimentDialogShowed = false },
+        ) {
+            SentimentDialog(
+                Modifier,
+                onCloseClick = { sentimentDialogShowed = false },
+                onRecommendationClick = {
+                    sentimentDialogShowed = false
+                    onClickAnalyze()
+                },
+                sentiment = currentNote.sentiment
+            )
+        }
     }
+
 }
 
 

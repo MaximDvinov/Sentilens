@@ -33,12 +33,11 @@ import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.RotateCcw
 import compose.icons.feathericons.Settings
-import io.github.aakira.napier.Napier
 import org.senti.lens.LoadState
 import org.senti.lens.TypeDevice
+import org.senti.lens.getTypeDevice
 import org.senti.lens.screens.commons.ui.PrimaryIconButton
 import org.senti.lens.screens.commons.ui.SecondaryIconButton
-import org.senti.lens.getTypeDevice
 import org.senti.lens.theme.defaultShape
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -88,7 +87,7 @@ fun TopBar(
             },
             modifier = Modifier.padding(start = 6.dp)
         ) {
-            AnimatedContent(searchable) {
+            AnimatedContent(searchable || text.isNotEmpty()) {
                 if (it) {
                     Icon(Icons.Default.Close, "Close Search")
                 } else {
@@ -98,7 +97,7 @@ fun TopBar(
         }
 
         if (getTypeDevice() == TypeDevice.DESKTOP) {
-            AnimatedVisibility(!searchable) {
+            AnimatedVisibility(!searchable && text.isEmpty()) {
                 SecondaryIconButton(
                     onClick = onRefresh,
                     modifier = Modifier.padding(start = 6.dp)
@@ -109,7 +108,7 @@ fun TopBar(
         }
 
 
-        AnimatedVisibility(!searchable) {
+        AnimatedVisibility(!searchable && text.isEmpty()) {
             Spacer(Modifier.width(6.dp))
             SecondaryIconButton(
                 onClick = onClickSetting,
@@ -165,16 +164,17 @@ fun TopBarExpanded(
         SecondaryIconButton(
             onClick = onRefresh,
         ) {
-            if (loadState == LoadState.Loading) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.onSecondary,
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.dp
-                )
-            } else {
-                Icon(FeatherIcons.RotateCcw, "Search")
+            AnimatedContent(loadState == LoadState.Loading) {
+                if (it) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.onSecondary,
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.3.dp
+                    )
+                } else {
+                    Icon(FeatherIcons.RotateCcw, "Search")
+                }
             }
-
         }
 
         SecondaryIconButton(
@@ -203,9 +203,10 @@ private fun RowScope.SearchText(
     val (text, onChangeText) = remember(searchQuery) { mutableStateOf(searchQuery) }
 
     Box(Modifier.Companion.weight(1f)) {
-        AnimatedContent(searchable) {
+        AnimatedContent(searchable || text.isNotEmpty()) {
             if (it) {
-                BasicTextField(modifier = Modifier.focusRequester(focusRequester).fillMaxWidth(),
+                BasicTextField(modifier = Modifier.focusRequester(focusRequester)
+                    .fillMaxWidth(),
                     value = text,
                     onValueChange = { value -> changeSearchQuery(value); onChangeText(value) },
                     textStyle = MaterialTheme.typography.h1.copy(MaterialTheme.colors.onBackground),
