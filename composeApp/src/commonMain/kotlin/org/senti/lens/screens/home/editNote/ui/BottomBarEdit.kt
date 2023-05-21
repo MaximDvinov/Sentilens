@@ -1,5 +1,6 @@
 package org.senti.lens.screens.home.editNote.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -27,15 +28,19 @@ fun BottomBarEdit(
         modifier = Modifier.padding(16.dp).fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        SecondaryButton(modifier = Modifier.weight(1f), onClick = {
-            onClickAnalyze()
-        }, enabled = sentiment?.title != null) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = if (sentiment?.title != null && sentiment.smile != null) "${sentiment.smile} ${sentiment.title}" else "настроение",
-                    style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
-                )
+        Row(modifier = Modifier.weight(1f)) {
+            AnimatedVisibility(sentiment?.title != null, modifier = Modifier.weight(1f)) {
+                SecondaryButton(onClick = {
+                    onClickAnalyze()
+                }, enabled = sentiment?.title != null) {
+                    Box(modifier = Modifier) {
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = "${sentiment?.smile ?: ""} ${sentiment?.title ?: ""}",
+                            style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
+                        )
+                    }
+                }
             }
         }
 

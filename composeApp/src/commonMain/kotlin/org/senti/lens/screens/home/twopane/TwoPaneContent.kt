@@ -29,7 +29,7 @@ import org.senti.lens.screens.home.HomeScreenModel
 @Composable
 fun TwoPaneContent(
     state: HomeScreenModel.NoteListUiState,
-    editorUiStat: HomeScreenModel.NoteEditorUiStat,
+    editorUiStat: HomeScreenModel.NoteEditorUiState,
     onBackClick: () -> Unit,
     onClickSetting: () -> Unit,
     onSaveClick: () -> Unit,

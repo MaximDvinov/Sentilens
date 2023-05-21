@@ -28,6 +28,8 @@ import com.russhwolf.settings.Settings
 import org.senti.lens.models.Advice
 import org.senti.lens.screens.recommendation.RecommendationItem
 import org.senti.lens.theme.defaultShape
+import java.awt.Desktop
+import java.net.URI
 import java.util.prefs.Preferences
 
 actual fun getSettings(delegate: Any): Settings {
@@ -97,4 +99,9 @@ actual fun RecommendationScreenContent(
 
 @Composable
 actual fun SetColorStatusBar(darkTheme: Boolean, colors: Colors) {
+}
+
+actual fun openLink(url: String) {
+    val uri = url.let { URI.create(it) } ?: return
+    Desktop.getDesktop().browse(uri)
 }

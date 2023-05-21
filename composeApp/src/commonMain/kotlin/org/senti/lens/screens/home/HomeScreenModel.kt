@@ -20,12 +20,11 @@ import org.senti.lens.network.SyncUseCase
 interface Intent
 
 class HomeScreenModel(
-    private val homeNotesUseCase: HomeNotesUseCase,
-    private val syncUseCase: SyncUseCase
+    private val homeNotesUseCase: HomeNotesUseCase, private val syncUseCase: SyncUseCase
 ) : StateScreenModel<HomeScreenModel.NoteListUiState>(NoteListUiState()) {
 
-    private val _editNoteState = MutableStateFlow(NoteEditorUiStat())
-    val editNoteState: StateFlow<NoteEditorUiStat>
+    private val _editNoteState = MutableStateFlow(NoteEditorUiState())
+    val editNoteState: StateFlow<NoteEditorUiState>
         get() = _editNoteState
 
 
@@ -37,12 +36,10 @@ class HomeScreenModel(
         val filteredNotes: List<Note>? = notes,
     )
 
-    data class NoteEditorUiStat(
+    data class NoteEditorUiState(
         val currentNote: Note? = null,
-        val noteTags: List<Tag> = listOf(),
         val loadState: LoadState = LoadState.Idle,
     )
-
 
     sealed class NoteListIntent : Intent {
         object LoadData : NoteListIntent()
@@ -57,9 +54,8 @@ class HomeScreenModel(
         object DeleteNote : EditNoteIntent()
         data class ChangeTitle(val title: String) : EditNoteIntent()
         data class ChangeBody(val body: String) : EditNoteIntent()
-        class AddTagInNote(val tag: Tag) : EditNoteIntent()
-        class SaveTags(val tags: List<Tag>) : EditNoteIntent()
-        class SelectNote(val note: Note?) : EditNoteIntent()
+        data class AddTagInNote(val tag: Tag) : EditNoteIntent()
+        data class SelectNote(val note: Note?) : EditNoteIntent()
     }
 
     init {
@@ -146,15 +142,17 @@ class HomeScreenModel(
             }
 
             is NoteListIntent.CreateTag -> {
-                homeNotesUseCase.createTag(noteListIntent.tag)
+                if (noteListUiState.tags?.find { it.first.title == noteListIntent.tag.title } == null) {
+                    homeNotesUseCase.createTag(noteListIntent.tag)
+                }
                 noteListUiState
             }
         }
     }
 
     private suspend fun reduceEditState(
-        editNoteUiState: NoteEditorUiStat, editNoteIntent: EditNoteIntent
-    ): NoteEditorUiStat {
+        editNoteUiState: NoteEditorUiState, editNoteIntent: EditNoteIntent
+    ): NoteEditorUiState {
         return when (editNoteIntent) {
             is EditNoteIntent.AddTagInNote -> {
                 var newTags = editNoteUiState.currentNote?.tags ?: listOf()
@@ -185,19 +183,31 @@ class HomeScreenModel(
 
             EditNoteIntent.SaveNote -> {
                 val now: Instant = Clock.System.now()
+                if (editNoteUiState.currentNote?.content.isNullOrBlank()) {
+                    return editNoteUiState.copy(loadState = LoadState.Error(message = "Пустая заметка"))
+                }
 
-                if (editNoteUiState.currentNote == null) return editNoteUiState
-                delay(300)
-                if (editNoteUiState.currentNote.uuid == null) {
-                    val result =
-                        homeNotesUseCase.createNoteAndAnalayze(
-                            editNoteUiState.currentNote.copy(
-                                updatedAt = now.toLocalDateTime(
-                                    TimeZone.UTC
-                                ),
-                                createdAt = now.toLocalDateTime(TimeZone.UTC)
-                            )
+                var currentNote = editNoteUiState.currentNote
+
+                if (currentNote?.title?.isEmpty() == true) {
+                    currentNote =
+                        currentNote.copy(
+                            title = "${
+                                currentNote.content?.split(" ")?.take(3)?.joinToString(" ")
+                            }"
                         )
+                }
+
+                if (currentNote == null) return editNoteUiState
+                delay(300)
+                if (currentNote.uuid == null) {
+                    val result = homeNotesUseCase.createNoteAndAnalayze(
+                        currentNote.copy(
+                            updatedAt = now.toLocalDateTime(
+                                TimeZone.UTC
+                            ), createdAt = now.toLocalDateTime(TimeZone.UTC)
+                        )
+                    )
                     when (val resultApi = result.first) {
                         is ApiResult.Failure -> {
                             editNoteUiState.copy(
@@ -215,35 +225,31 @@ class HomeScreenModel(
 
                         is ApiResult.Success -> {
                             editNoteUiState.copy(
-                                loadState = LoadState.Success,
-                                currentNote = result.second
+                                loadState = LoadState.Success, currentNote = result.second
                             )
                         }
                     }
                 } else {
-                    when (val result =
-                        homeNotesUseCase.updateNoteAndAnalyze(
-                            editNoteUiState.currentNote.copy(
-                                updatedAt = now.toLocalDateTime(
-                                    TimeZone.UTC
-                                ),
-                            )
-                        )) {
+                    when (val result = homeNotesUseCase.updateNoteAndAnalyze(
+                        currentNote.copy(
+                            updatedAt = now.toLocalDateTime(
+                                TimeZone.UTC
+                            ),
+                        )
+                    )) {
                         is ApiResult.Failure -> {
                             editNoteUiState.copy(loadState = LoadState.Error(message = result.message))
                         }
 
                         is ApiResult.ServerError -> {
                             if (result.status == HttpStatusCode.NotFound) {
-                                when (val result2 =
-                                    homeNotesUseCase.createNoteInServer(
-                                        editNoteUiState.currentNote.copy(
-                                            updatedAt = now.toLocalDateTime(
-                                                TimeZone.UTC
-                                            ),
-                                            createdAt = now.toLocalDateTime(TimeZone.UTC)
-                                        )
-                                    )) {
+                                when (val result2 = homeNotesUseCase.createNoteInServer(
+                                    currentNote.copy(
+                                        updatedAt = now.toLocalDateTime(
+                                            TimeZone.UTC
+                                        ), createdAt = now.toLocalDateTime(TimeZone.UTC)
+                                    )
+                                )) {
                                     is ApiResult.Failure -> {
                                         editNoteUiState.copy(loadState = LoadState.Error(message = result2.message))
                                     }
@@ -266,17 +272,11 @@ class HomeScreenModel(
 
                         is ApiResult.Success -> {
                             editNoteUiState.copy(
-                                loadState = LoadState.Success,
-                                currentNote = result.data
+                                loadState = LoadState.Success, currentNote = result.data
                             )
                         }
                     }
                 }
-            }
-
-            is EditNoteIntent.SaveTags -> {
-                editNoteUiState.copy(currentNote = editNoteUiState.currentNote?.copy(tags = editNoteIntent.tags))
-
             }
 
             is EditNoteIntent.SelectNote -> {
@@ -314,7 +314,8 @@ class HomeScreenModel(
         notes?.filter { note ->
             note.tags.containsAll(filteredTag)
         }?.filter { note ->
-            note.title.contains(query) || note.content?.contains(query) == true
+            note.title.lowercase().contains(query.lowercase()) || note.content?.lowercase()
+                ?.contains(query.lowercase()) == true
         }
     } else notes
 

@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
@@ -42,6 +43,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.senti.lens.RecommendationScreenContent
 import org.senti.lens.models.Advice
+import org.senti.lens.openLink
 import org.senti.lens.screens.commons.ui.PrimaryButton
 import org.senti.lens.screens.commons.ui.SecondaryIconButton
 import org.senti.lens.theme.defaultShape
@@ -87,7 +89,7 @@ fun RecommendationItem(recommendation: Advice) {
     LazyColumn(
         modifier = Modifier.clip(defaultShape).background(MaterialTheme.colors.secondary),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
         contentPadding = PaddingValues(8.dp)
     ) {
         item {
@@ -106,12 +108,14 @@ fun RecommendationItem(recommendation: Advice) {
                 Text(
                     recommendation.title ?: "",
                     style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.onSecondary
+                    color = MaterialTheme.colors.onSecondary,
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     recommendation.description ?: "",
                     style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSecondary
+                    color = MaterialTheme.colors.onSecondary.copy(0.7f),
+                    textAlign = TextAlign.Center
                 )
 
             }
@@ -120,12 +124,14 @@ fun RecommendationItem(recommendation: Advice) {
         if (recommendation.url != null) {
             item {
                 PrimaryButton(
-                    onClick = {},
+                    onClick = {
+                        openLink(recommendation.url)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        recommendation.title ?: "",
+                        "Открыть подборку",
                         style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.onPrimary
                     )

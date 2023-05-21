@@ -109,11 +109,10 @@ class TagDaoImpl(private val realm: Realm) : TagDao {
                     realm.query<TagEntity>(
                         "uuid == $0", RealmUUID.from(tag.uuid.toString())
                     ).find().first()
-                )
-                    ?.apply {
-                        this.title = tag.title
-                        this.isNew = tag.isNew
-                    }
+                )?.apply {
+                    this.title = tag.title
+                    this.isNew = tag.isNew
+                }
             }
 
             if (tagEntity == null) {

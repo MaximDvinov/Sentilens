@@ -65,7 +65,9 @@ actual fun PlatformGrid(
     ) {
         notes.forEach {
             item {
-                val color by animateColorAsState(if (currentNote?.uuid == it.uuid) MaterialTheme.colors.primary else MaterialTheme.colors.secondary)
+                val color by animateColorAsState(if (currentNote?.uuid == it.uuid) MaterialTheme.colors.primary else MaterialTheme.colors.secondary,
+                    label = ""
+                )
                 val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 2.dp else 0.dp)
 
                 NoteItem(
@@ -94,7 +96,11 @@ actual fun ColumnScope.BodyText(
                 alpha = 0.7f
             )
         ),
-        maxLines = 16,
+        maxLines = when {
+            text.length <= 140 -> Int.MAX_VALUE
+            text.length <= 250 -> 5
+            else -> 9
+        },
         overflow = TextOverflow.Ellipsis
     )
 }

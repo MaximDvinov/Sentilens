@@ -18,7 +18,7 @@ import org.senti.lens.singlePush
 @Composable
 fun OnePane(
     state: HomeScreenModel.NoteListUiState,
-    editState: HomeScreenModel.NoteEditorUiStat,
+    editState: HomeScreenModel.NoteEditorUiState,
     screenModel: HomeScreenModel,
     navigator: Navigator?
 ) {

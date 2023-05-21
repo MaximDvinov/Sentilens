@@ -14,6 +14,8 @@ enum class TypeDevice() {
 
 expect fun getTypeDevice(): TypeDevice
 
+expect fun openLink(url: String)
+
 
 @Composable
 expect fun RecommendationScreenContent(
@@ -26,3 +28,4 @@ expect fun PlatformBackHandler(backHandlingEnabled: Boolean, onBack: () -> Unit)
 
 @Composable
 expect fun SetColorStatusBar(darkTheme: Boolean, colors: Colors)
+

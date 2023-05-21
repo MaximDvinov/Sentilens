@@ -167,7 +167,7 @@ fun TagsFlow(
 
 @Composable
 fun HeaderDialog(
-    selectedTagsState1: List<Tag>?,
+    selectedTagsState: List<Tag>?,
     onSaveClick: (List<Tag>) -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -180,13 +180,13 @@ fun HeaderDialog(
                 .padding(16.dp)
         )
         Text(
-            "Сохранить",
+            "Закрыть",
             style = MaterialTheme.typography.body1,
             color = MaterialTheme.colors.primary,
             modifier = Modifier
                 .clip(defaultShape)
                 .clickable {
-                    selectedTagsState1?.let { onSaveClick(it) }
+                    selectedTagsState?.let { onSaveClick(it) }
                     onDismissRequest()
                 }
                 .padding(16.dp)

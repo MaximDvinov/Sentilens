@@ -89,7 +89,7 @@ fun EditNoteContent(
                 onCloseClick = { sentimentDialogShowed = false },
                 onRecommendationClick = {
                     sentimentDialogShowed = false
-                    onClickAnalyze()
+                    onClickRecommendation(currentNote.uuid.toString())
                 },
                 sentiment = currentNote.sentiment
             )

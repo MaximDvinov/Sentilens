@@ -1,7 +1,9 @@
 package org.senti.lens
 
 import android.app.Activity
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -76,4 +78,14 @@ actual fun SetColorStatusBar(darkTheme: Boolean, colors: Colors) {
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
+}
+
+actual fun openLink(url: String) {
+    val uri = url.let { Uri.parse(it) } ?: return
+    val intent = Intent().apply {
+        action = Intent.ACTION_VIEW
+        data = uri
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    AndroidApp.INSTANCE.startActivity(intent)
 }

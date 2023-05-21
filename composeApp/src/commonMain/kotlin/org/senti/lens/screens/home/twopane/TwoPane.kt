@@ -10,7 +10,7 @@ import org.senti.lens.singlePush
 @Composable
 fun TwoPane(
     state: HomeScreenModel.NoteListUiState,
-    editState: HomeScreenModel.NoteEditorUiStat,
+    editState: HomeScreenModel.NoteEditorUiState,
     screenModel: HomeScreenModel,
     navigator: Navigator?
 ) {

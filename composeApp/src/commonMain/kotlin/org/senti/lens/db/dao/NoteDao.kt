@@ -90,7 +90,8 @@ class NoteDaoImpl(private val realm: Realm) : NoteDao {
                         advices = upsertAdvices(note)
                     }
                 }
-                this.tags = upsertTags(note)
+                val addedTags = upsertTags(note)
+                this.tags = addedTags
                 this.isNew = note.isNew ?: true
             }
         }?.toNote()
