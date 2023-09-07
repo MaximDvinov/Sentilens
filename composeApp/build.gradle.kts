@@ -50,13 +50,8 @@ kotlin {
             }
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.activityCompose)
@@ -71,6 +66,7 @@ kotlin {
         }
 
         val desktopMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
@@ -84,6 +80,8 @@ kotlin {
 
 multiplatformResources {
     multiplatformResourcesPackage = "org.senti.lens" // required
+    multiplatformResourcesClassName = "SharedRes"
+
 }
 
 val version = "1.0.0"
@@ -116,6 +114,9 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+    kotlin{
+        jvmToolchain(17)
+    }
 }
 
 compose.desktop {
@@ -138,12 +139,10 @@ compose.experimental {
     web.application {}
 }
 
-
 dependencies {
     implementation("androidx.window:window:1.1.0")
 }
 
 buildConfig {
-    // BuildConfig configuration here.
-    // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
+
 }
