@@ -23,7 +23,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -68,6 +71,8 @@ class LoginScreen(val username: String? = null, val password: String? = null) : 
             }
         }
 
+
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
@@ -109,8 +114,6 @@ fun AuthScreenContent(
     currentUsername: String?,
     currentPassword: String?
 ) {
-
-
     LoginFields(
         state,
         onUsernameChanged,
@@ -136,6 +139,8 @@ private fun LoginFields(
     val (username, setUsername) = remember { mutableStateOf(currentUsername) }
     val (password, setPassword) = remember { mutableStateOf(currentPassword) }
 
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier.widthIn(max = 500.dp)
             .padding(bottom = 40.dp, start = 40.dp, end = 40.dp),
@@ -153,7 +158,6 @@ private fun LoginFields(
                 color = MaterialTheme.colors.onBackground
             )
 
-
             Spacer(modifier = Modifier.height(40.dp))
 
             AuthTextField(
@@ -164,7 +168,10 @@ private fun LoginFields(
                     setUsername(it)
                     onUsernameChanged(it)
                 },
-                keyboardType = KeyboardType.Text
+                keyboardType = KeyboardType.Text,
+                nextFocus = {
+                    focusManager.moveFocus(FocusDirection.Up)
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))

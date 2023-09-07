@@ -17,13 +17,9 @@ internal fun App(loginState: String?) {
     Surface {
         AnimatedContent(!loginState.isNullOrBlank()) { isLogin ->
             if (isLogin) {
-                Navigator(HomeScreen()) {
-                    FadeTransition(it)
-                }
+                Navigator(HomeScreen())
             } else {
-                Navigator(LoginScreen()) {
-                    FadeTransition(it)
-                }
+                Navigator(LoginScreen())
             }
         }
 

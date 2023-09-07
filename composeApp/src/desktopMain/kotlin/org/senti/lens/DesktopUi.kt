@@ -56,7 +56,6 @@ import org.senti.lens.screens.home.ui.TagItem
 import org.senti.lens.theme.defaultShape
 import org.senti.lens.theme.onError
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 actual fun PlatformGrid(
     modifier: Modifier,
@@ -194,62 +193,5 @@ actual fun TagsList(
                 thickness = 6.dp
             )
         )
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-actual fun PlatformDialog(
-    modifier: Modifier,
-    visible: Boolean,
-    onDismissRequest: () -> Unit,
-    size: Pair<Int, Int>,
-    content: @Composable () -> Unit
-) {
-    if (visible) {
-        AlertDialog(
-            onDismissRequest = onDismissRequest,
-            modifier = modifier.width(size.first.dp),
-            buttons = {
-                content()
-            }
-        )
-    }
-}
-
-@Composable
-actual fun SettingNoteMenu(
-    expanded: Boolean,
-    onDismissRequest: () -> Unit,
-    onDeleteClick: () -> Unit,
-    onTagsClick: () -> Unit,
-    modifier: Modifier
-) {
-    DropdownMenu(
-        offset = DpOffset(x = 0.dp, y = 10.dp),
-        expanded = expanded,
-        onDismissRequest = onDismissRequest,
-        modifier = modifier.clip(defaultShape).background(
-            MaterialTheme.colors.secondary
-        )
-    ) {
-        DropdownMenuItem(onClick = onTagsClick) {
-            Icon(FeatherIcons.Tag, "Settings")
-
-            Text(
-                text = "Теги",
-                style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary),
-                modifier = Modifier.padding(10.dp)
-            )
-        }
-        DropdownMenuItem(onClick = onDeleteClick) {
-            Icon(Icons.Default.Delete, "Settings", tint = onError)
-
-            Text(
-                text = "Удалить",
-                style = MaterialTheme.typography.body1.copy(color = onError),
-                modifier = Modifier.padding(10.dp)
-            )
-        }
     }
 }

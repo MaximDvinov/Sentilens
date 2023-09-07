@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.icerock.moko.resources.compose.fontFamilyResource
 import org.senti.lens.BodyText
-import org.senti.lens.MR
 import org.senti.lens.PlatformGrid
 import org.senti.lens.dateFormat
 import org.senti.lens.models.Note

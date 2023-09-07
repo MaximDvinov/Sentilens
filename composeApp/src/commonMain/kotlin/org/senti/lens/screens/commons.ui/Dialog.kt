@@ -153,7 +153,7 @@ fun TagsFlow(
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = { size, space -> 10 }
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         tagsState?.forEach { tag ->
             TagItem(

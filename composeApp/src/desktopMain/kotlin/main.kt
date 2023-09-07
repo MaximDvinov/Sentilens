@@ -1,11 +1,13 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
@@ -20,7 +22,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.DpSize
@@ -52,6 +56,7 @@ import org.senti.lens.screens.auth.login.TOKEN
 import org.senti.lens.theme.AppTheme
 import org.senti.lens.theme.background
 import org.senti.lens.theme.body
+import org.senti.lens.theme.defaultShape
 import org.senti.lens.theme.lightBackground
 import java.awt.Dimension
 
@@ -63,7 +68,6 @@ fun main() = application {
     val koin = startKoin {
         modules(platformModule, commonModule)
     }.koin
-
 
     val windowState = rememberWindowState(size = DpSize(1000.dp, 800.dp))
 
@@ -120,7 +124,23 @@ fun main() = application {
         window.minimumSize = Dimension(400, 500)
 
         AppTheme(isDarkTheme) {
-            App(isLogin)
+            Column(
+//                modifier = Modifier
+//                    .clip(if (windowState.placement == WindowPlacement.Maximized) RectangleShape else defaultShape)
+//                    .background(color = MaterialTheme.colors.background)
+            ) {
+//                window.isResizable = windowState.placement != WindowPlacement.Maximized
+//                if (windowState.placement != WindowPlacement.Maximized) {
+//                    WindowDraggableArea {
+//                        AppBar(windowState)
+//                    }
+//                } else {
+//                    AppBar(windowState)
+//                }
+
+                App(isLogin)
+            }
+
         }
     }
 }

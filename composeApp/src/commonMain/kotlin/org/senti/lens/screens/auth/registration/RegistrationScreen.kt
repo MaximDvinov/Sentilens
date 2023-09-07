@@ -23,7 +23,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -109,6 +111,8 @@ fun RegScreenContent(
 
     val localNavigator = LocalNavigator.currentOrThrow
 
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier.widthIn(max = 500.dp)
             .padding(bottom = 40.dp, start = 40.dp, end = 40.dp),
@@ -137,7 +141,10 @@ fun RegScreenContent(
                     onEmailChanged(it)
                 },
                 placeholder = "Почта",
-                keyboardType = KeyboardType.Email
+                keyboardType = KeyboardType.Email,
+                nextFocus = {
+                    focusManager.moveFocus(FocusDirection.Up)
+                }
             )
 
             AuthTextField(
@@ -148,7 +155,10 @@ fun RegScreenContent(
                     setUsername(it)
                     onUsernameChanged(it)
                 },
-                keyboardType = KeyboardType.Text
+                keyboardType = KeyboardType.Text,
+                nextFocus = {
+                    focusManager.moveFocus(FocusDirection.Up)
+                }
             )
             PasswordTextField(
                 modifier = Modifier.fillMaxWidth().widthIn(max = 240.dp),

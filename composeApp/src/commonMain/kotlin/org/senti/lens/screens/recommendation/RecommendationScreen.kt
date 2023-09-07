@@ -1,6 +1,6 @@
 package org.senti.lens.screens.recommendation
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,10 +34,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.seiko.imageloader.ImageRequestState
-import com.seiko.imageloader.model.ImageRequest
-import com.seiko.imageloader.model.ImageRequestEvent
-import com.seiko.imageloader.rememberAsyncImagePainter
+import io.kamel.core.Resource
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.senti.lens.RecommendationScreenContent
@@ -149,35 +147,31 @@ fun ImageItem(
     blurRadius: Int = 0,
 ) {
     Box(modifier.clip(defaultShape), Alignment.Center) {
-        val request = remember(url, blurRadius) {
-            ImageRequest {
-                data(url)
-            }
-        }
-        val painter = rememberAsyncImagePainter(request)
-        Image(
-            painter = painter,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-        )
-        when (val requestState = painter.requestState) {
-            is ImageRequestState.Loading -> {
-                val event = requestState.event
-                if (event is ImageRequestEvent.ReadDiskCache && !event.hasCache) {
+        val painter = asyncPainterResource(url)
+
+        Crossfade(painter) {
+            when (it) {
+                is Resource.Loading -> {
                     CircularProgressIndicator()
                 }
-            }
 
-            is ImageRequestState.Failure -> {
-                Text(
-                    requestState.error.message ?: "Error",
-                    modifier = Modifier.padding(16.dp),
-                    color = MaterialTheme.colors.onSecondary
-                )
-            }
+                is Resource.Failure -> {
+                    Text(
+                        it.exception.message ?: "Error",
+                        modifier = Modifier.padding(16.dp),
+                        color = MaterialTheme.colors.onSecondary
+                    )
+                }
 
-            ImageRequestState.Success -> Unit
+                is Resource.Success -> {
+                    KamelImage(
+                        resource = painter,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+            }
         }
     }
 }

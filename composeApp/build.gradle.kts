@@ -8,14 +8,14 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
 
     id("dev.icerock.mobile.multiplatform-resources")
-    id("io.realm.kotlin") version "1.7.0"
+    id("io.realm.kotlin") version "1.10.0"
 }
 
 kotlin {
-    android {
+    androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "17"
             }
         }
     }
@@ -46,6 +46,7 @@ kotlin {
                 implementation(libs.ktor.client.auth)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.realm)
+                implementation(libs.kamel)
             }
         }
 
@@ -89,11 +90,11 @@ val version = "1.0.0"
 
 android {
     namespace = "org.senti.lens"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
 
         applicationId = "org.senti.lens.androidApp"
         versionCode = 1
@@ -104,10 +105,10 @@ android {
         res.srcDirs("src/androidMain/resources")
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    packagingOptions {
+    packaging {
         resources.excludes.add("META-INF/**")
     }
     buildTypes {
@@ -139,7 +140,7 @@ compose.experimental {
 
 
 dependencies {
-    implementation("androidx.window:window:1.0.0")
+    implementation("androidx.window:window:1.1.0")
 }
 
 buildConfig {

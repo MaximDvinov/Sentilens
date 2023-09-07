@@ -46,7 +46,6 @@ class HomeScreen : Screen, KoinComponent {
         val listState by screenModel.state.collectAsState()
         val editState by screenModel.editNoteState.collectAsState()
 
-
         BoxWithConstraints {
             if (listState.loadState is LoadState.Error) {
                 Snackbar(

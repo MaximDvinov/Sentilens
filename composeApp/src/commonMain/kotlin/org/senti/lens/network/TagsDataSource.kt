@@ -42,7 +42,6 @@ class TagsDataSource(private val client: HttpClient) {
         }catch (e: Exception) {
             ApiResult.Failure("${e.message}")
         }
-
     }
 
     suspend fun deleteTag(id: String): ApiResult<Unit> {
@@ -58,6 +57,5 @@ class TagsDataSource(private val client: HttpClient) {
         }catch (e: Exception) {
             ApiResult.Failure("${e.message}")
         }
-
     }
 }

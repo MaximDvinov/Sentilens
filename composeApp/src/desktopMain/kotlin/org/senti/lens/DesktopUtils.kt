@@ -40,7 +40,6 @@ actual fun getTypeDevice(): TypeDevice {
     return TypeDevice.DESKTOP
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun PlatformBackHandler(
     backHandlingEnabled: Boolean,

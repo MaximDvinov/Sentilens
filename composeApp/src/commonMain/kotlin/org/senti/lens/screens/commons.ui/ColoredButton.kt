@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import org.senti.lens.bounceClick
 import org.senti.lens.theme.defaultShape
 
 @Composable
@@ -113,7 +114,7 @@ fun PrimaryButton(
             elevation = 10.dp,
             shape = defaultShape,
             spotColor = color,
-        ),
+        ).bounceClick(),
         enabled = enabled,
         content = content
     )
@@ -132,7 +133,7 @@ fun SecondaryButton(
         elevation = null,
         shape = defaultShape,
         colors = ButtonDefaults.buttonColors(backgroundColor = color),
-        modifier = modifier.defaultMinSize(minHeight = 48.dp),
+        modifier = modifier.defaultMinSize(minHeight = 48.dp).bounceClick(),
         enabled = enabled,
         content = content
     )
