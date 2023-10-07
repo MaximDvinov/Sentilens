@@ -92,15 +92,20 @@ fun main() = application {
 
     System.setProperty("skiko.renderApi", "OPENGL")
 
-    Tray(icon = painterResource(MR.images.icon), onAction = {
-        settings["theme"] = !isDarkTheme
-    }, menu = {
-        Item(if (!isDarkTheme) "Темная тема" else "Светлая тема",
-
-            onClick = {
-                settings["theme"] = !isDarkTheme
-            })
-    }, tooltip = "Светлая тема")
+//    Tray(icon = painterResource(MR.images.icon), onAction = {
+//        settings["theme"] = !isDarkTheme
+//    }, menu = {
+//        Item(if (!isDarkTheme) "Темная тема" else "Светлая тема",
+//
+//            onClick = {
+//                settings["theme"] = !isDarkTheme
+//            })
+//
+//        Item("Создать заметку",
+//            onClick = {
+//
+//            })
+//    }, tooltip = "Светлая тема")
 
 
     Window(

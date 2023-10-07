@@ -37,7 +37,7 @@ import org.senti.lens.screens.home.HomeNotesUseCase
 
 expect val platformModule: Module
 
-const val BASE_URL = "http://112889.msk.web.highserver.ru"
+const val BASE_URL = "https://122467.msk.web.highserver.ru"
 
 val commonModule = module {
     single {
@@ -54,7 +54,6 @@ val commonModule = module {
             .build()
         Realm.open(config)
     }
-
     single<TagDao> {
         TagDaoImpl(get())
     }

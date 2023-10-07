@@ -1,12 +1,10 @@
 package org.senti.lens
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,52 +15,43 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import compose.icons.FeatherIcons
-import compose.icons.feathericons.Tag
+import kotlinx.collections.immutable.ImmutableList
 import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
 import org.senti.lens.screens.home.ui.NoteItem
 import org.senti.lens.screens.home.ui.TagItem
 import org.senti.lens.theme.defaultShape
-import org.senti.lens.theme.onError
 
 @Composable
 actual fun PlatformGrid(
     modifier: Modifier,
     onClick: (Note) -> Unit,
-    notes: List<Note>,
+    notes: ImmutableList<Note>,
     cellsDp: Dp,
     currentNote: Note?,
+    onDeleteClick: (Note) -> Unit,
     contentPadding: PaddingValues,
 ) {
     val state = rememberLazyGridState()
@@ -91,26 +80,26 @@ actual fun PlatformGrid(
             contentPadding = contentPadding
         ) {
 
-            notes.forEach {
-                item {
-                    key(it.uuid) {
-                        val color by animateColorAsState(if (currentNote?.uuid == it.uuid) MaterialTheme.colors.primary else MaterialTheme.colors.secondary)
-//                        val width by animateDpAsState(if (currentNote?.id == it.id) 2.dp else 0.dp)
+            items(notes) {
+                key(it.uuid) {
+                    val color by animateColorAsState(if (currentNote?.uuid == it.uuid) MaterialTheme.colors.primary else MaterialTheme.colors.secondary)
+                    val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 2.dp else 0.dp)
 
-                        NoteItem(
-                            modifier = Modifier.height(200.dp).border(
-                                width = 2.dp,
-                                color = color,
-                                shape = defaultShape
-                            )
-//                                .animateItemPlacement(animationSpec = spring(stiffness = 500f))
-                            ,
-                            note = it
-                        ) {
-                            onClick(it)
+                    NoteItem(
+                        modifier = Modifier.height(200.dp).border(
+                            width = width,
+                            color = color,
+                            shape = defaultShape
+                        ),
+                        note = it,
+                        onDeleteItemClick = remember {
+                            { onDeleteClick(it) }
                         }
+                    ) {
+                        onClick(it)
                     }
                 }
+
             }
 
             item(span = { GridItemSpan(1) }) {
@@ -157,7 +146,7 @@ actual fun ColumnScope.BodyText(
 actual fun TagsList(
     modifier: Modifier,
     tags: List<Pair<Tag, Boolean>>,
-    onClickTag: (Tag) -> Unit
+    onClickTag: (Tag) -> Unit,
 ) {
     val state = rememberLazyListState()
     Box {

@@ -47,6 +47,7 @@ kotlin {
                 implementation(libs.ktor.client.logging)
                 implementation(libs.realm)
                 implementation(libs.kamel)
+                implementation(libs.kotlinx.collections.immutable)
             }
         }
 
@@ -79,8 +80,7 @@ kotlin {
 }
 
 multiplatformResources {
-    multiplatformResourcesPackage = "org.senti.lens" // required
-    multiplatformResourcesClassName = "SharedRes"
+    multiplatformResourcesPackage = "org.senti.lens"
 
 }
 
@@ -101,6 +101,7 @@ android {
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")
         res.srcDirs("src/androidMain/resources")
+        java.srcDirs("build/generated/moko/androidMain/src")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -120,6 +121,7 @@ android {
 }
 
 compose.desktop {
+
     application {
         mainClass = "MainKt"
 
@@ -141,6 +143,7 @@ compose.experimental {
 
 dependencies {
     implementation("androidx.window:window:1.1.0")
+//    implementation(project(":composeApp"))
 }
 
 buildConfig {

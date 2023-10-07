@@ -21,7 +21,7 @@ fun ContentNote(
     modifier: Modifier = Modifier,
     currentNote: Note? = null,
     onChangeTitleNote: (String) -> Unit,
-    onChangeBodyNote: (String) -> Unit
+    onChangeBodyNote: (String) -> Unit,
 ) {
     // temporary fix for a text input problem
     // TODO: get rid of storing state in two places
@@ -42,31 +42,31 @@ fun ContentNote(
             .padding(start = 16.dp, end = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        AnimatedContent(currentNote?.uuid) { _ ->
-            TextField(
-                Modifier.fillMaxWidth(),
-                text = title,
-                onTextChange = {
-                    onChangeTitle(it)
-                    onChangeTitleNote(it)
-                },
-                placeholder = "Введите заголовок...",
-                style = MaterialTheme.typography.h1.copy(MaterialTheme.colors.onSecondary),
-                maxLines = 3,
-            )
-        }
 
-        AnimatedContent(currentNote?.uuid) { _ ->
-            TextField(
-                modifier = Modifier.weight(1f).fillMaxSize(),
-                text = body,
-                onTextChange = {
-                    onChangeBody(it)
-                    onChangeBodyNote(it)
-                },
-                style = MaterialTheme.typography.body1.copy(MaterialTheme.colors.onSecondary),
-                placeholder = "Введите текст заметки..."
-            )
-        }
+        TextField(
+            Modifier.fillMaxWidth(),
+            text = title,
+            onTextChange = {
+                onChangeTitle(it)
+                onChangeTitleNote(it)
+            },
+            placeholder = "Введите заголовок...",
+            style = MaterialTheme.typography.h1.copy(MaterialTheme.colors.onSecondary),
+            maxLines = 3,
+        )
+
+
+
+        TextField(
+            modifier = Modifier.weight(1f).fillMaxSize(),
+            text = body,
+            onTextChange = {
+                onChangeBody(it)
+                onChangeBodyNote(it)
+            },
+            style = MaterialTheme.typography.body1.copy(MaterialTheme.colors.onSecondary),
+            placeholder = "Введите текст заметки..."
+        )
+
     }
 }

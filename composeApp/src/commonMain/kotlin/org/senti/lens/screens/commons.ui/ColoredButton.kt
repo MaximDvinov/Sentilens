@@ -40,6 +40,7 @@ fun SecondaryIconButton(
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     Box(
         modifier = modifier
+            .bounceClick()
             .clip(defaultShape)
             .background(color)
             .clickable(
@@ -68,6 +69,7 @@ fun PrimaryIconButton(
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     Box(
         modifier = modifier
+            .bounceClick()
             .shadow(
                 elevation = 10.dp,
                 shape = defaultShape,
@@ -110,11 +112,11 @@ fun PrimaryButton(
             backgroundColor = color,
             disabledBackgroundColor = color
         ),
-        modifier = modifier.defaultMinSize(minHeight = 48.dp).shadow(
-            elevation = 10.dp,
+        modifier = modifier.bounceClick().defaultMinSize(minHeight = 48.dp).shadow(
+            elevation = 7.dp,
             shape = defaultShape,
             spotColor = color,
-        ).bounceClick(),
+        ),
         enabled = enabled,
         content = content
     )
@@ -133,7 +135,7 @@ fun SecondaryButton(
         elevation = null,
         shape = defaultShape,
         colors = ButtonDefaults.buttonColors(backgroundColor = color),
-        modifier = modifier.defaultMinSize(minHeight = 48.dp).bounceClick(),
+        modifier = modifier.bounceClick().defaultMinSize(minHeight = 48.dp),
         enabled = enabled,
         content = content
     )

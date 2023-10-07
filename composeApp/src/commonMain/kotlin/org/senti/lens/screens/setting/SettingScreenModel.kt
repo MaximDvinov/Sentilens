@@ -61,6 +61,6 @@ class SettingScreenModel(
 
     private suspend fun deleteTags(oldState: UiState): UiState {
         tagsRepository.deleteTags(oldState.tags?.filter { it.second }?.map { it.first })
-        return oldState
+        return oldState.copy(tags = oldState.tags?.filter { it.second })
     }
 }

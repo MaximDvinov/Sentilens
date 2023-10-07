@@ -39,6 +39,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.senti.lens.LoadState
+import org.senti.lens.bounceClick
 import org.senti.lens.screens.auth.registration.RegistrationScreen
 import org.senti.lens.screens.commons.ui.PrimaryButton
 import org.senti.lens.screens.commons.ui.SecondaryButton
@@ -161,7 +162,7 @@ private fun LoginFields(
             Spacer(modifier = Modifier.height(40.dp))
 
             AuthTextField(
-                modifier = Modifier.fillMaxWidth().widthIn(max = 240.dp),
+                modifier = Modifier.bounceClick().fillMaxWidth().widthIn(max = 240.dp),
                 text = username ?: "",
                 placeholder = "Логин",
                 onTextChange = {

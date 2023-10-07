@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.senti.lens.bounceClick
 import org.senti.lens.theme.defaultShape
 
 @Composable
@@ -32,6 +33,7 @@ fun TagItem(
 
     Box(
         modifier
+            .bounceClick()
             .shadow(
                 elevation = if (color == defaultColor) 0.dp else 10.dp,
                 shape = RoundedCornerShape(50),

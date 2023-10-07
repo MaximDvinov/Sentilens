@@ -12,7 +12,7 @@ fun TwoPane(
     state: HomeScreenModel.NoteListUiState,
     editState: HomeScreenModel.NoteEditorUiState,
     screenModel: HomeScreenModel,
-    navigator: Navigator?
+    navigator: Navigator?,
 ) {
     TwoPaneContent(state, editState, onBackClick = {
         screenModel.processIntent(
@@ -66,5 +66,10 @@ fun TwoPane(
         screenModel.processIntent(
             HomeScreenModel.NoteListIntent.CreateTag(it)
         )
-    })
+    },
+        onDeleteItemClick = {
+            screenModel.processIntent(
+                HomeScreenModel.NoteListIntent.DeleteNote(it)
+            )
+        })
 }

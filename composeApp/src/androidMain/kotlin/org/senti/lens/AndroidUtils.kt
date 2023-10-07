@@ -49,12 +49,17 @@ actual fun RecommendationScreenContent(
     modifier: Modifier,
     recommendationList: List<Advice?>
 ) {
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+        recommendationList.size
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
         HorizontalPager(
             modifier = Modifier,
-            pageCount = recommendationList.size,
+            state = pagerState,
             contentPadding = PaddingValues(16.dp),
             verticalAlignment = Alignment.Top
         ) { page ->

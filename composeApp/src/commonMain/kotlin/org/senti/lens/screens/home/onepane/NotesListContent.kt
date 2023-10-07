@@ -48,6 +48,7 @@ fun NotesListContent(
     state: HomeScreenModel.NoteListUiState,
     onClickTag: (Tag) -> Unit,
     onClickNote: (Note) -> Unit,
+    onDeleteItemClick: (Note) -> Unit,
     changeSearchQuery: (String) -> Unit,
     onRefresh: () -> Unit,
     onClickSetting: () -> Unit,
@@ -61,7 +62,7 @@ fun NotesListContent(
         if (state.loadState == LoadState.Loading) 58.dp else minOf(
             (refreshState.progress * 80).dp + 8.dp,
             80.dp
-        ), animationSpec = tween(300)
+        ), animationSpec = tween(if (refreshState.progress > 0) 0 else 300)
     )
 
     AnimatedContent(state.loadState == LoadState.Loading, Modifier.fillMaxWidth()) {
@@ -117,12 +118,13 @@ fun NotesListContent(
             if (state.filteredNotes != null) {
                 NotesList(
                     modifier = Modifier.weight(1f),
-                    onClick = onClickNote,
+                    onItemClick = onClickNote,
+                    notes = state.filteredNotes,
+                    currentNote = null,
+                    onDeleteClick = onDeleteItemClick,
                     contentPadding = PaddingValues(
                         start = 16.dp, end = 16.dp, top = 8.dp, bottom = 40.dp
-                    ),
-                    notes = state.filteredNotes,
-                    currentNote = null
+                    )
                 )
             }
         }

@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.persistentListOf
 import org.senti.lens.TagsList
 import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.models.Note
@@ -36,6 +37,7 @@ fun TwoPaneContent(
     onChangeTitle: (String) -> Unit,
     onChangeBody: (String) -> Unit,
     onDeleteClick: () -> Unit,
+    onDeleteItemClick:(Note) -> Unit,
     onSelectNote: (Note) -> Unit,
     onSelectTag: (Tag) -> Unit,
     changeSearchQuery: (String) -> Unit,
@@ -80,10 +82,11 @@ fun TwoPaneContent(
                     )
                 }
                 NotesList(
-                    onClick = onSelectNote,
-                    notes = state.filteredNotes ?: listOf(),
+                    onItemClick = onSelectNote,
+                    notes = state.filteredNotes ?: persistentListOf(),
                     currentNote = editorUiStat.currentNote,
                     cellsDp = 250.dp,
+                    onDeleteClick = onDeleteItemClick,
                     contentPadding = PaddingValues(
                         start = 16.dp,
                         end = 16.dp,

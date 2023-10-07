@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -21,6 +20,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Tag
+import kotlinx.collections.immutable.ImmutableList
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
 import org.senti.lens.theme.defaultShape
@@ -30,9 +30,10 @@ import org.senti.lens.theme.onError
 expect fun PlatformGrid(
     modifier: Modifier,
     onClick: (Note) -> Unit,
-    notes: List<Note>,
+    notes: ImmutableList<Note>,
     cellsDp: Dp = 175.dp,
     currentNote: Note?,
+    onDeleteClick: (Note) -> Unit,
     contentPadding: PaddingValues
 )
 
@@ -57,13 +58,14 @@ fun PlatformDialog(
     size: Pair<Int, Int> = 350 to 300,
     content: @Composable () -> Unit
 ){
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        modifier = modifier.width(size.first.dp),
-        buttons = {
-            content()
-        }
-    )
+    if (visible)
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            modifier = modifier,
+            buttons = {
+                content()
+            }
+        )
 }
 
 @Composable

@@ -3,6 +3,9 @@ package org.senti.lens.screens.home
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import io.ktor.http.HttpStatusCode
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +23,7 @@ import org.senti.lens.network.SyncUseCase
 interface Intent
 
 class HomeScreenModel(
-    private val homeNotesUseCase: HomeNotesUseCase, private val syncUseCase: SyncUseCase
+    private val homeNotesUseCase: HomeNotesUseCase, private val syncUseCase: SyncUseCase,
 ) : StateScreenModel<HomeScreenModel.NoteListUiState>(NoteListUiState()) {
 
     private val _editNoteState = MutableStateFlow(NoteEditorUiState())
@@ -29,11 +32,11 @@ class HomeScreenModel(
 
 
     data class NoteListUiState(
-        val notes: List<Note>? = null,
-        val tags: List<Pair<Tag, Boolean>>? = null,
+        val notes: ImmutableList<Note>? = null,
+        val tags: ImmutableList<Pair<Tag, Boolean>>? = null,
         val searchQuery: String = "",
         val loadState: LoadState = LoadState.Idle,
-        val filteredNotes: List<Note>? = notes,
+        val filteredNotes: ImmutableList<Note>? = notes?.toImmutableList(),
     )
 
     data class NoteEditorUiState(
@@ -46,6 +49,8 @@ class HomeScreenModel(
         data class SelectTag(val tag: Tag) : NoteListIntent()
         data class CreateTag(val tag: Tag) : NoteListIntent()
         data class ChangeSearchQuery(val query: String) : NoteListIntent()
+        data class DeleteNote(val note: Note) : NoteListIntent()
+
         object CloseErrorMessage : NoteListIntent()
     }
 
@@ -62,9 +67,9 @@ class HomeScreenModel(
         coroutineScope.launch {
             homeNotesUseCase.getNotesAndTags().collect {
                 mutableState.value = mutableState.value.copy(
-                    notes = it?.first,
-                    tags = it?.second?.map { tag -> tag to false },
-                    filteredNotes = it?.first
+                    notes = it?.first?.toPersistentList(),
+                    tags = it?.second?.map { tag -> tag to false }?.toPersistentList(),
+                    filteredNotes = it?.first?.toPersistentList()
                 )
             }
         }
@@ -112,7 +117,7 @@ class HomeScreenModel(
 
 
     private suspend fun reduceListState(
-        noteListUiState: NoteListUiState, noteListIntent: NoteListIntent
+        noteListUiState: NoteListUiState, noteListIntent: NoteListIntent,
     ): NoteListUiState {
         return when (noteListIntent) {
 
@@ -147,11 +152,18 @@ class HomeScreenModel(
                 }
                 noteListUiState
             }
+
+            is NoteListIntent.DeleteNote -> {
+                homeNotesUseCase.deleteNote(noteListIntent.note)
+                val newList =
+                    noteListUiState.filteredNotes?.filter { it.uuid != noteListIntent.note.uuid }?.toPersistentList()
+                noteListUiState.copy(filteredNotes = newList)
+            }
         }
     }
 
     private suspend fun reduceEditState(
-        editNoteUiState: NoteEditorUiState, editNoteIntent: EditNoteIntent
+        editNoteUiState: NoteEditorUiState, editNoteIntent: EditNoteIntent,
     ): NoteEditorUiState {
         return when (editNoteIntent) {
             is EditNoteIntent.AddTagInNote -> {
@@ -288,26 +300,32 @@ class HomeScreenModel(
     }
 
     private fun changeTag(
-        tag: Tag, currentState: NoteListUiState
+        tag: Tag, currentState: NoteListUiState,
     ): NoteListUiState {
         val newTags =
             currentState.tags?.map { (it, isSelected) -> if (it == tag) it to !isSelected else it to isSelected }
 
         val newFilteredNotes = filterList(currentState.notes, newTags, currentState.searchQuery)
 
-        return currentState.copy(tags = newTags, filteredNotes = newFilteredNotes)
+        return currentState.copy(
+            tags = newTags?.toPersistentList(),
+            filteredNotes = newFilteredNotes?.toPersistentList()
+        )
     }
 
     private fun changeSearchQuery(
-        query: String, currentState: NoteListUiState
+        query: String, currentState: NoteListUiState,
     ): NoteListUiState {
         val newFilteredNotes = filterList(currentState.notes, currentState.tags, query)
 
-        return currentState.copy(searchQuery = query, filteredNotes = newFilteredNotes)
+        return currentState.copy(
+            searchQuery = query,
+            filteredNotes = newFilteredNotes?.toPersistentList()
+        )
     }
 
     private fun filterList(
-        notes: List<Note>?, tags: List<Pair<Tag, Boolean>>?, query: String
+        notes: List<Note>?, tags: List<Pair<Tag, Boolean>>?, query: String,
     ) = if (!tags.isNullOrEmpty()) {
         val filteredTag = tags.filter { it.second }.map { it.first }
 

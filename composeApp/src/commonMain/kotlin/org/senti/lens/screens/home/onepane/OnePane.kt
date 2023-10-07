@@ -104,6 +104,11 @@ fun OnePane(
                 onRefresh = { screenModel.processIntent(HomeScreenModel.NoteListIntent.LoadData) },
                 onClickSetting = {
                     navigator?.singlePush(SettingScreen())
+                },
+                onDeleteItemClick = {
+                    screenModel.processIntent(
+                        HomeScreenModel.NoteListIntent.DeleteNote(it)
+                    )
                 })
 
         }

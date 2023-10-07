@@ -36,6 +36,7 @@ fun EditNoteContent(
     var tagDialogShowed by remember { mutableStateOf(false) }
     var sentimentDialogShowed by remember { mutableStateOf(false) }
 
+
     Column(modifier) {
         TopBarEdit(
             onBackClick = onBackClick,
