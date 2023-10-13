@@ -86,7 +86,7 @@ actual fun PlatformGrid(
                     val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 2.dp else 0.dp)
 
                     NoteItem(
-                        modifier = Modifier.height(200.dp).border(
+                        modifier = Modifier.bounceClick().height(200.dp).border(
                             width = width,
                             color = color,
                             shape = defaultShape

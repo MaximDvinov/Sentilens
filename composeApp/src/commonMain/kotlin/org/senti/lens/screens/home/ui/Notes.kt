@@ -63,7 +63,7 @@ fun NoteItem(
     Box {
         Column(
             modifier = modifier
-                .bounceClick().clip(defaultShape).combinedClickable(
+                .clip(defaultShape).combinedClickable(
                     onClick = onItemClick,
                     onLongClick = {
                         expanded = true

@@ -9,6 +9,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -156,7 +157,13 @@ class HomeScreenModel(
             is NoteListIntent.DeleteNote -> {
                 homeNotesUseCase.deleteNote(noteListIntent.note)
                 val newList =
-                    noteListUiState.filteredNotes?.filter { it.uuid != noteListIntent.note.uuid }?.toPersistentList()
+                    noteListUiState.filteredNotes?.filter { it.uuid != noteListIntent.note.uuid }
+                        ?.toPersistentList()
+                if (noteListIntent.note.uuid == _editNoteState.value.currentNote?.uuid) {
+                    _editNoteState.update {
+                        it.copy(currentNote = null)
+                    }
+                }
                 noteListUiState.copy(filteredNotes = newList)
             }
         }

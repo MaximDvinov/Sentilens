@@ -64,7 +64,7 @@ actual fun PlatformGrid(
             )
 
             NoteItem(
-                modifier = Modifier.animateContentSize().border(
+                modifier = Modifier.bounceClick().animateContentSize().border(
                     width = width,
                     color = color,
                     shape = defaultShape
