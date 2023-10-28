@@ -37,7 +37,7 @@ fun AuthTextField(
     style: TextStyle = MaterialTheme.typography.body1,
     onTextChange: (String) -> Unit,
     keyboardType: KeyboardType,
-    nextFocus: () -> Unit
+    nextFocus: () -> Unit,
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -61,12 +61,12 @@ fun AuthTextField(
                 alpha = 0.2f
             )
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Next),
-        keyboardActions = KeyboardActions(onNext = {
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = {
             nextFocus()
         }),
 
-    )
+        )
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
@@ -78,6 +78,7 @@ fun PasswordTextField(
     style: TextStyle = MaterialTheme.typography.body1,
     onTextChange: (String) -> Unit,
     keyboardType: KeyboardType,
+    nextFocus: () -> Unit,
 ) {
     var showPassword by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -118,10 +119,10 @@ fun PasswordTextField(
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                focusManager.clearFocus()
+                nextFocus()
             }
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Done),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             textColor = MaterialTheme.colors.onSecondary,
             backgroundColor = MaterialTheme.colors.secondary,

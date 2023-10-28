@@ -22,6 +22,12 @@ kotlin {
 
     jvm("desktop")
 
+    js {
+        browser()
+        binaries.executable()
+    }
+
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -45,9 +51,9 @@ kotlin {
                 implementation(libs.mokoResourcesCompose)
                 implementation(libs.ktor.client.auth)
                 implementation(libs.ktor.client.logging)
-                implementation(libs.realm)
                 implementation(libs.kamel)
                 implementation(libs.kotlinx.collections.immutable)
+                implementation(libs.kotlinx.uuid.core)
             }
         }
 
@@ -59,7 +65,7 @@ kotlin {
                 implementation(libs.compose.uitooling)
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.ktor.client.okhttp)
-
+                implementation(libs.realm)
                 implementation(libs.koin.android)
 
                 compileOnly(libs.realm)
@@ -72,8 +78,17 @@ kotlin {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
                 implementation(libs.ktor.client.okhttp)
-
+                implementation(libs.realm)
                 implementation(libs.window.styler)
+            }
+        }
+
+        val jsMain by getting {
+            dependsOn(commonMain)
+            dependencies {
+                implementation(compose.html.core)
+                implementation(libs.ktor.client.js)
+                implementation(libs.indexeddb.core)
             }
         }
     }
@@ -115,7 +130,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-    kotlin{
+    kotlin {
         jvmToolchain(17)
     }
 }

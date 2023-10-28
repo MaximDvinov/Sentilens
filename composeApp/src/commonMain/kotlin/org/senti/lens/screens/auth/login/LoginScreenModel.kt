@@ -13,13 +13,13 @@ const val TOKEN = "token"
 
 class LoginScreenModel(
     private val authRepository: AuthRepository,
-    private val settings: ObservableSettings
+    private val settings: ObservableSettings,
 ) :
     StateScreenModel<LoginScreenModel.UiState>(UiState()) {
     data class UiState(
         val loginData: LoginData = LoginData(),
         val loadState: LoadState = LoadState.Idle,
-        val tokenData: String? = null
+        val tokenData: String? = null,
     )
 
     sealed class Intent {
@@ -49,8 +49,11 @@ class LoginScreenModel(
                             loadState = LoadState.Success
                         )
                     }
+
                     else -> {
-                        state
+                        state.copy(
+                            loadState = LoadState.Error(result.toString())
+                        )
                     }
                 }
 

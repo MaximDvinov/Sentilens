@@ -6,6 +6,9 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.uuid.UUID
+import kotlinx.uuid.generateUUID
+import kotlinx.uuid.randomUUID
 import org.senti.lens.ApiResult
 import org.senti.lens.models.Note
 import org.senti.lens.models.NoteWrite
@@ -13,7 +16,7 @@ import org.senti.lens.models.Tag
 import org.senti.lens.network.NotesDataSource
 import org.senti.lens.repositories.NotesRepository
 import org.senti.lens.repositories.TagsRepository
-import java.util.UUID
+import kotlin.random.Random
 
 class HomeNotesUseCase(
     private val notesRepository: NotesRepository,
@@ -32,7 +35,7 @@ class HomeNotesUseCase(
 
         return notesRepository.createNotes(
             note.copy(
-                uuid = UUID.randomUUID(), updatedAt = now.toLocalDateTime(
+                uuid = UUID.generateUUID(Random), updatedAt = now.toLocalDateTime(
                     TimeZone.UTC
                 ), createdAt = now.toLocalDateTime(TimeZone.UTC)
             )

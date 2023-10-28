@@ -1,9 +1,9 @@
 package org.senti.lens.repositories
 
 import kotlinx.coroutines.flow.Flow
-import org.senti.lens.db.dao.NoteDao
+import kotlinx.uuid.UUID
+import org.senti.lens.db.NoteDao
 import org.senti.lens.models.Note
-import java.util.UUID
 
 interface NotesRepository {
 

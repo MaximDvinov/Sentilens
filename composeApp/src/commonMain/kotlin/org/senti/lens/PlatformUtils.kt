@@ -9,7 +9,7 @@ import org.senti.lens.models.Advice
 expect fun getSettings(delegate: Any): Settings
 
 enum class TypeDevice() {
-    DESKTOP, MOBILE
+    DESKTOP, MOBILE, WEB
 }
 
 expect fun getTypeDevice(): TypeDevice

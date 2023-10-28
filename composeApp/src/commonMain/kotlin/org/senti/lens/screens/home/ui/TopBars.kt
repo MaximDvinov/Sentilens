@@ -47,15 +47,12 @@ fun TopBar(
     searchQuery: String,
     changeSearchQuery: (String) -> Unit,
     onClickSetting: () -> Unit,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
 ) {
     var searchable by remember {
         mutableStateOf(false)
     }
 
-
-    // temporary fix for a text input problem
-    // TODO: get rid of storing state in two places
 
     val (text, onChangeText) = remember(false) {
         mutableStateOf(
@@ -96,7 +93,7 @@ fun TopBar(
             }
         }
 
-        if (getTypeDevice() == TypeDevice.DESKTOP) {
+        if (getTypeDevice() == TypeDevice.DESKTOP || getTypeDevice() == TypeDevice.WEB) {
             AnimatedVisibility(!searchable && text.isEmpty()) {
                 SecondaryIconButton(
                     onClick = onRefresh,
@@ -106,7 +103,6 @@ fun TopBar(
                 }
             }
         }
-
 
         AnimatedVisibility(!searchable && text.isEmpty()) {
             Spacer(Modifier.width(6.dp))
@@ -198,7 +194,7 @@ private fun RowScope.SearchText(
     searchable: Boolean,
     focusRequester: FocusRequester,
     searchQuery: String,
-    changeSearchQuery: (String) -> Unit
+    changeSearchQuery: (String) -> Unit,
 ) {
     val (text, onChangeText) = remember(searchQuery) { mutableStateOf(searchQuery) }
 

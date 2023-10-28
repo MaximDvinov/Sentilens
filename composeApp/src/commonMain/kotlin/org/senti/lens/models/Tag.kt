@@ -4,7 +4,7 @@ import androidx.compose.runtime.Stable
 import cafe.adriel.voyager.core.lifecycle.JavaSerializable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import kotlinx.uuid.UUID
 
 @Stable
 @Serializable

@@ -143,7 +143,7 @@ fun RegScreenContent(
                 placeholder = "Почта",
                 keyboardType = KeyboardType.Email,
                 nextFocus = {
-                    focusManager.moveFocus(FocusDirection.Up)
+                    focusManager.moveFocus(FocusDirection.Next)
                 }
             )
 
@@ -157,7 +157,7 @@ fun RegScreenContent(
                 },
                 keyboardType = KeyboardType.Text,
                 nextFocus = {
-                    focusManager.moveFocus(FocusDirection.Up)
+                    focusManager.moveFocus(FocusDirection.Next)
                 }
             )
             PasswordTextField(
@@ -168,7 +168,10 @@ fun RegScreenContent(
                     onPasswordChanged(it)
                 },
                 placeholder = "Пароль",
-                keyboardType = KeyboardType.Password
+                keyboardType = KeyboardType.Password,
+                nextFocus = {
+
+                }
             )
 
             AnimatedVisibility(state.loadState is LoadState.Error) {

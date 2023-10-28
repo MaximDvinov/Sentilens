@@ -1,7 +1,7 @@
 package org.senti.lens.repositories
 
 import kotlinx.coroutines.flow.Flow
-import org.senti.lens.db.dao.TagDao
+import org.senti.lens.db.TagDao
 import org.senti.lens.models.Tag
 
 interface TagsRepository {

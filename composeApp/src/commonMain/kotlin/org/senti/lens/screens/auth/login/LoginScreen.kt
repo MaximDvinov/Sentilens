@@ -72,8 +72,6 @@ class LoginScreen(val username: String? = null, val password: String? = null) : 
             }
         }
 
-
-
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
@@ -113,7 +111,7 @@ fun AuthScreenContent(
     onUsernameChanged: (String) -> Unit,
     navigator: Navigator,
     currentUsername: String?,
-    currentPassword: String?
+    currentPassword: String?,
 ) {
     LoginFields(
         state,
@@ -135,7 +133,7 @@ private fun LoginFields(
     onClickLogin: () -> Unit,
     navigator: Navigator,
     currentUsername: String?,
-    currentPassword: String?
+    currentPassword: String?,
 ) {
     val (username, setUsername) = remember { mutableStateOf(currentUsername) }
     val (password, setPassword) = remember { mutableStateOf(currentPassword) }
@@ -171,7 +169,7 @@ private fun LoginFields(
                 },
                 keyboardType = KeyboardType.Text,
                 nextFocus = {
-                    focusManager.moveFocus(FocusDirection.Up)
+                    focusManager.moveFocus(FocusDirection.Next)
                 }
             )
 
@@ -185,7 +183,10 @@ private fun LoginFields(
                     onPasswordChanged(it)
                 },
                 placeholder = "Пароль",
-                keyboardType = KeyboardType.Password
+                keyboardType = KeyboardType.Password,
+                nextFocus = {
+                    onClickLogin()
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))

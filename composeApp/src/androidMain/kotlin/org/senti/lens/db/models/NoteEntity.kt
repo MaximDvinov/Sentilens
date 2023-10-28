@@ -47,7 +47,7 @@ class NoteEntity() : RealmObject {
         }
 
     fun toNote(): Note {
-        return Note(uuid = UUID.fromString(_id.toString()),
+        return Note(uuid = kotlinx.uuid.UUID(_id.toString()),
             title = title,
             content = content,
             createdAt = createdAt,

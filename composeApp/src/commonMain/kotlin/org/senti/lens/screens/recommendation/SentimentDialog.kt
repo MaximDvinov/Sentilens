@@ -33,7 +33,6 @@ fun SentimentDialog(
 
     Box(
         modifier = modifier.clip(defaultShape).background(MaterialTheme.colors.secondary)
-            .padding(16.dp)
     ) {
         SecondaryIconButton(
             modifier = Modifier.align(Alignment.TopEnd),

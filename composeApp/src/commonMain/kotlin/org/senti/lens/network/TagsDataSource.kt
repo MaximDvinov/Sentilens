@@ -8,7 +8,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import org.senti.lens.ApiResult
 import org.senti.lens.models.Tag
-import java.net.UnknownHostException
 
 class TagsDataSource(private val client: HttpClient) {
     suspend fun getTags(): ApiResult<List<Tag>> {
@@ -19,8 +18,6 @@ class TagsDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         }catch (e: Exception) {
             ApiResult.Failure("${e.message}")
         }
@@ -37,8 +34,6 @@ class TagsDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         }catch (e: Exception) {
             ApiResult.Failure("${e.message}")
         }
@@ -52,8 +47,6 @@ class TagsDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         }catch (e: Exception) {
             ApiResult.Failure("${e.message}")
         }

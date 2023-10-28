@@ -1,13 +1,15 @@
 [versions]
 
+indexeddb = "0.6.1"
 jSystemThemeDetector = "3.8"
 kotlin = "1.9.10"
 agp = "8.1.2"
-compose = "1.5.10-beta01"
+compose = "1.5.3"
 androidx-appcompat = "1.6.1"
 androidx-activityCompose = "1.8.0"
-compose-uitooling = "1.5.3"
+compose-uitooling = "1.5.4"
 kotlinxCollectionsImmutable = "0.3.6"
+kotlinxUuidCore = "0.0.21"
 realm = "1.10.0"
 napier = "2.6.1"
 libres = "1.2.0-beta01"
@@ -18,8 +20,8 @@ buildConfig = "4.1.2"
 ktor = "2.3.4"
 composeIcons = "1.1.0"
 kotlinx-serialization = "1.6.0"
-kotlinx-datetime = "0.4.0"
-multiplatformSettings = "1.0.0"
+kotlinx-datetime = "0.4.1"
+multiplatformSettings = "1.1.0"
 koin = "3.4.3"
 kstore = "0.6.0"
 mokoResourcesVersion = "0.23.0"
@@ -35,9 +37,11 @@ kamel = "0.7.2"
 
 [libraries]
 
+indexeddb-core = { module = "com.juul.indexeddb:core", version.ref = "indexeddb" }
 jSystemThemeDetector = { module = "com.github.Dansoftowner:jSystemThemeDetector", version.ref = "jSystemThemeDetector" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+kotlinx-uuid-core = { module = "app.softwork:kotlinx-uuid-core", version.ref = "kotlinxUuidCore" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 realm = { module = "io.realm.kotlin:library-base", version.ref = "realm" }
 
@@ -56,6 +60,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }

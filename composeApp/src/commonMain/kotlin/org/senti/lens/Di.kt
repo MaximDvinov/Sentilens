@@ -8,19 +8,9 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.appendIfNameAbsent
-import io.realm.kotlin.Realm
-import io.realm.kotlin.RealmConfiguration
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import org.senti.lens.db.dao.NoteDao
-import org.senti.lens.db.dao.NoteDaoImpl
-import org.senti.lens.db.dao.TagDao
-import org.senti.lens.db.dao.TagDaoImpl
-import org.senti.lens.db.models.AdviceEntity
-import org.senti.lens.db.models.NoteEntity
-import org.senti.lens.db.models.SentimentEntity
-import org.senti.lens.db.models.TagEntity
 import org.senti.lens.network.AuthDataSource
 import org.senti.lens.network.NotesDataSource
 import org.senti.lens.network.SyncUseCase
@@ -40,27 +30,6 @@ expect val platformModule: Module
 const val BASE_URL = "https://122467.msk.web.highserver.ru"
 
 val commonModule = module {
-    single {
-        val config = RealmConfiguration
-            .Builder(
-                schema = setOf(
-                    NoteEntity::class,
-                    TagEntity::class,
-                    SentimentEntity::class,
-                    AdviceEntity::class
-                )
-            )
-            .schemaVersion(5)
-            .build()
-        Realm.open(config)
-    }
-    single<TagDao> {
-        TagDaoImpl(get())
-    }
-
-    single<NoteDao> {
-        NoteDaoImpl(get())
-    }
 
     single {
         val setting = get<ObservableSettings>()

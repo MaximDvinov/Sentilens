@@ -9,7 +9,6 @@ import org.senti.lens.models.CreatedUser
 import org.senti.lens.models.LoginData
 import org.senti.lens.models.RegisterData
 import org.senti.lens.models.TokenData
-import java.net.UnknownHostException
 
 class AuthDataSource(private val client: HttpClient) {
     suspend fun register(value: RegisterData): ApiResult<CreatedUser> {
@@ -20,9 +19,7 @@ class AuthDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             ApiResult.Failure("${e.message}")
         }
 
@@ -38,12 +35,9 @@ class AuthDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             ApiResult.Failure("${e.message}")
         }
-
     }
 
 }

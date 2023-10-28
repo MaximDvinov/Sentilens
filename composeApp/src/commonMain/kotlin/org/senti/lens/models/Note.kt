@@ -3,7 +3,7 @@ package org.senti.lens.models
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import kotlinx.uuid.UUID
 
 
 @Serializable

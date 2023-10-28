@@ -4,24 +4,14 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmUUID
 import kotlinx.coroutines.flow.Flow
+import kotlinx.uuid.UUID
+import kotlinx.uuid.generateUUID
+import kotlinx.uuid.randomUUID
+import org.senti.lens.db.TagDao
 import org.senti.lens.db.asFlowMap
 import org.senti.lens.db.models.TagEntity
 import org.senti.lens.models.Tag
-import java.util.UUID
-
-
-interface TagDao {
-
-    fun getAllTags(): Flow<List<Tag>>
-    suspend fun createTag(tag: Tag): Tag
-    suspend fun getTag(uuid: UUID): Tag?
-    suspend fun updateTag(tag: Tag): Tag?
-    suspend fun deleteTag(tag: Tag)
-    suspend fun deleteTags(tags: List<Tag>?)
-    suspend fun getAllTagsSync(): List<Tag>
-    suspend fun upsertTag(tag: Tag)
-    suspend fun finallyDeleteTag(tag: Tag)
-}
+import kotlin.random.Random
 
 class TagDaoImpl(private val realm: Realm) : TagDao {
     override fun getAllTags(): Flow<List<Tag>> =
@@ -33,7 +23,8 @@ class TagDaoImpl(private val realm: Realm) : TagDao {
     override suspend fun createTag(tag: Tag): Tag {
         return realm.write {
             this.copyToRealm(TagEntity().apply {
-                this.uuid = RealmUUID.from(tag.uuid?.toString() ?: UUID.randomUUID().toString())
+                this.uuid =
+                    RealmUUID.from(tag.uuid?.toString() ?: UUID.generateUUID(Random).toString())
                 this.title = tag.title
                 this.isNew = tag.isNew
             })
@@ -118,7 +109,7 @@ class TagDaoImpl(private val realm: Realm) : TagDao {
             if (tagEntity == null) {
                 tagEntity = TagEntity().apply {
                     this.uuid = RealmUUID.from(
-                        tag.uuid?.toString() ?: UUID.randomUUID().toString()
+                        tag.uuid?.toString() ?: UUID.generateUUID(Random).toString()
                     )
                     this.title = tag.title
                     this.isNew = tag.isNew

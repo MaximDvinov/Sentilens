@@ -12,7 +12,6 @@ import org.senti.lens.models.AnalyzeText
 import org.senti.lens.models.Note
 import org.senti.lens.models.NoteWrite
 import org.senti.lens.models.Sentiment
-import java.net.UnknownHostException
 
 class NotesDataSource(private val client: HttpClient) {
     suspend fun getNotes(): ApiResult<List<Note>> {
@@ -23,8 +22,6 @@ class NotesDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         }catch (e: Exception) {
             ApiResult.Failure(e.message ?: "Unknown error")
         }
@@ -40,8 +37,6 @@ class NotesDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        } catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         } catch (e: Exception) {
             ApiResult.Failure(e.message ?: "Unknown error")
         }
@@ -55,8 +50,6 @@ class NotesDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         }catch (e: Exception) {
             ApiResult.Failure(e.message ?: "Unknown error")
         }
@@ -74,8 +67,6 @@ class NotesDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         }catch (e: Exception) {
             ApiResult.Failure("${e.message}")
         }
@@ -89,8 +80,6 @@ class NotesDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         }catch (e: Exception) {
             ApiResult.Failure(e.message ?: "Unknown error")
         }
@@ -107,8 +96,6 @@ class NotesDataSource(private val client: HttpClient) {
             } else {
                 ApiResult.ServerError(status = result.status, message = result.body())
             }
-        }  catch (e: UnknownHostException) {
-            ApiResult.Failure("Нет доступа к интернету")
         }catch (e: Exception) {
             ApiResult.Failure(e.message ?: "Unknown error")
         }

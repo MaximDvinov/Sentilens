@@ -8,25 +8,16 @@ import io.realm.kotlin.ext.toRealmList
 import io.realm.kotlin.query.Sort
 import io.realm.kotlin.types.RealmUUID
 import kotlinx.coroutines.flow.Flow
+import kotlinx.uuid.UUID
+import kotlinx.uuid.generateUUID
+import org.senti.lens.db.NoteDao
 import org.senti.lens.db.asFlowMap
 import org.senti.lens.db.models.AdviceEntity
 import org.senti.lens.db.models.NoteEntity
 import org.senti.lens.db.models.SentimentEntity
 import org.senti.lens.db.models.TagEntity
 import org.senti.lens.models.Note
-import java.util.UUID
-
-interface NoteDao {
-
-    fun getAllNotes(): Flow<List<Note>>
-    suspend fun createNote(note: Note): Note
-    suspend fun getNote(uuid: UUID): Note?
-    suspend fun updateNote(note: Note): Note?
-    suspend fun deleteNote(note: Note)
-    fun getAllNotesSync(): List<Note>
-    suspend fun upsertNote(note: Note): Note?
-    suspend fun finallyDeleteNote(note: Note)
-}
+import kotlin.random.Random
 
 class NoteDaoImpl(private val realm: Realm) : NoteDao {
     override fun getAllNotes(): Flow<List<Note>> = realm.asFlowMap<NoteEntity, Note>(
@@ -42,7 +33,7 @@ class NoteDaoImpl(private val realm: Realm) : NoteDao {
     override suspend fun createNote(note: Note): Note {
         return realm.write {
             val result = this.copyToRealm(NoteEntity().apply {
-                this._id = RealmUUID.from((note.uuid ?: UUID.randomUUID()).toString())
+                this._id = RealmUUID.from((note.uuid ?: UUID.generateUUID(Random)).toString())
                 this.title = note.title
                 this.content = note.content
                 this.createdAt = note.createdAt
@@ -114,7 +105,7 @@ class NoteDaoImpl(private val realm: Realm) : NoteDao {
         if (tagEntity == null) {
             tagEntity = TagEntity().apply {
                 this.uuid = RealmUUID.from(
-                    UUID.randomUUID().toString()
+                    UUID.generateUUID(Random).toString()
                 )
                 this.title = tag.title
                 this.isNew = tag.isNew ?: true
