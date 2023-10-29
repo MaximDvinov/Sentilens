@@ -138,7 +138,7 @@ private fun StatusNote(note: Note?, modifier: Modifier) {
                     modifier = Modifier,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("сохранено в", style = MaterialTheme.typography.caption)
+                    Text("сохранено", style = MaterialTheme.typography.caption)
                     Text(
                         text = note.updatedAt.dateTimeFormat(),
                         style = MaterialTheme.typography.caption

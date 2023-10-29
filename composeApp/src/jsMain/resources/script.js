@@ -2,6 +2,16 @@ function addChangeStorageListener(callback) {
     browser.storage.onChanged.addListener(callback);
 }
 
+const savedTheme = localStorage.getItem('theme');
+const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const userSelectedTheme = savedTheme ? (savedTheme === 'true') : prefersDarkMode;
+
+if (userSelectedTheme) {
+    document.body.classList.add('dark-theme');
+} else {
+    document.body.classList.add('light-theme');
+}
+
 var loadingScreen = document.getElementsByClassName("loading")[0];
 loadingScreen.style.display = "block";
 
