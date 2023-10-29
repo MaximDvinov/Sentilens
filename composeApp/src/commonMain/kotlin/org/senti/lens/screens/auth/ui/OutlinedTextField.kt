@@ -64,9 +64,9 @@ fun AuthTextField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = {
             nextFocus()
-        }),
+        })
 
-        )
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)

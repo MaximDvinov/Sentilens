@@ -11,7 +11,7 @@ import org.senti.lens.db.TagDao
 import org.senti.lens.models.Tag
 import kotlin.random.Random
 
-class TagDaoImpl() : TagDao {
+class TagDaoImpl : TagDao {
     val tags = MutableStateFlow<List<Tag>>(listOf())
     override fun getAllTags(): Flow<List<Tag>> {
         return tags.map { it.filter { !it.isDeleted } }
