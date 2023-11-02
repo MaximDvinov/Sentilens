@@ -12,6 +12,7 @@ import kotlinx.browser.window
 import org.senti.lens.App
 import org.jetbrains.skiko.wasm.onWasmReady
 import org.koin.core.context.startKoin
+import org.senti.lens.MR
 import org.senti.lens.commonModule
 import org.senti.lens.platformModule
 import org.senti.lens.screens.auth.login.TOKEN
@@ -29,8 +30,9 @@ fun main() {
         modules(platformModule, commonModule)
     }.koin
 
+
     onWasmReady {
-        CanvasBasedWindow("Multiplatform App") {
+        BrowserViewportWindow("Sentilens") {
             val settings: ObservableSettings by koin.inject()
             var isLogin by remember {
                 mutableStateOf(settings.getStringOrNull(TOKEN))

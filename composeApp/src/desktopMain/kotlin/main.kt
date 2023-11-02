@@ -30,11 +30,14 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
+import androidx.compose.ui.window.Notification
 import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberNotification
+import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
 import com.mayakapps.compose.windowstyler.WindowFrameStyle
 import com.mayakapps.compose.windowstyler.WindowStyle
@@ -91,21 +94,23 @@ fun main() = application {
 
 
     System.setProperty("skiko.renderApi", "OPENGL")
+    val trayState = rememberTrayState()
+    val notification = rememberNotification("Notification", "Message from MyApp!", type = Notification.Type.Error)
 
-//    Tray(icon = painterResource(MR.images.icon), onAction = {
-//        settings["theme"] = !isDarkTheme
-//    }, menu = {
-//        Item(if (!isDarkTheme) "Темная тема" else "Светлая тема",
-//
-//            onClick = {
-//                settings["theme"] = !isDarkTheme
-//            })
-//
-//        Item("Создать заметку",
-//            onClick = {
-//
-//            })
-//    }, tooltip = "Светлая тема")
+    Tray(icon = painterResource(MR.images.icon), onAction = {
+        settings["theme"] = !isDarkTheme
+    }, menu = {
+        Item(if (!isDarkTheme) "Темная тема" else "Светлая тема",
+
+            onClick = {
+                settings["theme"] = !isDarkTheme
+            })
+
+        Item("Создать заметку",
+            onClick = {
+                trayState.sendNotification(notification)
+            })
+    }, state = trayState)
 
 
     Window(

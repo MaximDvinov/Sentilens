@@ -33,6 +33,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(libs.window.size)
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)

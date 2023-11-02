@@ -1,6 +1,7 @@
 package org.senti.lens.screens.home
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,10 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,17 +32,17 @@ import compose.icons.feathericons.X
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.senti.lens.LoadState
-import org.senti.lens.screens.commons.ui.WindowSize
-import org.senti.lens.screens.commons.ui.WindowSize.Companion.basedOnWidth
 import org.senti.lens.screens.home.onepane.OnePane
 import org.senti.lens.screens.home.twopane.TwoPane
 
 class HomeScreen : Screen, KoinComponent {
     override val key = uniqueScreenKey
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.current
+        val windowSizeClass = calculateWindowSizeClass()
 
         val screenModel = rememberScreenModel {
             HomeScreenModel(get(), get())
@@ -46,7 +51,10 @@ class HomeScreen : Screen, KoinComponent {
         val listState by screenModel.state.collectAsState()
         val editState by screenModel.editNoteState.collectAsState()
 
-        BoxWithConstraints {
+
+
+
+        Box {
             if (listState.loadState is LoadState.Error) {
                 Snackbar(
                     elevation = 100.dp,
@@ -81,7 +89,7 @@ class HomeScreen : Screen, KoinComponent {
                 }
             }
 
-            Crossfade(basedOnWidth(maxWidth, maxHeight) == WindowSize.COMPACT) {
+            Crossfade(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact || windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact) {
                 if (it) {
                     OnePane(listState, editState, screenModel, navigator)
                 } else {
@@ -89,5 +97,7 @@ class HomeScreen : Screen, KoinComponent {
                 }
             }
         }
+
+
     }
 }

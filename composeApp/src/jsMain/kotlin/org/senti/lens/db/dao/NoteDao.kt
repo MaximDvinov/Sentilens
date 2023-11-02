@@ -6,6 +6,7 @@ import com.juul.indexeddb.openDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.uuid.UUID
@@ -17,7 +18,8 @@ import kotlin.random.Random
 
 class NoteDaoImpl() : NoteDao {
     val notes = MutableStateFlow<List<Note>>(listOf())
-    override fun getAllNotes(): Flow<List<Note>> = notes
+    override fun getAllNotes(): Flow<List<Note>> =
+        notes.map { it.filter { !it.isDeleted }.sortedByDescending { it.updatedAt } }
 
     override suspend fun createNote(note: Note): Note {
         notes.updateAndGet {
