@@ -1,3 +1,7 @@
+![badge-android](http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat)
+![badge-desktop](http://img.shields.io/badge/platform-desktop-4D76CD.svg?style=flat)
+![badge-browser](https://img.shields.io/badge/platform-js-F8DB5D.svg?style=flat)
+
 <p  align="center">
   <img src="docs/logo.png" alt="Sentilens" width="175" height="175"></a>
 
