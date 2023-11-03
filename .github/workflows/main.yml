@@ -31,6 +31,6 @@ jobs:
         env:
           REPO: self
           BRANCH: build
-          FOLDER: composeApp/build
+          FOLDER: composeApp/build/dist/js
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MESSAGE: "Builded"
