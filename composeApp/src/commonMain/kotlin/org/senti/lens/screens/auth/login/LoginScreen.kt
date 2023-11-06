@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,7 +44,7 @@ import org.senti.lens.screens.commons.ui.PrimaryButton
 import org.senti.lens.screens.commons.ui.SecondaryButton
 import org.senti.lens.screens.auth.ui.AuthTextField
 import org.senti.lens.screens.auth.ui.PasswordTextField
-import org.senti.lens.screens.home.HomeScreen
+import org.senti.lens.screens.list.DiaryListScreen
 
 class LoginScreen(val username: String? = null, val password: String? = null) : Screen,
     KoinComponent {
@@ -61,7 +60,7 @@ class LoginScreen(val username: String? = null, val password: String? = null) : 
 
         LaunchedEffect(state.tokenData != null) {
             if (state.tokenData != null) {
-                localNavigator.replace(HomeScreen())
+                localNavigator.replace(DiaryListScreen())
             }
         }
 

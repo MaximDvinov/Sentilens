@@ -1,33 +1,26 @@
-package org.senti.lens.screens.home
+package org.senti.lens.screens.list
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
-import kotlinx.uuid.randomUUID
 import org.senti.lens.ApiResult
 import org.senti.lens.models.Note
 import org.senti.lens.models.NoteWrite
-import org.senti.lens.models.Tag
 import org.senti.lens.network.NotesDataSource
 import org.senti.lens.repositories.NotesRepository
 import org.senti.lens.repositories.TagsRepository
 import kotlin.random.Random
 
-class HomeNotesUseCase(
+class DiaryUseCase(
     private val notesRepository: NotesRepository,
-    private val tagsRepository: TagsRepository,
-    private val notesDataSource: NotesDataSource
+    private val notesDataSource: NotesDataSource,
 ) {
-    fun getNotesAndTags(): Flow<Pair<List<Note>, List<Tag>>?> {
-        val notes = notesRepository.getNotes()
-        val tags = tagsRepository.getTags()
-
-        return notes.combine(tags) { f1, f2 -> f1 to f2 }
+    fun getNotesAndTags(): Flow<List<Note>> {
+        return notesRepository.getNotes()
     }
 
     suspend fun createNote(note: Note): Note? {
@@ -42,7 +35,7 @@ class HomeNotesUseCase(
         )
     }
 
-    suspend fun createNoteAndAnalayze(note: Note): Pair<ApiResult<Note>, Note?> {
+    suspend fun createNoteAndAnalyze(note: Note): Pair<ApiResult<Note>, Note?> {
         var createdNote = notesRepository.createNotes(note.copy(isNew = true))
 
         val serverNote = notesDataSource.createNote(
@@ -97,9 +90,5 @@ class HomeNotesUseCase(
         if (notesDataSource.deleteNote(note.uuid.toString()) is ApiResult.Success) {
             notesRepository.finalyDeleteNote(note)
         }
-    }
-
-    suspend fun createTag(tag: Tag) {
-        return tagsRepository.createTag(tag)
     }
 }

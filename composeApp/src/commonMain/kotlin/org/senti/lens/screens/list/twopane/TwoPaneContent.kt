@@ -1,4 +1,4 @@
-package org.senti.lens.screens.home.twopane
+package org.senti.lens.screens.list.twopane
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Spring
@@ -21,10 +21,10 @@ import org.senti.lens.TagsList
 import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.home.editNote.EditNoteContent
-import org.senti.lens.screens.home.ui.NotesList
-import org.senti.lens.screens.home.ui.TopBarExpanded
-import org.senti.lens.screens.home.HomeScreenModel
+import org.senti.lens.screens.list.editDiary.EditNoteContent
+import org.senti.lens.screens.list.ui.NotesList
+import org.senti.lens.screens.list.ui.TopBarExpanded
+import org.senti.lens.screens.list.HomeScreenModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -37,17 +37,13 @@ fun TwoPaneContent(
     onChangeTitle: (String) -> Unit,
     onChangeBody: (String) -> Unit,
     onDeleteClick: () -> Unit,
-    onDeleteItemClick:(Note) -> Unit,
+    onDeleteItemClick: (Note) -> Unit,
     onSelectNote: (Note) -> Unit,
-    onSelectTag: (Tag) -> Unit,
     changeSearchQuery: (String) -> Unit,
     onRefresh: () -> Unit,
     onClickAnalyze: () -> Unit,
-    onClickTagInDialog: (Tag) -> Unit,
     onClickRecommendation: (String) -> Unit,
-    onCreateTagClick: (Tag) -> Unit
 ) {
-
     Column {
         TopBarExpanded(
             modifier = Modifier.padding(
@@ -65,27 +61,17 @@ fun TwoPaneContent(
 
         val alpha by animateFloatAsState(
             if (editorUiStat.currentNote != null) 1f else 0f,
-            spring(stiffness = Spring.StiffnessVeryLow)
+            spring(stiffness = 100f)
         )
 
         Row(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                if (state.tags?.isNotEmpty() == true) {
-                    TagsList(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).fadingEdge(
-                            startingColor = MaterialTheme.colors.background,
-                            length = 30f,
-                            horizontal = true
-                        ), tags = state.tags, onClickTag = onSelectTag
-                    )
-                }
                 NotesList(
                     onItemClick = onSelectNote,
                     notes = state.filteredNotes ?: persistentListOf(),
                     currentNote = editorUiStat.currentNote,
-                    cellsDp = 250.dp,
                     onDeleteClick = onDeleteItemClick,
                     contentPadding = PaddingValues(
                         start = 16.dp,
@@ -96,12 +82,9 @@ fun TwoPaneContent(
                 )
             }
 
-
-
             EditNoteContent(
-                modifier = Modifier.weight(if (editorUiStat.currentNote != null) 2f else 0.001f)
+                modifier = Modifier.weight(2f)
                     .alpha(alpha),
-                tags = state.tags?.map { it.first },
                 currentNote = editorUiStat.currentNote,
                 onBackClick = onBackClick,
                 onSaveClick = onSaveClick,
@@ -109,10 +92,8 @@ fun TwoPaneContent(
                 onChangeBody = onChangeBody,
                 onDeleteClick = onDeleteClick,
                 onClickAnalyze = onClickAnalyze,
-                onClickTagInDialog = onClickTagInDialog,
                 loadState = editorUiStat.loadState,
                 onClickRecommendation = onClickRecommendation,
-                onCreteTagClick = onCreateTagClick
             )
 
         }

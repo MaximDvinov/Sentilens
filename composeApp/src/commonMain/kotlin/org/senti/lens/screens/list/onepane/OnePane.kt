@@ -1,4 +1,4 @@
-package org.senti.lens.screens.home.onepane
+package org.senti.lens.screens.list.onepane
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import org.senti.lens.PlatformBackHandler
-import org.senti.lens.screens.home.editNote.EditNoteContent
-import org.senti.lens.screens.home.HomeScreenModel
+import org.senti.lens.screens.list.editDiary.EditNoteContent
+import org.senti.lens.screens.list.HomeScreenModel
 import org.senti.lens.screens.recommendation.RecommendationScreen
 import org.senti.lens.screens.setting.SettingScreen
 import org.senti.lens.singlePush
@@ -32,7 +32,6 @@ fun OnePane(
         if (!isNote) {
             EditNoteContent(
                 modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background),
-                tags = state.tags?.map { it.first },
                 currentNote = editState.currentNote,
                 onBackClick = {
                     screenModel.processIntent(
@@ -65,30 +64,11 @@ fun OnePane(
                 onClickRecommendation = { id: String ->
                     navigator?.singlePush(RecommendationScreen(id))
                 },
-                onClickTagInDialog = {
-                    screenModel.processIntent(
-                        HomeScreenModel.EditNoteIntent.AddTagInNote(
-                            it
-                        )
-                    )
-                },
                 loadState = editState.loadState,
-                onCreteTagClick = {
-                    screenModel.processIntent(
-                        HomeScreenModel.NoteListIntent.CreateTag(it)
-                    )
-                }
             )
         } else {
             NotesListContent(modifier = Modifier.fillMaxSize(),
                 state = state,
-                onClickTag = {
-                    screenModel.processIntent(
-                        HomeScreenModel.NoteListIntent.SelectTag(
-                            it
-                        )
-                    )
-                },
                 onClickNote = {
                     screenModel.processIntent(
                         HomeScreenModel.EditNoteIntent.SelectNote(it)

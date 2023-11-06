@@ -1,9 +1,11 @@
 package org.senti.lens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -104,3 +106,6 @@ fun SettingNoteMenu(
         }
     }
 }
+
+@Composable
+expect fun BoxScope.VerticalScrollBar(state: LazyListState)

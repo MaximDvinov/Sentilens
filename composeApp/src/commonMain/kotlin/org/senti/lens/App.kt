@@ -6,9 +6,8 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.FadeTransition
 import org.senti.lens.screens.auth.login.LoginScreen
-import org.senti.lens.screens.home.HomeScreen
+import org.senti.lens.screens.list.DiaryListScreen
 
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -17,7 +16,7 @@ internal fun App(loginState: String?) {
     Surface {
         AnimatedContent(!loginState.isNullOrBlank()) { isLogin ->
             if (isLogin) {
-                Navigator(HomeScreen())
+                Navigator(DiaryListScreen())
             } else {
                 Navigator(LoginScreen())
             }

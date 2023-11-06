@@ -11,13 +11,17 @@ import org.senti.lens.MR
 val h1 = TextStyle(
     fontWeight = FontWeight.Bold,
     fontSize = 24.sp,
-//    fontFamily = fontFamilyResource(MR.fonts.Nunito.bold),
     color = Color.White
 )
 
 val h2 = TextStyle(
     fontWeight = FontWeight.SemiBold,
     fontSize = 20.sp,
+    color = Color.White
+)
+
+val title = TextStyle(
+    fontSize = 16.sp,
     color = Color.White
 )
 

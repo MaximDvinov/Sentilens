@@ -1,8 +1,7 @@
-package org.senti.lens.screens.home
+package org.senti.lens.screens.list
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,10 +31,10 @@ import compose.icons.feathericons.X
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.senti.lens.LoadState
-import org.senti.lens.screens.home.onepane.OnePane
-import org.senti.lens.screens.home.twopane.TwoPane
+import org.senti.lens.screens.list.onepane.OnePane
+import org.senti.lens.screens.list.twopane.TwoPane
 
-class HomeScreen : Screen, KoinComponent {
+class DiaryListScreen : Screen, KoinComponent {
     override val key = uniqueScreenKey
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -50,9 +49,6 @@ class HomeScreen : Screen, KoinComponent {
 
         val listState by screenModel.state.collectAsState()
         val editState by screenModel.editNoteState.collectAsState()
-
-
-
 
         Box {
             if (listState.loadState is LoadState.Error) {
@@ -97,7 +93,5 @@ class HomeScreen : Screen, KoinComponent {
                 }
             }
         }
-
-
     }
 }

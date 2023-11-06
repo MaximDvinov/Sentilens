@@ -1,8 +1,8 @@
-package org.senti.lens.screens.home.twopane
+package org.senti.lens.screens.list.twopane
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
-import org.senti.lens.screens.home.HomeScreenModel
+import org.senti.lens.screens.list.HomeScreenModel
 import org.senti.lens.screens.recommendation.RecommendationScreen
 import org.senti.lens.screens.setting.SettingScreen
 import org.senti.lens.singlePush
@@ -40,10 +40,6 @@ fun TwoPane(
         screenModel.processIntent(
             HomeScreenModel.EditNoteIntent.SelectNote(it)
         )
-    }, onSelectTag = {
-        screenModel.processIntent(
-            HomeScreenModel.NoteListIntent.SelectTag(it)
-        )
     }, changeSearchQuery = {
         screenModel.processIntent(
             HomeScreenModel.NoteListIntent.ChangeSearchQuery(
@@ -54,22 +50,11 @@ fun TwoPane(
         screenModel.processIntent(
             HomeScreenModel.NoteListIntent.LoadData
         )
-    }, onClickAnalyze = {}, onClickTagInDialog = {
-        screenModel.processIntent(
-            HomeScreenModel.EditNoteIntent.AddTagInNote(
-                it
-            )
-        )
-    }, onClickRecommendation = { id: String ->
+    }, onClickAnalyze = {}, onClickRecommendation = { id: String ->
         navigator?.singlePush(RecommendationScreen(id))
-    }, onCreateTagClick = {
+    }, onDeleteItemClick = {
         screenModel.processIntent(
-            HomeScreenModel.NoteListIntent.CreateTag(it)
+            HomeScreenModel.NoteListIntent.DeleteNote(it)
         )
-    },
-        onDeleteItemClick = {
-            screenModel.processIntent(
-                HomeScreenModel.NoteListIntent.DeleteNote(it)
-            )
-        })
+    })
 }

@@ -22,7 +22,7 @@ import org.senti.lens.repositories.TagsRepository
 import org.senti.lens.screens.auth.AuthRepository
 import org.senti.lens.screens.auth.AuthRepositoryImpl
 import org.senti.lens.screens.auth.login.TOKEN
-import org.senti.lens.screens.home.HomeNotesUseCase
+import org.senti.lens.screens.list.DiaryUseCase
 
 
 expect val platformModule: Module
@@ -65,7 +65,7 @@ val commonModule = module {
     }
 
     single {
-        HomeNotesUseCase(get(), get(), get())
+        DiaryUseCase(get(), get())
     }
 
     single<AuthRepository> {

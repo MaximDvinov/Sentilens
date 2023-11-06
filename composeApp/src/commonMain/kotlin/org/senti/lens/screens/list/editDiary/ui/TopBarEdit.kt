@@ -1,4 +1,4 @@
-package org.senti.lens.screens.home.editNote.ui
+package org.senti.lens.screens.list.editDiary.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi

@@ -1,7 +1,6 @@
-package org.senti.lens.screens.home.ui
+package org.senti.lens.screens.list.ui
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,7 +16,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.senti.lens.bounceClick
-import org.senti.lens.theme.defaultShape
 
 @Composable
 fun TagItem(

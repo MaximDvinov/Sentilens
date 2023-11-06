@@ -37,6 +37,19 @@ fun LocalDateTime?.dateFormat(): String {
     return "$day $month $year"
 }
 
+//"d MMMM yyyy"
+fun LocalDateTime?.dateFormatWithEnter(): String {
+    if (this == null) {
+        return ""
+    }
+    val timeZonedDate = this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
+    val day = if (timeZonedDate.dayOfMonth < 10) "0${timeZonedDate.dayOfMonth}" else "${timeZonedDate.dayOfMonth}"
+    val month = timeZonedDate.month.mothFormat()
+    val year = timeZonedDate.year.toString()
+    return "$day $month\n$year"
+}
+
+
 //"HH:mm"
 fun LocalDateTime?.timeFormat(): String {
     if (this == null) return ""

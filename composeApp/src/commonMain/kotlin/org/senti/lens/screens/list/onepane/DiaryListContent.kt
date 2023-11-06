@@ -1,4 +1,4 @@
-package org.senti.lens.screens.home.onepane
+package org.senti.lens.screens.list.onepane
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -37,16 +37,15 @@ import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
 import org.senti.lens.screens.commons.ui.PrimaryIconButton
 import org.senti.lens.screens.commons.ui.fadingEdge
-import org.senti.lens.screens.home.HomeScreenModel
-import org.senti.lens.screens.home.ui.NotesList
-import org.senti.lens.screens.home.ui.TopBar
+import org.senti.lens.screens.list.HomeScreenModel
+import org.senti.lens.screens.list.ui.NotesList
+import org.senti.lens.screens.list.ui.TopBar
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NotesListContent(
     modifier: Modifier = Modifier,
     state: HomeScreenModel.NoteListUiState,
-    onClickTag: (Tag) -> Unit,
     onClickNote: (Note) -> Unit,
     onDeleteItemClick: (Note) -> Unit,
     changeSearchQuery: (String) -> Unit,
@@ -105,15 +104,6 @@ fun NotesListContent(
                 onClickSetting = onClickSetting,
                 onRefresh = onRefresh
             )
-            if (state.tags?.isNotEmpty() == true) {
-                TagsList(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).fadingEdge(
-                        startingColor = MaterialTheme.colors.background,
-                        length = 60f,
-                        horizontal = true
-                    ), tags = state.tags, onClickTag = onClickTag
-                )
-            }
 
             if (state.filteredNotes != null) {
                 NotesList(

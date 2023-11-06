@@ -1,4 +1,4 @@
-package org.senti.lens.screens.home.ui
+package org.senti.lens.screens.list.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility

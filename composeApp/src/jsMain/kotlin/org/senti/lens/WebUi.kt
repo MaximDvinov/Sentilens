@@ -8,6 +8,7 @@ import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -40,8 +42,8 @@ import kotlinx.collections.immutable.ImmutableList
 import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.home.ui.NoteItem
-import org.senti.lens.screens.home.ui.TagItem
+import org.senti.lens.screens.list.ui.NoteItem
+import org.senti.lens.screens.list.ui.TagItem
 import org.senti.lens.theme.defaultShape
 
 @Composable
@@ -139,6 +141,24 @@ actual fun ColumnScope.BodyText(
         ),
         maxLines = 4,
         overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Composable
+actual fun BoxScope.VerticalScrollBar(state: LazyListState) {
+    VerticalScrollbar(
+        modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight().padding(end = 2.dp),
+        adapter = rememberScrollbarAdapter(state),
+        style = LocalScrollbarStyle.current.copy(
+            hoverColor = MaterialTheme.colors.onBackground.copy(
+                0.3f
+            ),
+            shape = defaultShape,
+            unhoverColor = MaterialTheme.colors.onBackground.copy(
+                0.03f
+            ),
+            thickness = 6.dp
+        )
     )
 }
 

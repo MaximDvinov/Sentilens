@@ -70,7 +70,7 @@ fun Colors.switch() = copy(
 @Composable
 internal fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colors = if (darkTheme) {
         darkColors
@@ -92,6 +92,10 @@ internal fun AppTheme(
                 color = colors.onSecondary
             ),
             defaultFontFamily = fontFamilyResource(MR.fonts.Nunito.medium),
+            subtitle1 = title.copy(
+                fontFamily = fontFamilyResource(MR.fonts.Nunito.medium),
+                color = colors.onSecondary
+            ),
             body1 = body.copy(
                 fontFamily = fontFamilyResource(MR.fonts.Nunito.medium),
                 color = colors.onSecondary

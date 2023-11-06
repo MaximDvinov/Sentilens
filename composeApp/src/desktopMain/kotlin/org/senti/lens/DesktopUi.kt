@@ -8,6 +8,7 @@ import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,12 +16,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
@@ -37,12 +35,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.home.ui.NoteItem
-import org.senti.lens.screens.home.ui.TagItem
+import org.senti.lens.screens.commons.ui.fadingEdge
+import org.senti.lens.screens.list.ui.NoteItem
+import org.senti.lens.screens.list.ui.TagItem
 import org.senti.lens.theme.defaultShape
+import org.senti.lens.theme.smallShape
 
 @Composable
 actual fun PlatformGrid(
@@ -54,7 +53,7 @@ actual fun PlatformGrid(
     onDeleteClick: (Note) -> Unit,
     contentPadding: PaddingValues,
 ) {
-    val state = rememberLazyGridState()
+    val state = rememberLazyListState()
 
     LaunchedEffect(key1 = currentNote) {
         if (currentNote != null) {
@@ -66,16 +65,14 @@ actual fun PlatformGrid(
     }
 
     Box {
-        LazyVerticalGrid(
+        LazyColumn(
             modifier = modifier.fadingEdge(
                 startingColor = MaterialTheme.colors.background,
                 length = 10f,
                 length1 = 40f,
                 horizontal = false
             ),
-            columns = GridCells.Adaptive(cellsDp),
             state = state,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = contentPadding
         ) {
@@ -86,10 +83,10 @@ actual fun PlatformGrid(
                     val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 2.dp else 0.dp)
 
                     NoteItem(
-                        modifier = Modifier.bounceClick().height(200.dp).border(
+                        modifier = Modifier.bounceClick().border(
                             width = width,
                             color = color,
-                            shape = defaultShape
+                            shape = smallShape
                         ),
                         note = it,
                         onDeleteItemClick = remember {
@@ -102,28 +99,33 @@ actual fun PlatformGrid(
 
             }
 
-            item(span = { GridItemSpan(1) }) {
+            item() {
                 Spacer(modifier = Modifier.height(1.dp))
             }
         }
 
-        VerticalScrollbar(
-            modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight().padding(end = 2.dp),
-            adapter = rememberScrollbarAdapter(state),
-            style = LocalScrollbarStyle.current.copy(
-                hoverColor = MaterialTheme.colors.onBackground.copy(
-                    0.3f
-                ),
-                shape = defaultShape,
-                unhoverColor = MaterialTheme.colors.onBackground.copy(
-                    0.03f
-                ),
-                thickness = 6.dp
-            )
-        )
+        VerticalScrollBar(state)
     }
-
 }
+
+@Composable
+actual fun BoxScope.VerticalScrollBar(state: LazyListState) {
+    VerticalScrollbar(
+        modifier = Modifier.Companion.align(Alignment.TopEnd).fillMaxHeight().padding(end = 2.dp),
+        adapter = rememberScrollbarAdapter(state),
+        style = LocalScrollbarStyle.current.copy(
+            hoverColor = MaterialTheme.colors.onBackground.copy(
+                0.3f
+            ),
+            shape = defaultShape,
+            unhoverColor = MaterialTheme.colors.onBackground.copy(
+                0.03f
+            ),
+            thickness = 6.dp
+        )
+    )
+}
+
 
 @Composable
 actual fun ColumnScope.BodyText(

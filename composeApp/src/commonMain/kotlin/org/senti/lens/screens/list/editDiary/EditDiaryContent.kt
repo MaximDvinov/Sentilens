@@ -1,4 +1,4 @@
-package org.senti.lens.screens.home.editNote
+package org.senti.lens.screens.list.editDiary
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -12,15 +12,14 @@ import org.senti.lens.PlatformDialog
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
 import org.senti.lens.screens.commons.ui.TagDialog
-import org.senti.lens.screens.home.editNote.ui.BottomBarEdit
-import org.senti.lens.screens.home.editNote.ui.ContentNote
-import org.senti.lens.screens.home.editNote.ui.TopBarEdit
+import org.senti.lens.screens.list.editDiary.ui.BottomBarEdit
+import org.senti.lens.screens.list.editDiary.ui.ContentNote
+import org.senti.lens.screens.list.editDiary.ui.TopBarEdit
 import org.senti.lens.screens.recommendation.SentimentDialog
 
 @Composable
 fun EditNoteContent(
     modifier: Modifier,
-    tags: List<Tag>?,
     currentNote: Note?,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
@@ -28,14 +27,11 @@ fun EditNoteContent(
     onChangeBody: (String) -> Unit,
     onDeleteClick: () -> Unit,
     onClickAnalyze: () -> Unit,
-    onClickTagInDialog: (Tag) -> Unit,
     loadState: LoadState,
     onClickRecommendation: (String) -> Unit,
-    onCreteTagClick: (Tag) -> Unit
 ) {
     var tagDialogShowed by remember { mutableStateOf(false) }
     var sentimentDialogShowed by remember { mutableStateOf(false) }
-
 
     Column(modifier) {
         TopBarEdit(
@@ -61,21 +57,6 @@ fun EditNoteContent(
             onClickAnalyze = {
                 sentimentDialogShowed = true
             })
-    }
-
-
-    PlatformDialog(
-        modifier = Modifier,
-        visible = tagDialogShowed,
-        onDismissRequest = { tagDialogShowed = false },
-    ) {
-        TagDialog(
-            modifier = Modifier,
-            tags = tags,
-            onCreteTagClick = onCreteTagClick,
-            selectedTags = currentNote?.tags,
-            onClickTag = onClickTagInDialog
-        ) { tagDialogShowed = false }
     }
 
     if (currentNote?.sentiment != null) {
