@@ -22,14 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
+import cafe.adriel.voyager.koin.getNavigatorScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.X
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.senti.lens.LoadState
 import org.senti.lens.screens.list.onepane.OnePane
 import org.senti.lens.screens.list.twopane.TwoPane
@@ -37,15 +38,13 @@ import org.senti.lens.screens.list.twopane.TwoPane
 class DiaryListScreen : Screen, KoinComponent {
     override val key = uniqueScreenKey
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.current
+        val navigator = LocalNavigator.currentOrThrow
         val windowSizeClass = calculateWindowSizeClass()
 
-        val screenModel = rememberScreenModel {
-            HomeScreenModel(get(), get())
-        }
+        val screenModel = navigator.getNavigatorScreenModel<DiaryListScreenModel>()
 
         val listState by screenModel.state.collectAsState()
         val editState by screenModel.editNoteState.collectAsState()
@@ -72,7 +71,7 @@ class DiaryListScreen : Screen, KoinComponent {
                         )
 
                         IconButton(onClick = {
-                            screenModel.processIntent(HomeScreenModel.NoteListIntent.CloseErrorMessage)
+                            screenModel.processIntent(DiaryListScreenModel.NoteListIntent.CloseErrorMessage)
                         }, modifier = Modifier.padding(0.dp)) {
                             Icon(
                                 imageVector = FeatherIcons.X,

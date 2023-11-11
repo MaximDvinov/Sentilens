@@ -1,5 +1,8 @@
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,25 +28,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.StrokeCap.Companion.Square
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
-import androidx.compose.ui.window.Notification
-import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import androidx.compose.ui.window.rememberNotification
-import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
 import com.mayakapps.compose.windowstyler.WindowFrameStyle
 import com.mayakapps.compose.windowstyler.WindowStyle
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SettingsListener
-import com.russhwolf.settings.set
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Minus
 import compose.icons.feathericons.Square
@@ -93,26 +93,6 @@ fun main() = application {
     }
 
 
-    System.setProperty("skiko.renderApi", "OPENGL")
-    val trayState = rememberTrayState()
-    val notification = rememberNotification("Notification", "Message from MyApp!", type = Notification.Type.Error)
-
-    Tray(icon = painterResource(MR.images.icon), onAction = {
-        settings["theme"] = !isDarkTheme
-    }, menu = {
-        Item(if (!isDarkTheme) "Темная тема" else "Светлая тема",
-
-            onClick = {
-                settings["theme"] = !isDarkTheme
-            })
-
-        Item("Создать заметку",
-            onClick = {
-                trayState.sendNotification(notification)
-            })
-    }, state = trayState)
-
-
     Window(
         title = "Sentilens",
         state = windowState,
@@ -123,6 +103,8 @@ fun main() = application {
             }
             exitApplication()
         },
+        undecorated = true,
+        transparent = true,
     ) {
         WindowStyle(
             isDarkTheme = isDarkTheme, frameStyle = WindowFrameStyle(
@@ -135,18 +117,18 @@ fun main() = application {
 
         AppTheme(isDarkTheme) {
             Column(
-//                modifier = Modifier
-//                    .clip(if (windowState.placement == WindowPlacement.Maximized) RectangleShape else defaultShape)
-//                    .background(color = MaterialTheme.colors.background)
+                modifier = Modifier
+                    .clip(if (windowState.placement == WindowPlacement.Maximized) RectangleShape else defaultShape)
+                    .background(color = MaterialTheme.colors.background)
             ) {
-//                window.isResizable = windowState.placement != WindowPlacement.Maximized
-//                if (windowState.placement != WindowPlacement.Maximized) {
-//                    WindowDraggableArea {
-//                        AppBar(windowState)
-//                    }
-//                } else {
-//                    AppBar(windowState)
-//                }
+                window.isResizable = windowState.placement != WindowPlacement.Maximized
+                if (windowState.placement != WindowPlacement.Maximized) {
+                    WindowDraggableArea {
+                        AppBar(windowState)
+                    }
+                } else {
+                    AppBar(windowState)
+                }
 
                 App(isLogin)
             }
@@ -167,7 +149,7 @@ fun ApplicationScope.AppBar(windowState: WindowState) {
     ) {
         Icon(
             painter = painterResource(MR.images.icon),
-            modifier = Modifier.size(20.dp),
+            modifier = Modifier.size(18.dp),
             contentDescription = "icon",
             tint = MaterialTheme.colors.onBackground
         )
@@ -181,67 +163,61 @@ fun ApplicationScope.AppBar(windowState: WindowState) {
             )
         )
 
-        var activeMinimize by remember { mutableStateOf(false) }
-        Button(modifier = Modifier.size(24.dp)
-            .onPointerEvent(PointerEventType.Enter) { activeMinimize = true }
-            .onPointerEvent(PointerEventType.Exit) { activeMinimize = false },
-            contentPadding = PaddingValues(4.dp),
-            shape = RoundedCornerShape(4.dp),
-            elevation = null,
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = if (!activeMinimize) Color.Transparent else MaterialTheme.colors.primary
-            ),
-            onClick = {
-                windowState.isMinimized = !windowState.isMinimized
-            }) {
-            Icon(
-                FeatherIcons.Minus,
-                contentDescription = "close",
-                tint = MaterialTheme.colors.onBackground
-            )
-        }
-
-        var activePlacement by remember { mutableStateOf(false) }
-        Button(modifier = Modifier.size(24.dp)
-            .onPointerEvent(PointerEventType.Enter) { activePlacement = true }
-            .onPointerEvent(PointerEventType.Exit) { activePlacement = false },
-            contentPadding = PaddingValues(4.dp),
-            elevation = null,
-            shape = RoundedCornerShape(4.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = if (!activePlacement) Color.Transparent else MaterialTheme.colors.primary,
-            ),
-            onClick = {
-                windowState.placement = if (windowState.placement == WindowPlacement.Fullscreen) {
-                    WindowPlacement.Floating
-                } else {
-                    WindowPlacement.Fullscreen
-                }
-            }) {
-            Icon(
-                FeatherIcons.Square,
-                contentDescription = "close",
-                tint = MaterialTheme.colors.onBackground
-            )
-        }
-
-        var activeClose by remember { mutableStateOf(false) }
-        Button(modifier = Modifier.size(24.dp)
-            .onPointerEvent(PointerEventType.Enter) { activeClose = true }
-            .onPointerEvent(PointerEventType.Exit) { activeClose = false },
-            onClick = ::exitApplication,
-            contentPadding = PaddingValues(4.dp),
-            shape = RoundedCornerShape(4.dp),
-            elevation = null,
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = if (!activeClose) Color.Transparent else Color.Red
-            )
+        WindowControlButton(
+            background = MaterialTheme.colors.primary.copy(alpha = 0.3f),
+            icon = FeatherIcons.Minus
         ) {
-            Icon(
-                FeatherIcons.X,
-                contentDescription = "close",
-                tint = MaterialTheme.colors.onBackground
-            )
+            windowState.isMinimized = !windowState.isMinimized
         }
+
+        WindowControlButton(
+            background = MaterialTheme.colors.primary.copy(alpha = 0.3f),
+            icon = FeatherIcons.Square
+        ) {
+            windowState.placement = if (windowState.placement == WindowPlacement.Fullscreen) {
+                WindowPlacement.Floating
+            } else {
+                WindowPlacement.Fullscreen
+            }
+        }
+
+        WindowControlButton(
+            icon = FeatherIcons.X,
+            background = MaterialTheme.colors.error,
+            iconColor = MaterialTheme.colors.onError,
+            onClick = ::exitApplication
+        )
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun WindowControlButton(
+    background: Color = MaterialTheme.colors.primary,
+    contentPadding: PaddingValues = PaddingValues(4.dp),
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    icon: ImageVector,
+    iconColor: Color = MaterialTheme.colors.primary,
+    contentDescription: String = "",
+    onClick: () -> Unit,
+) {
+    var isActive by remember { mutableStateOf(false) }
+    val colorBackground by animateColorAsState(
+        if (isActive) background else Color.Transparent
+    )
+    Box(
+        modifier = Modifier.size(24.dp)
+            .clip(shape)
+            .background(colorBackground)
+            .onPointerEvent(PointerEventType.Enter) { isActive = true }
+            .onPointerEvent(PointerEventType.Exit) { isActive = false }
+            .clickable(onClick = onClick)
+            .padding(contentPadding),
+    ) {
+        Icon(
+            icon,
+            contentDescription = contentDescription,
+            tint = iconColor
+        )
     }
 }

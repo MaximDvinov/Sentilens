@@ -1,36 +1,30 @@
 package org.senti.lens.screens.list.twopane
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
-import org.senti.lens.TagsList
-import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.models.Note
-import org.senti.lens.models.Tag
 import org.senti.lens.screens.list.editDiary.EditNoteContent
 import org.senti.lens.screens.list.ui.NotesList
 import org.senti.lens.screens.list.ui.TopBarExpanded
-import org.senti.lens.screens.list.HomeScreenModel
+import org.senti.lens.screens.list.DiaryListScreenModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TwoPaneContent(
-    state: HomeScreenModel.NoteListUiState,
-    editorUiStat: HomeScreenModel.NoteEditorUiState,
+    state: DiaryListScreenModel.NoteListUiState,
+    editorUiStat: DiaryListScreenModel.NoteEditorUiState,
     onBackClick: () -> Unit,
     onClickSetting: () -> Unit,
     onSaveClick: () -> Unit,

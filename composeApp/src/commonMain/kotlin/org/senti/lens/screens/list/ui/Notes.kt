@@ -84,7 +84,7 @@ fun NotesList(
 
     Box {
         LazyColumn(
-            modifier = modifier.fadingEdge(
+            modifier = modifier.fillMaxHeight().fadingEdge(
                 startingColor = MaterialTheme.colors.background,
                 length = 10f,
                 length1 = 40f,
@@ -152,7 +152,7 @@ fun NoteItem(
                 .background(MaterialTheme.colors.secondary).padding(8.dp),
         ) {
             Column(
-                modifier = Modifier.width(60.dp).fillMaxHeight(),
+                modifier = Modifier.width(80.dp).fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

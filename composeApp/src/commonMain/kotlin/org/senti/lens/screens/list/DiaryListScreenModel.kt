@@ -23,9 +23,9 @@ import org.senti.lens.network.SyncUseCase
 
 interface Intent
 
-class HomeScreenModel(
+class DiaryListScreenModel(
     private val diaryUseCase: DiaryUseCase, private val syncUseCase: SyncUseCase,
-) : StateScreenModel<HomeScreenModel.NoteListUiState>(NoteListUiState()) {
+) : StateScreenModel<DiaryListScreenModel.NoteListUiState>(NoteListUiState()) {
 
     private val _editNoteState = MutableStateFlow(NoteEditorUiState())
     val editNoteState: StateFlow<NoteEditorUiState>

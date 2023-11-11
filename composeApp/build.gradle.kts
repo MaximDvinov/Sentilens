@@ -40,6 +40,7 @@ kotlin {
                 implementation(libs.napier)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
+                implementation(libs.voyager.koin)
                 implementation(libs.composeImageLoader)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.ktor.core)
@@ -133,6 +134,15 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
+
     kotlin {
         jvmToolchain(17)
     }

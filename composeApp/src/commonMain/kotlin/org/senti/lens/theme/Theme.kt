@@ -111,7 +111,7 @@ internal fun AppTheme(
         ),
         shapes = MaterialTheme.shapes.copy(medium = defaultShape),
         content = {
-            Surface(content = content)
+            Surface(content = content, color = Color.Transparent)
         }
     )
 }

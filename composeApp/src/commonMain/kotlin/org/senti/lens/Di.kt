@@ -22,6 +22,8 @@ import org.senti.lens.repositories.TagsRepository
 import org.senti.lens.screens.auth.AuthRepository
 import org.senti.lens.screens.auth.AuthRepositoryImpl
 import org.senti.lens.screens.auth.login.TOKEN
+import org.senti.lens.screens.list.DiaryListScreen
+import org.senti.lens.screens.list.DiaryListScreenModel
 import org.senti.lens.screens.list.DiaryUseCase
 
 
@@ -83,4 +85,6 @@ val commonModule = module {
     single {
         SyncUseCase(get(), get(), get(), get())
     }
+
+    factory { DiaryListScreenModel(get(), get()) }
 }

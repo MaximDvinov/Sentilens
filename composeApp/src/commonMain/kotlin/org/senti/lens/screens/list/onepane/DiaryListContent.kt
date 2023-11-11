@@ -1,7 +1,7 @@
 package org.senti.lens.screens.list.onepane
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -32,12 +32,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.senti.lens.LoadState
-import org.senti.lens.TagsList
 import org.senti.lens.models.Note
-import org.senti.lens.models.Tag
 import org.senti.lens.screens.commons.ui.PrimaryIconButton
-import org.senti.lens.screens.commons.ui.fadingEdge
-import org.senti.lens.screens.list.HomeScreenModel
+import org.senti.lens.screens.list.DiaryListScreenModel
 import org.senti.lens.screens.list.ui.NotesList
 import org.senti.lens.screens.list.ui.TopBar
 
@@ -45,7 +42,7 @@ import org.senti.lens.screens.list.ui.TopBar
 @Composable
 fun NotesListContent(
     modifier: Modifier = Modifier,
-    state: HomeScreenModel.NoteListUiState,
+    state: DiaryListScreenModel.NoteListUiState,
     onClickNote: (Note) -> Unit,
     onDeleteItemClick: (Note) -> Unit,
     changeSearchQuery: (String) -> Unit,
@@ -70,12 +67,12 @@ fun NotesListContent(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.height(offset).fillMaxWidth().padding(2.dp)
         ) {
-            if (refreshState.progress > 0f || it) {
+            AnimatedVisibility(refreshState.progress > 0f || it) {
                 Text(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.caption,
                     text = if (it) "Синхронизация" else "Синхронизировать",
-                    color = MaterialTheme.colors.onBackground.copy(0.3f)
+                    color = MaterialTheme.colors.onBackground.copy(0.3f),
                 )
             }
 

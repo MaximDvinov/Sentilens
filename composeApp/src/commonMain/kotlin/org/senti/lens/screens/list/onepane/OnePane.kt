@@ -10,21 +10,21 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import org.senti.lens.PlatformBackHandler
 import org.senti.lens.screens.list.editDiary.EditNoteContent
-import org.senti.lens.screens.list.HomeScreenModel
+import org.senti.lens.screens.list.DiaryListScreenModel
 import org.senti.lens.screens.recommendation.RecommendationScreen
 import org.senti.lens.screens.setting.SettingScreen
 import org.senti.lens.singlePush
 
 @Composable
 fun OnePane(
-    state: HomeScreenModel.NoteListUiState,
-    editState: HomeScreenModel.NoteEditorUiState,
-    screenModel: HomeScreenModel,
+    state: DiaryListScreenModel.NoteListUiState,
+    editState: DiaryListScreenModel.NoteEditorUiState,
+    screenModel: DiaryListScreenModel,
     navigator: Navigator?
 ) {
     PlatformBackHandler(editState.currentNote != null) {
         screenModel.processIntent(
-            HomeScreenModel.EditNoteIntent.SelectNote(null)
+            DiaryListScreenModel.EditNoteIntent.SelectNote(null)
         )
     }
 
@@ -35,27 +35,27 @@ fun OnePane(
                 currentNote = editState.currentNote,
                 onBackClick = {
                     screenModel.processIntent(
-                        HomeScreenModel.EditNoteIntent.SelectNote(null)
+                        DiaryListScreenModel.EditNoteIntent.SelectNote(null)
                     )
                 },
                 onSaveClick = {
                     screenModel.processIntent(
-                        HomeScreenModel.EditNoteIntent.SaveNote
+                        DiaryListScreenModel.EditNoteIntent.SaveNote
                     )
                 },
                 onChangeTitle = {
                     screenModel.processIntent(
-                        HomeScreenModel.EditNoteIntent.ChangeTitle(it)
+                        DiaryListScreenModel.EditNoteIntent.ChangeTitle(it)
                     )
                 },
                 onChangeBody = {
                     screenModel.processIntent(
-                        HomeScreenModel.EditNoteIntent.ChangeBody(it)
+                        DiaryListScreenModel.EditNoteIntent.ChangeBody(it)
                     )
                 },
                 onDeleteClick = {
                     screenModel.processIntent(
-                        HomeScreenModel.EditNoteIntent.DeleteNote
+                        DiaryListScreenModel.EditNoteIntent.DeleteNote
                     )
                 },
                 onClickAnalyze = {
@@ -71,23 +71,23 @@ fun OnePane(
                 state = state,
                 onClickNote = {
                     screenModel.processIntent(
-                        HomeScreenModel.EditNoteIntent.SelectNote(it)
+                        DiaryListScreenModel.EditNoteIntent.SelectNote(it)
                     )
                 },
                 changeSearchQuery = {
                     screenModel.processIntent(
-                        HomeScreenModel.NoteListIntent.ChangeSearchQuery(
+                        DiaryListScreenModel.NoteListIntent.ChangeSearchQuery(
                             it
                         )
                     )
                 },
-                onRefresh = { screenModel.processIntent(HomeScreenModel.NoteListIntent.LoadData) },
+                onRefresh = { screenModel.processIntent(DiaryListScreenModel.NoteListIntent.LoadData) },
                 onClickSetting = {
                     navigator?.singlePush(SettingScreen())
                 },
                 onDeleteItemClick = {
                     screenModel.processIntent(
-                        HomeScreenModel.NoteListIntent.DeleteNote(it)
+                        DiaryListScreenModel.NoteListIntent.DeleteNote(it)
                     )
                 })
 
