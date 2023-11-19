@@ -25,9 +25,9 @@
 
 .loading {
     opacity: 1;
-        visibility: visible;
-        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, height 0.3s ease-in-out;
-        height: 100%;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, height 0.3s ease-in-out;
+    margin: 100px
 }
 
 .loading.hidden{
