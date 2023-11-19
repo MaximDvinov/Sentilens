@@ -25,6 +25,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
 import com.russhwolf.settings.Settings
+import kotlinx.browser.window
 import org.senti.lens.models.Advice
 import org.senti.lens.screens.recommendation.RecommendationItem
 import org.senti.lens.theme.defaultShape
@@ -40,7 +41,7 @@ actual fun getTypeDevice(): TypeDevice {
 @Composable
 actual fun PlatformBackHandler(
     backHandlingEnabled: Boolean,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     Box(modifier = Modifier.onPreviewKeyEvent {
         if (it.key == Key.Escape) {
@@ -54,7 +55,7 @@ actual fun PlatformBackHandler(
 
 @Composable
 actual fun RecommendationScreenContent(
-    modifier: Modifier, recommendationList: List<Advice?>
+    modifier: Modifier, recommendationList: List<Advice?>,
 ) {
     val state = rememberLazyListState()
 
@@ -98,5 +99,5 @@ actual fun SetColorStatusBar(darkTheme: Boolean, colors: Colors) {
 }
 
 actual fun openLink(url: String) {
-
+    window.open(url)
 }

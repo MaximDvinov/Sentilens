@@ -67,16 +67,17 @@ fun PrimaryIconButton(
     content: @Composable () -> Unit,
 ) {
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    val animatedColor by animateColorAsState(if (enabled) color else Color.DarkGray)
     Box(
         modifier = modifier
             .bounceClick()
             .shadow(
                 elevation = 10.dp,
                 shape = defaultShape,
-                spotColor = color,
+                spotColor = animatedColor,
             )
             .clip(defaultShape)
-            .background(color)
+            .background(animatedColor)
             .clickable(
                 onClick = onClick,
                 enabled = enabled,
@@ -102,20 +103,20 @@ fun PrimaryButton(
     shape: Shape = defaultShape,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val color by animateColorAsState(if (enabled) color else MaterialTheme.colors.primaryVariant)
+    val animatedColor by animateColorAsState(if (enabled) color else Color.DarkGray)
 
     Button(
         onClick = onClick,
         elevation = ButtonDefaults.elevation(5.dp),
         shape = shape,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = color,
-            disabledBackgroundColor = color
+            backgroundColor = animatedColor,
+            disabledBackgroundColor = animatedColor
         ),
         modifier = modifier.bounceClick().defaultMinSize(minHeight = 48.dp).shadow(
             elevation = 7.dp,
             shape = defaultShape,
-            spotColor = color,
+            spotColor = animatedColor,
         ),
         enabled = enabled,
         content = content
@@ -140,3 +141,4 @@ fun SecondaryButton(
         content = content
     )
 }
+

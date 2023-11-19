@@ -16,13 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Save
+import org.senti.lens.LoadState
 import org.senti.lens.models.Sentiment
 import org.senti.lens.screens.commons.ui.PrimaryIconButton
 import org.senti.lens.screens.commons.ui.SecondaryButton
 
 @Composable
 fun BottomBarEdit(
-    sentiment: Sentiment? = null, onSaveClick: () -> Unit, onClickAnalyze: () -> Unit
+    sentiment: Sentiment? = null,
+    loadState: LoadState,
+    onSaveClick: () -> Unit,
+    onClickAnalyze: () -> Unit,
 ) {
     Row(
         modifier = Modifier.padding(16.dp).fillMaxWidth(),
@@ -44,7 +48,10 @@ fun BottomBarEdit(
             }
         }
 
-        PrimaryIconButton(onClick = remember { { onSaveClick() } }) {
+        PrimaryIconButton(
+            onClick = remember { { onSaveClick() } },
+            enabled = loadState != LoadState.Loading
+        ) {
             Icon(FeatherIcons.Save, "Settings", tint = MaterialTheme.colors.onPrimary)
         }
     }

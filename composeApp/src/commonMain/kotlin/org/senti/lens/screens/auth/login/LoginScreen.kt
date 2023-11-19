@@ -159,7 +159,7 @@ private fun LoginFields(
             Spacer(modifier = Modifier.height(40.dp))
 
             AuthTextField(
-                modifier = Modifier.bounceClick().fillMaxWidth().widthIn(max = 240.dp),
+                modifier = Modifier.fillMaxWidth().widthIn(max = 240.dp),
                 text = username ?: "",
                 placeholder = "Логин",
                 onTextChange = {

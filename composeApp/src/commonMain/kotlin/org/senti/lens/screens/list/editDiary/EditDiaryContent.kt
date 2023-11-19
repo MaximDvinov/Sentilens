@@ -54,6 +54,7 @@ fun EditNoteContent(
         BottomBarEdit(
             sentiment = currentNote?.sentiment,
             onSaveClick = onSaveClick,
+            loadState = loadState,
             onClickAnalyze = {
                 sentimentDialogShowed = true
             })
