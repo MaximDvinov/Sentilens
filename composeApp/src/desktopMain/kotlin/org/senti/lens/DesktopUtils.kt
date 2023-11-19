@@ -1,5 +1,6 @@
 package org.senti.lens
 
+import LocalEscapeEvent
 import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +16,10 @@ import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -45,14 +49,20 @@ actual fun PlatformBackHandler(
     backHandlingEnabled: Boolean,
     onBack: () -> Unit
 ) {
-    Box(modifier = Modifier.onPreviewKeyEvent {
-        if (it.key == Key.Escape) {
+    var localEscapeEvent by LocalEscapeEvent.current
+    LaunchedEffect(localEscapeEvent) {
+        if (localEscapeEvent != null) {
             onBack()
-            true
-        } else {
-            false
         }
-    })
+    }
+//    Box(modifier = Modifier.onPreviewKeyEvent {
+//        if (it.key == Key.Escape) {
+//            onBack()
+//            true
+//        } else {
+//            false
+//        }
+//    })
 }
 
 @Composable

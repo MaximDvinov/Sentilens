@@ -11,13 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.window.WindowDraggableArea
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,8 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.StrokeCap.Companion.Square
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.DpSize
@@ -67,6 +70,8 @@ import java.awt.Dimension
 private lateinit var settingsListener: SettingsListener
 private lateinit var tokenListener: SettingsListener
 
+val LocalEscapeEvent = compositionLocalOf<MutableState<Key?>> { mutableStateOf(null) }
+
 fun main() = application {
     val koin = startKoin {
         modules(platformModule, commonModule)
@@ -92,49 +97,61 @@ fun main() = application {
         }
     }
 
+    CompositionLocalProvider(LocalEscapeEvent provides mutableStateOf(null)) {
+        var localEscapeEvent by LocalEscapeEvent.current
 
-    Window(
-        title = "Sentilens",
-        state = windowState,
-        icon = painterResource(MR.images.icon),
-        onCloseRequest = {
-            if (::settingsListener.isInitialized) {
-                settingsListener.deactivate()
-            }
-            exitApplication()
-        },
-        undecorated = true,
-        transparent = true,
-    ) {
-        WindowStyle(
-            isDarkTheme = isDarkTheme, frameStyle = WindowFrameStyle(
-                borderColor = if (isDarkTheme) background else lightBackground,
-                titleBarColor = if (isDarkTheme) background else lightBackground
+        Window(
+            title = "Sentilens",
+            state = windowState,
+            icon = painterResource(MR.images.icon),
+            onCloseRequest = {
+                if (::settingsListener.isInitialized) {
+                    settingsListener.deactivate()
+                }
+                exitApplication()
+            },
+            onKeyEvent = {
+                if (it.key == Key.Escape) {
+                    localEscapeEvent = it.key
+                    true
+                } else {
+                    false
+                }
+            },
+            undecorated = true,
+            transparent = true,
+        ) {
+            WindowStyle(
+                isDarkTheme = isDarkTheme, frameStyle = WindowFrameStyle(
+                    borderColor = if (isDarkTheme) background else lightBackground,
+                    titleBarColor = if (isDarkTheme) background else lightBackground
+                )
             )
-        )
 
-        window.minimumSize = Dimension(400, 500)
+            window.minimumSize = Dimension(400, 500)
 
-        AppTheme(isDarkTheme) {
-            Column(
-                modifier = Modifier
-                    .clip(if (windowState.placement == WindowPlacement.Maximized) RectangleShape else defaultShape)
-                    .background(color = MaterialTheme.colors.background)
-            ) {
-                window.isResizable = windowState.placement != WindowPlacement.Maximized
-                if (windowState.placement != WindowPlacement.Maximized) {
-                    WindowDraggableArea {
+            AppTheme(isDarkTheme) {
+                Column(
+                    modifier = Modifier
+                        .clip(if (windowState.placement == WindowPlacement.Maximized) RectangleShape else defaultShape)
+                        .background(color = MaterialTheme.colors.background)
+                ) {
+                    window.isResizable = windowState.placement != WindowPlacement.Maximized
+                    if (windowState.placement != WindowPlacement.Maximized) {
+                        WindowDraggableArea {
+                            AppBar(windowState)
+                        }
+                    } else {
                         AppBar(windowState)
                     }
-                } else {
-                    AppBar(windowState)
+
+                    App(isLogin)
                 }
 
-                App(isLogin)
             }
-
         }
     }
+
 }
 
 
