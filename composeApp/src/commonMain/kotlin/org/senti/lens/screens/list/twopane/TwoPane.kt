@@ -14,47 +14,12 @@ fun TwoPane(
     screenModel: DiaryListScreenModel,
     navigator: Navigator?,
 ) {
-    TwoPaneContent(state, editState, onBackClick = {
-        screenModel.processIntent(
-            DiaryListScreenModel.EditNoteIntent.SelectNote(null)
-        )
-    }, onClickSetting = {
-        navigator?.singlePush(SettingScreen())
-    }, onSaveClick = {
-        screenModel.processIntent(
-            DiaryListScreenModel.EditNoteIntent.SaveNote
-        )
-    }, onChangeTitle = {
-        screenModel.processIntent(
-            DiaryListScreenModel.EditNoteIntent.ChangeTitle(it)
-        )
-    }, onChangeBody = {
-        screenModel.processIntent(
-            DiaryListScreenModel.EditNoteIntent.ChangeBody(it)
-        )
-    }, onDeleteClick = {
-        screenModel.processIntent(
-            DiaryListScreenModel.EditNoteIntent.DeleteNote
-        )
-    }, onSelectNote = {
-        screenModel.processIntent(
-            DiaryListScreenModel.EditNoteIntent.SelectNote(it)
-        )
-    }, changeSearchQuery = {
-        screenModel.processIntent(
-            DiaryListScreenModel.NoteListIntent.ChangeSearchQuery(
-                it
-            )
-        )
-    }, onRefresh = {
-        screenModel.processIntent(
-            DiaryListScreenModel.NoteListIntent.LoadData
-        )
-    }, onClickAnalyze = {}, onClickRecommendation = { id: String ->
-        navigator?.singlePush(RecommendationScreen(id))
-    }, onDeleteItemClick = {
-        screenModel.processIntent(
-            DiaryListScreenModel.NoteListIntent.DeleteNote(it)
-        )
-    })
+    TwoPaneContent(state, editState,
+        onIntent = screenModel::processIntent,
+        onClickSetting = {
+            navigator?.singlePush(SettingScreen())
+        },
+        onClickRecommendation = { id: String ->
+            navigator?.singlePush(RecommendationScreen(id))
+        })
 }

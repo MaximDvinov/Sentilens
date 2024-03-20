@@ -1,4 +1,4 @@
-package org.senti.lens.screens.list.ui
+package org.senti.lens.screens.commons.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background

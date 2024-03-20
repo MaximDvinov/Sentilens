@@ -32,7 +32,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.list.ui.TagItem
 import org.senti.lens.theme.defaultShape
 
 

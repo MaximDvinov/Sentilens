@@ -1,6 +1,4 @@
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.background
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +15,7 @@ import org.senti.lens.StartScreenContent
 import org.senti.lens.commonModule
 import org.senti.lens.platformModule
 import org.senti.lens.screens.auth.login.TOKEN
+import org.senti.lens.screens.commons.ui.tileBack
 import org.senti.lens.theme.AppTheme
 import org.w3c.dom.MediaQueryListEvent
 
@@ -46,10 +45,10 @@ fun main() {
                 mutableStateOf(isLogin == null)
             }
 
-
             window.matchMedia("(prefers-color-scheme: dark)").addListener { e ->
                 isDarkTheme = e.unsafeCast<MediaQueryListEvent>().matches
             }
+
             LaunchedEffect(Unit) {
                 settingsListener = settings.addBooleanOrNullListener(
                     "theme"
@@ -66,7 +65,7 @@ fun main() {
 
             AppTheme(isDarkTheme) {
                 AnimatedContent(
-                    modifier = Modifier.background(MaterialTheme.colors.background),
+                    modifier = Modifier.tileBack(),
                     targetState = isStartScreen
                 ) {
                     if (it) {

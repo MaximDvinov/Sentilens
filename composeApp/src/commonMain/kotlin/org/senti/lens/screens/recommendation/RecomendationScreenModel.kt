@@ -1,7 +1,7 @@
 package org.senti.lens.screens.recommendation
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.launch
 import kotlinx.uuid.UUID
 import org.senti.lens.models.Note
@@ -22,7 +22,7 @@ class RecommendationScreenModel(private val notesRepository: NotesRepository, va
     }
 
     fun processIntent(intent: Intent) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             mutableState.value = reduce(mutableState.value, intent)
         }
     }

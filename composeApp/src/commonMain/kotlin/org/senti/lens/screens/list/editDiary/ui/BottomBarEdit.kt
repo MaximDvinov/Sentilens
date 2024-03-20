@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -23,13 +22,14 @@ import org.senti.lens.screens.commons.ui.SecondaryButton
 
 @Composable
 fun BottomBarEdit(
+    modifier: Modifier,
     sentiment: Sentiment? = null,
     loadState: LoadState,
     onSaveClick: () -> Unit,
     onClickAnalyze: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(modifier = Modifier.weight(1f)) {

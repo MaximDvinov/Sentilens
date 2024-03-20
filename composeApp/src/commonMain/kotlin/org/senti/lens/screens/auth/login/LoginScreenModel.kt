@@ -1,7 +1,7 @@
 package org.senti.lens.screens.auth.login
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.russhwolf.settings.ObservableSettings
 import kotlinx.coroutines.launch
 import org.senti.lens.ApiResult
@@ -29,7 +29,7 @@ class LoginScreenModel(
     }
 
     fun processIntent(intent: Intent) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             if (intent is Intent.OnLoginClicked) {
                 mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
             }
@@ -50,9 +50,9 @@ class LoginScreenModel(
                         )
                     }
 
-                    else -> {
+                    is ApiResult.Failure -> {
                         state.copy(
-                            loadState = LoadState.Error(result.toString())
+                            loadState = LoadState.Error(result.message)
                         )
                     }
                 }

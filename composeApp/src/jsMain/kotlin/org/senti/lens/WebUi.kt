@@ -42,8 +42,8 @@ import kotlinx.collections.immutable.ImmutableList
 import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
-import org.senti.lens.screens.list.ui.NoteItem
-import org.senti.lens.screens.list.ui.TagItem
+import org.senti.lens.screens.commons.ui.NoteItem
+import org.senti.lens.screens.commons.ui.TagItem
 import org.senti.lens.theme.defaultShape
 
 @Composable

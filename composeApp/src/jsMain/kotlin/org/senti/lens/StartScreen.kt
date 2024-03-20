@@ -23,10 +23,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import compose.icons.FeatherIcons
-import compose.icons.feathericons.Phone
-import compose.icons.feathericons.Tablet
-import compose.icons.feathericons.Wifi
 import org.senti.lens.screens.commons.ui.SecondaryButton
 import org.senti.lens.theme.icons.androidIcon
 import org.senti.lens.theme.icons.webIcon

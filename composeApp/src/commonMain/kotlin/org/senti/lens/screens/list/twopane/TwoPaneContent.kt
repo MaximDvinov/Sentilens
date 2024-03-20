@@ -1,75 +1,86 @@
 package org.senti.lens.screens.list.twopane
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.senti.lens.models.Note
 import org.senti.lens.screens.list.editDiary.EditNoteContent
-import org.senti.lens.screens.list.ui.NotesList
-import org.senti.lens.screens.list.ui.TopBarExpanded
+import org.senti.lens.screens.commons.ui.NotesList
+import org.senti.lens.screens.commons.ui.DiaryTopBarExpanded
+import org.senti.lens.screens.commons.ui.fadingCenterBack
 import org.senti.lens.screens.list.DiaryListScreenModel
+import org.senti.lens.screens.list.Intent
+import org.senti.lens.theme.defaultShape
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TwoPaneContent(
     state: DiaryListScreenModel.NoteListUiState,
     editorUiStat: DiaryListScreenModel.NoteEditorUiState,
-    onBackClick: () -> Unit,
+    onIntent: (Intent) -> Unit,
     onClickSetting: () -> Unit,
-    onSaveClick: () -> Unit,
-    onChangeTitle: (String) -> Unit,
-    onChangeBody: (String) -> Unit,
-    onDeleteClick: () -> Unit,
-    onDeleteItemClick: (Note) -> Unit,
-    onSelectNote: (Note) -> Unit,
-    changeSearchQuery: (String) -> Unit,
-    onRefresh: () -> Unit,
-    onClickAnalyze: () -> Unit,
     onClickRecommendation: (String) -> Unit,
 ) {
     Column {
-        TopBarExpanded(
+        DiaryTopBarExpanded(
             modifier = Modifier.padding(
                 start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp
             ),
             onClickSetting = onClickSetting,
             searchQuery = state.searchQuery,
-            changeSearchQuery = changeSearchQuery,
-            onCreateClick = {
-                onSelectNote(Note())
+            changeSearchQuery = {
+                onIntent(DiaryListScreenModel.NoteListIntent.ChangeSearchQuery(it))
             },
-            onRefresh = onRefresh,
+            onCreateClick = {
+                onIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(Note()))
+            },
+            onRefresh = {
+                onIntent(DiaryListScreenModel.NoteListIntent.LoadData)
+            },
             loadState = state.loadState
         )
 
-        val alpha by animateFloatAsState(
-            if (editorUiStat.currentNote != null) 1f else 0f,
-            spring(stiffness = 100f)
-        )
-
-        Row(modifier = Modifier.fillMaxSize()) {
+        Row(modifier = Modifier.widthIn(max = 1500.dp).align(Alignment.Start)) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1.2f)
             ) {
                 NotesList(
-                    onItemClick = onSelectNote,
+                    onItemClick = {
+                        onIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(it))
+                    },
                     notes = state.filteredNotes ?: persistentListOf(),
                     currentNote = editorUiStat.currentNote,
-                    onDeleteClick = onDeleteItemClick,
+                    onDeleteClick = {
+                        onIntent(DiaryListScreenModel.NoteListIntent.DeleteNote(it))
+                    },
                     contentPadding = PaddingValues(
                         start = 16.dp,
-                        end = 16.dp,
+                        end = 14.dp,
                         top = 8.dp,
                         bottom = 40.dp
                     )
@@ -77,20 +88,22 @@ fun TwoPaneContent(
             }
 
             EditNoteContent(
-                modifier = Modifier.weight(2f)
-                    .alpha(alpha),
+                modifier = Modifier
+                    .padding(start = 4.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
+                    .background(MaterialTheme.colors.background)
+                    .clip(RoundedCornerShape(20.dp))
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colors.secondary,
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .padding(8.dp)
+                    .weight(2f),
                 currentNote = editorUiStat.currentNote,
-                onBackClick = onBackClick,
-                onSaveClick = onSaveClick,
-                onChangeTitle = onChangeTitle,
-                onChangeBody = onChangeBody,
-                onDeleteClick = onDeleteClick,
-                onClickAnalyze = onClickAnalyze,
+                onIntent = onIntent,
                 loadState = editorUiStat.loadState,
                 onClickRecommendation = onClickRecommendation,
             )
-
         }
-
     }
 }

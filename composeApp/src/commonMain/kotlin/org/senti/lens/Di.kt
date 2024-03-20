@@ -10,6 +10,7 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.appendIfNameAbsent
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import org.senti.lens.network.AuthDataSource
 import org.senti.lens.network.NotesDataSource
@@ -21,7 +22,9 @@ import org.senti.lens.repositories.NotesRepository
 import org.senti.lens.repositories.TagsRepository
 import org.senti.lens.screens.auth.AuthRepository
 import org.senti.lens.screens.auth.AuthRepositoryImpl
+import org.senti.lens.screens.auth.MockAuthRepository
 import org.senti.lens.screens.auth.login.TOKEN
+import org.senti.lens.screens.home.HomeScreenModel
 import org.senti.lens.screens.list.DiaryListScreen
 import org.senti.lens.screens.list.DiaryListScreenModel
 import org.senti.lens.screens.list.DiaryUseCase
@@ -71,7 +74,7 @@ val commonModule = module {
     }
 
     single<AuthRepository> {
-        AuthRepositoryImpl(get())
+        MockAuthRepository()
     }
 
     single {
@@ -87,4 +90,6 @@ val commonModule = module {
     }
 
     factory { DiaryListScreenModel(get(), get()) }
+
+    factoryOf(::HomeScreenModel)
 }

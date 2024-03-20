@@ -19,6 +19,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -68,7 +69,7 @@ class RecommendationScreen(private val id: String) : Screen, KoinComponent {
                         navigator.pop()
                     },
                 ) {
-                    Icon(Icons.Default.ArrowBack, "Back")
+                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Back")
                 }
 
             }

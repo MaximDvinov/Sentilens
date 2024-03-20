@@ -11,9 +11,17 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import dev.icerock.moko.resources.compose.fontFamilyResource
-import org.senti.lens.MR
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import io.ktor.client.plugins.websocket.WebSockets
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.Font
+import org.jetbrains.compose.resources.FontResource
 import org.senti.lens.SetColorStatusBar
+import sentilens.composeapp.generated.resources.Nunito_Bold
+import sentilens.composeapp.generated.resources.Nunito_Medium
+import sentilens.composeapp.generated.resources.Nunito_SemiBold
+import sentilens.composeapp.generated.resources.Res
 
 private val darkColors = darkColors(
     primary = primary,
@@ -26,7 +34,8 @@ private val darkColors = darkColors(
     onBackground = onBackground,
     surface = surface,
     onSurface = onSurface,
-    primaryVariant = tagColor
+    primaryVariant = tagColor,
+    secondaryVariant = secondary.copy(alpha = 0.3f)
 )
 
 private val lightColors = lightColors(
@@ -40,7 +49,8 @@ private val lightColors = lightColors(
     onBackground = lightOnBackground,
     surface = lightSurface,
     onSurface = lightOnSurface,
-    primaryVariant = lightTagColor
+    primaryVariant = lightTagColor,
+    secondaryVariant = lightSecondary.copy(alpha = 0.5f)
 )
 
 @Composable
@@ -64,9 +74,10 @@ fun Colors.switch() = copy(
     onSecondary = animateColor(onSecondary),
     onBackground = animateColor(onBackground),
     onSurface = animateColor(onSurface),
-    onError = animateColor(onError)
+    onError = animateColor(onError),
 )
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -80,32 +91,43 @@ internal fun AppTheme(
 
     SetColorStatusBar(darkTheme, colors)
 
+    val fontFamily = FontFamily(
+        Font(Res.font.Nunito_Bold, weight = FontWeight.Bold),
+        Font(Res.font.Nunito_Medium, weight = FontWeight.Medium),
+        Font(Res.font.Nunito_Medium, weight = FontWeight.Normal),
+        Font(Res.font.Nunito_SemiBold, weight = FontWeight.SemiBold),
+    )
+
     MaterialTheme(
         colors = colors.switch(),
         typography = Typography(
             h1 = h1.copy(
-                fontFamily = fontFamilyResource(MR.fonts.Nunito.bold),
+                fontFamily = fontFamily,
                 color = colors.onSecondary
             ),
             h2 = h2.copy(
-                fontFamily = fontFamilyResource(MR.fonts.Nunito.semiBold),
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.SemiBold,
                 color = colors.onSecondary
             ),
-            defaultFontFamily = fontFamilyResource(MR.fonts.Nunito.medium),
+            defaultFontFamily = fontFamily,
             subtitle1 = title.copy(
-                fontFamily = fontFamilyResource(MR.fonts.Nunito.medium),
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Medium,
                 color = colors.onSecondary
             ),
             body1 = body.copy(
-                fontFamily = fontFamilyResource(MR.fonts.Nunito.medium),
-                color = colors.onSecondary
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Medium,
             ),
             caption = muted.copy(
-                fontFamily = fontFamilyResource(MR.fonts.Nunito.medium),
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Medium,
                 color = colors.onSecondary.copy(0.6f)
             ),
             overline = small.copy(
-                fontFamily = fontFamilyResource(MR.fonts.Nunito.medium),
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Medium,
                 color = colors.onSecondary
             )
         ),

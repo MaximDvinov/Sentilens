@@ -1,7 +1,7 @@
 package org.senti.lens.screens.list
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import io.ktor.http.HttpStatusCode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -45,22 +45,22 @@ class DiaryListScreenModel(
     )
 
     sealed class NoteListIntent : Intent {
-        object LoadData : NoteListIntent()
+        data object LoadData : NoteListIntent()
         data class ChangeSearchQuery(val query: String) : NoteListIntent()
         data class DeleteNote(val note: Note) : NoteListIntent()
-        object CloseErrorMessage : NoteListIntent()
+        data object CloseErrorMessage : NoteListIntent()
     }
 
     sealed class EditNoteIntent : Intent {
-        object SaveNote : EditNoteIntent()
-        object DeleteNote : EditNoteIntent()
+        data object SaveNote : EditNoteIntent()
+        data object DeleteNote : EditNoteIntent()
         data class ChangeTitle(val title: String) : EditNoteIntent()
         data class ChangeBody(val body: String) : EditNoteIntent()
         data class SelectNote(val note: Note?) : EditNoteIntent()
     }
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             diaryUseCase.getNotesAndTags().collect {
                 mutableState.value = mutableState.value.copy(
                     notes = it.toPersistentList(),
@@ -69,7 +69,7 @@ class DiaryListScreenModel(
             }
         }
 
-        coroutineScope.launch {
+        screenModelScope.launch {
             delay(50)
 
             mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
@@ -94,7 +94,7 @@ class DiaryListScreenModel(
     }
 
     fun processIntent(intent: Intent) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             if (intent is NoteListIntent) {
                 if (intent is NoteListIntent.LoadData) {
                     mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
@@ -150,12 +150,12 @@ class DiaryListScreenModel(
             }
 
             is NoteListIntent.DeleteNote -> {
-                diaryUseCase.deleteNote(noteListIntent.note)
                 if (noteListIntent.note.uuid == _editNoteState.value.currentNote?.uuid) {
                     _editNoteState.update {
                         it.copy(currentNote = null)
                     }
                 }
+                diaryUseCase.deleteNote(noteListIntent.note)
             }
         }
     }

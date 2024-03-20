@@ -1,25 +1,15 @@
 package org.senti.lens.screens.list.onepane
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -28,32 +18,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
 import org.senti.lens.LoadState
 import org.senti.lens.models.Note
+import org.senti.lens.screens.commons.ui.LoadIndicator
+import org.senti.lens.screens.commons.ui.NotesList
 import org.senti.lens.screens.commons.ui.PrimaryIconButton
+import org.senti.lens.screens.commons.ui.DiaryTopBar
 import org.senti.lens.screens.list.DiaryListScreenModel
-import org.senti.lens.screens.list.ui.NotesList
-import org.senti.lens.screens.list.ui.TopBar
+import org.senti.lens.screens.list.Intent
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NotesListContent(
     modifier: Modifier = Modifier,
     state: DiaryListScreenModel.NoteListUiState,
-    onClickNote: (Note) -> Unit,
-    onDeleteItemClick: (Note) -> Unit,
-    changeSearchQuery: (String) -> Unit,
-    onRefresh: () -> Unit,
+    onIntent: (Intent) -> Unit,
     onClickSetting: () -> Unit,
 ) {
+    val navigator = LocalNavigator.current
     val refreshState = rememberPullRefreshState(
         state.loadState == LoadState.Loading,
-        onRefresh,
+        onRefresh = {
+            onIntent(DiaryListScreenModel.NoteListIntent.LoadData)
+        },
         refreshThreshold = 80.dp
     )
+
     val offset by animateDpAsState(
         if (state.loadState == LoadState.Loading) 58.dp else minOf(
             (refreshState.progress * 80).dp + 8.dp,
@@ -61,54 +53,39 @@ fun NotesListContent(
         ), animationSpec = tween(if (refreshState.progress > 0) 0 else 300)
     )
 
-    AnimatedContent(state.loadState == LoadState.Loading, Modifier.fillMaxWidth()) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.height(offset).fillMaxWidth().padding(2.dp)
-        ) {
-            AnimatedVisibility(refreshState.progress > 0f || it) {
-                Text(
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.caption,
-                    text = if (it) "Синхронизация" else "Синхронизировать",
-                    color = MaterialTheme.colors.onBackground.copy(0.3f),
-                )
-            }
-
-            Spacer(Modifier.height(3.dp))
-            if (it) {
-                LinearProgressIndicator(
-                    modifier = Modifier.width(60.dp).height(2.dp),
-                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f),
-                    backgroundColor = MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
-                    strokeCap = StrokeCap.Round,
-                )
-            }
-        }
-    }
+    LoadIndicator(state.loadState == LoadState.Loading, offset, refreshState)
 
     Box(modifier.pullRefresh(refreshState).padding(top = offset)) {
         Column(
-            modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)
+            modifier = Modifier.fillMaxSize()
         ) {
-            TopBar(
+            DiaryTopBar(
                 modifier = Modifier.padding(
                     start = 16.dp, end = 16.dp, top = 0.dp, bottom = 8.dp
                 ),
                 searchQuery = state.searchQuery,
-                changeSearchQuery = changeSearchQuery,
-                onClickSetting = onClickSetting,
-                onRefresh = onRefresh
+                changeSearchQuery = {
+                    onIntent(DiaryListScreenModel.NoteListIntent.ChangeSearchQuery(it))
+                },
+                onBackClick = {
+                    navigator?.pop()
+                },
+                onRefresh = {
+                    onIntent(DiaryListScreenModel.NoteListIntent.LoadData)
+                }
             )
 
             if (state.filteredNotes != null) {
                 NotesList(
                     modifier = Modifier.weight(1f),
-                    onItemClick = onClickNote,
+                    onItemClick = {
+                        onIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(it))
+                    },
                     notes = state.filteredNotes,
                     currentNote = null,
-                    onDeleteClick = onDeleteItemClick,
+                    onDeleteClick = {
+                        onIntent(DiaryListScreenModel.NoteListIntent.DeleteNote(it))
+                    },
                     contentPadding = PaddingValues(
                         start = 16.dp, end = 16.dp, top = 8.dp, bottom = 40.dp
                     )
@@ -116,11 +93,14 @@ fun NotesListContent(
             }
         }
 
-        PrimaryIconButton(modifier = Modifier.padding(16.dp).align(Alignment.BottomEnd),
-            onClick = { onClickNote(Note()) }) {
+        PrimaryIconButton(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+            onClick = { onIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(Note())) }
+        ) {
             Icon(Icons.Default.Add, "", tint = MaterialTheme.colors.onPrimary)
         }
     }
 }
-
 

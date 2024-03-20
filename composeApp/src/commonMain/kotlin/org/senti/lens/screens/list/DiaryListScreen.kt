@@ -1,6 +1,7 @@
 package org.senti.lens.screens.list
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,19 +34,26 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.X
 import org.koin.core.component.KoinComponent
 import org.senti.lens.LoadState
+import org.senti.lens.models.Note
 import org.senti.lens.screens.list.onepane.OnePane
 import org.senti.lens.screens.list.twopane.TwoPane
 
-class DiaryListScreen : Screen, KoinComponent {
+class DiaryListScreen(private val diary: Note? = null) : Screen {
     override val key = uniqueScreenKey
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalVoyagerApi::class)
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val windowSizeClass = calculateWindowSizeClass()
 
         val screenModel = navigator.getNavigatorScreenModel<DiaryListScreenModel>()
+
+        LaunchedEffect(diary) {
+            if (diary != null) {
+                screenModel.processIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(diary))
+            }
+        }
 
         val listState by screenModel.state.collectAsState()
         val editState by screenModel.editNoteState.collectAsState()
@@ -84,7 +93,10 @@ class DiaryListScreen : Screen, KoinComponent {
                 }
             }
 
-            Crossfade(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact || windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact) {
+            Crossfade(
+                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact || windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact,
+                animationSpec = tween(durationMillis = 150)
+            ) {
                 if (it) {
                     OnePane(listState, editState, screenModel, navigator)
                 } else {

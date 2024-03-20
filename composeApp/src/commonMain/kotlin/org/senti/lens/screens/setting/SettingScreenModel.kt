@@ -1,7 +1,7 @@
 package org.senti.lens.screens.setting
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.russhwolf.settings.ObservableSettings
 import kotlinx.coroutines.launch
 import org.senti.lens.models.Tag
@@ -25,7 +25,7 @@ class SettingScreenModel(
     }
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             tagsRepository.getTags().collect {
                 mutableState.value = mutableState.value.copy(tags = it.map { tag -> tag to false })
             }
@@ -33,7 +33,7 @@ class SettingScreenModel(
     }
 
     fun processIntent(intent: Intent) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             mutableState.value = reduce(mutableState.value, intent)
         }
     }

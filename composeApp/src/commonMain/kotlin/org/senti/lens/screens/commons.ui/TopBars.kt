@@ -1,4 +1,4 @@
-package org.senti.lens.screens.list.ui
+package org.senti.lens.screens.commons.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -19,9 +19,12 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,25 +32,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.RotateCcw
 import compose.icons.feathericons.Settings
 import org.senti.lens.LoadState
 import org.senti.lens.TypeDevice
 import org.senti.lens.getTypeDevice
-import org.senti.lens.screens.commons.ui.PrimaryIconButton
-import org.senti.lens.screens.commons.ui.SecondaryIconButton
 import org.senti.lens.theme.defaultShape
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun TopBar(
+fun DiaryTopBar(
     modifier: Modifier = Modifier,
     searchQuery: String,
     changeSearchQuery: (String) -> Unit,
-    onClickSetting: () -> Unit,
     onRefresh: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     var searchable by remember {
         mutableStateOf(false)
@@ -71,8 +74,22 @@ fun TopBar(
         modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        AnimatedVisibility(!searchable && text.isEmpty()) {
+            SecondaryIconButton(
+                onClick = onBackClick,
+                modifier = Modifier
+            ) {
+                Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Setting")
+            }
+        }
 
-        SearchText(searchable, focusRequester, text, onChangeText)
+
+        SearchText(
+            searchable = searchable,
+            focusRequester = focusRequester,
+            searchQuery = text,
+            changeSearchQuery = onChangeText,
+        )
 
         SecondaryIconButton(
             onClick = {
@@ -92,33 +109,114 @@ fun TopBar(
                 }
             }
         }
+//
+//        if (getTypeDevice() == TypeDevice.DESKTOP || getTypeDevice() == TypeDevice.WEB) {
+//            AnimatedVisibility(!searchable && text.isEmpty()) {
+//                SecondaryIconButton(
+//                    onClick = onRefresh,
+//                    modifier = Modifier.padding(start = 6.dp)
+//                ) {
+//                    Icon(FeatherIcons.RotateCcw, "Refresh")
+//                }
+//            }
+//        }
+
+//        AnimatedVisibility(!searchable && text.isEmpty()) {
+//            Spacer(Modifier.width(6.dp))
+//            SecondaryIconButton(
+//                onClick = onClickSetting,
+//                modifier = Modifier.padding(start = 6.dp)
+//            ) {
+//                Icon(FeatherIcons.Settings, "Setting")
+//            }
+//        }
+    }
+}
+
+@Composable
+fun HomeTopBar(
+    modifier: Modifier = Modifier,
+    onRefresh: () -> Unit,
+    onClickSetting: () -> Unit
+) {
+    Row(
+        modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "Дневник",
+            style = MaterialTheme.typography.h1,
+            color = MaterialTheme.colors.onSecondary
+        )
 
         if (getTypeDevice() == TypeDevice.DESKTOP || getTypeDevice() == TypeDevice.WEB) {
-            AnimatedVisibility(!searchable && text.isEmpty()) {
-                SecondaryIconButton(
-                    onClick = onRefresh,
-                    modifier = Modifier.padding(start = 6.dp)
-                ) {
-                    Icon(FeatherIcons.RotateCcw, "Refresh")
-                }
+
+            SecondaryIconButton(
+                onClick = onRefresh,
+                modifier = Modifier.padding(start = 6.dp)
+            ) {
+                Icon(FeatherIcons.RotateCcw, "Refresh")
             }
         }
 
-        AnimatedVisibility(!searchable && text.isEmpty()) {
-            Spacer(Modifier.width(6.dp))
+        Spacer(Modifier.width(6.dp))
+        SecondaryIconButton(
+            onClick = onClickSetting,
+            modifier = Modifier.padding(start = 6.dp)
+        ) {
+            Icon(FeatherIcons.Settings, "Setting")
+        }
+    }
+}
+
+@Composable
+fun ActionTopBar(
+    modifier: Modifier = Modifier,
+    title: String,
+    leftButtonIcon: ImageVector? = null,
+    rightButtonIcon: ImageVector? = null,
+    onClickLeft: () -> Unit = {},
+    onClickRight: () -> Unit = {},
+    textAlign: TextAlign = TextAlign.Center
+) {
+    Row(
+        modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (leftButtonIcon != null) {
             SecondaryIconButton(
-                onClick = onClickSetting,
-                modifier = Modifier.padding(start = 6.dp)
+                onClick = onClickLeft,
+                modifier = Modifier
             ) {
-                Icon(FeatherIcons.Settings, "Setting")
+                Icon(leftButtonIcon, "")
+            }
+        }
+
+
+        Text(
+            modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
+            text = title,
+            style = MaterialTheme.typography.h1,
+            color = MaterialTheme.colors.onSecondary,
+            textAlign = textAlign
+        )
+
+        if (rightButtonIcon != null) {
+            SecondaryIconButton(
+                onClick = onClickRight,
+                modifier = Modifier
+            ) {
+                Icon(rightButtonIcon, "")
             }
         }
     }
 }
 
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun TopBarExpanded(
+fun DiaryTopBarExpanded(
     modifier: Modifier = Modifier,
     searchQuery: String,
     changeSearchQuery: (String) -> Unit,
@@ -155,7 +253,13 @@ fun TopBarExpanded(
             }
         }
 
-        SearchText(searchable, focusRequester, searchQuery, changeSearchQuery)
+        SearchText(
+            searchable = searchable,
+            focusRequester = focusRequester,
+            searchQuery = searchQuery,
+            changeSearchQuery = changeSearchQuery,
+            isCenter = false
+        )
 
         SecondaryIconButton(
             onClick = onRefresh,
@@ -188,17 +292,20 @@ fun TopBarExpanded(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun RowScope.SearchText(
     searchable: Boolean,
     focusRequester: FocusRequester,
     searchQuery: String,
+    isCenter: Boolean = true,
     changeSearchQuery: (String) -> Unit,
 ) {
     val (text, onChangeText) = remember(searchQuery) { mutableStateOf(searchQuery) }
 
-    Box(Modifier.Companion.weight(1f)) {
+    Box(
+        Modifier.Companion.weight(1f),
+        contentAlignment = if (isCenter) Alignment.Center else Alignment.CenterStart
+    ) {
         AnimatedContent(searchable || text.isNotEmpty()) {
             if (it) {
                 BasicTextField(modifier = Modifier.focusRequester(focusRequester)
@@ -229,9 +336,9 @@ private fun RowScope.SearchText(
             } else {
                 Text(
                     modifier = Modifier,
-                    text = "Заметки",
+                    text = "Страницы",
                     style = MaterialTheme.typography.h1,
-                    color = MaterialTheme.colors.onSecondary
+                    color = MaterialTheme.colors.onSecondary,
                 )
             }
         }

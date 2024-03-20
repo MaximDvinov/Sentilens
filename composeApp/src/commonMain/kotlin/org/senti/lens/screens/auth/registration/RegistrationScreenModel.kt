@@ -1,7 +1,7 @@
 package org.senti.lens.screens.auth.registration
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.launch
 import org.senti.lens.ApiResult
 import org.senti.lens.LoadState
@@ -25,7 +25,7 @@ class RegistrationScreenModel(private val authRepository: AuthRepository) :
     }
 
     fun processIntent(intent: Intent) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             if (intent is Intent.OnRegistrationClicked) {
                 mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
             }

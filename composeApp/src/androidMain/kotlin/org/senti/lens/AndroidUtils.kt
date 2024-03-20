@@ -3,6 +3,7 @@ package org.senti.lens
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -64,7 +65,9 @@ actual fun RecommendationScreenContent(
             verticalAlignment = Alignment.Top
         ) { page ->
             Box(
-                Modifier.padding(8.dp).fillMaxSize()
+                Modifier
+                    .padding(8.dp)
+                    .fillMaxSize()
             ) {
                 recommendationList[page]?.let { RecommendationItem(it) }
             }
@@ -79,7 +82,7 @@ actual fun SetColorStatusBar(darkTheme: Boolean, colors: Colors) {
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colors.background.toArgb()
+            window.statusBarColor = Color.TRANSPARENT
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }

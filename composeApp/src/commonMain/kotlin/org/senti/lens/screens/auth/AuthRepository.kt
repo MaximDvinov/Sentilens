@@ -17,3 +17,10 @@ class AuthRepositoryImpl(private val authDataSource: AuthDataSource) : AuthRepos
 
     override suspend fun login(value: LoginData) = authDataSource.login(value)
 }
+
+class MockAuthRepository : AuthRepository {
+    override suspend fun register(value: RegisterData) = ApiResult.Success(CreatedUser("", "", 0, false, "TestUser"))
+
+    override suspend fun login(value: LoginData) = ApiResult.Success(TokenData("token"))
+
+}

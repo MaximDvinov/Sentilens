@@ -4,19 +4,20 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SettingsListener
 import io.github.aakira.napier.DebugAntilog
@@ -26,6 +27,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 import org.senti.lens.screens.auth.login.TOKEN
+import org.senti.lens.screens.commons.ui.tileBack
 import org.senti.lens.theme.AppTheme
 
 class AndroidApp : Application() {
@@ -80,7 +82,7 @@ class AppActivity : ComponentActivity() {
             AppTheme(isDarkTheme ?: isSystemInDarkTheme()) {
                 Box(
                     modifier = Modifier
-                        .background(MaterialTheme.colors.background)
+                        .tileBack()
                         .systemBarsPadding()
                         .navigationBarsPadding()
                         .imePadding()

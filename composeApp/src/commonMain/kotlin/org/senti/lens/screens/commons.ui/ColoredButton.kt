@@ -72,7 +72,7 @@ fun PrimaryIconButton(
         modifier = modifier
             .bounceClick()
             .shadow(
-                elevation = 10.dp,
+                elevation = 4.dp,
                 shape = defaultShape,
                 spotColor = animatedColor,
             )

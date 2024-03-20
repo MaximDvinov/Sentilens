@@ -1,7 +1,7 @@
 //package org.senti.lens.screens.home.editNote
 //
 //import cafe.adriel.voyager.core.model.StateScreenModel
-//import cafe.adriel.voyager.core.model.coroutineScope
+//import cafe.adriel.voyager.core.model.screenModelScope
 //import kotlinx.coroutines.delay
 //import kotlinx.coroutines.flow.MutableSharedFlow
 //import kotlinx.coroutines.flow.SharedFlow
@@ -39,7 +39,7 @@
 //
 //    init {
 //        if (id != null) {
-//            coroutineScope.launch {
+//            screenModelScope.launch {
 //                mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
 //                useCase.getNote(UUID.fromString(id))?.let {
 //                    mutableState.value =
@@ -50,7 +50,7 @@
 //            mutableState.value = mutableState.value.copy(currentNote = Note())
 //        }
 //
-//        coroutineScope.launch {
+//        screenModelScope.launch {
 //            useCase.getAllTags().collect { tags ->
 //                mutableState.value = mutableState.value.copy(tags = tags)
 //            }
@@ -67,7 +67,7 @@
 //    }
 //
 //    fun processIntent(intent: Intent) {
-//        coroutineScope.launch {
+//        screenModelScope.launch {
 //            if (intent is Intent.SaveNote) {
 //                mutableState.value = mutableState.value.copy(loadState = LoadState.Loading)
 //            }

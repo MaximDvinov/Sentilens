@@ -10,22 +10,16 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,8 +29,8 @@ import kotlinx.collections.immutable.ImmutableList
 import org.senti.lens.models.Note
 import org.senti.lens.models.Tag
 import org.senti.lens.screens.commons.ui.fadingEdge
-import org.senti.lens.screens.list.ui.NoteItem
-import org.senti.lens.screens.list.ui.TagItem
+import org.senti.lens.screens.commons.ui.NoteItem
+import org.senti.lens.screens.commons.ui.TagItem
 import org.senti.lens.theme.defaultShape
 
 @OptIn(ExperimentalFoundationApi::class)

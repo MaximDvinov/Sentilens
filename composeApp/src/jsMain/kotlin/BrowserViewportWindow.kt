@@ -1,5 +1,6 @@
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.window.Window
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.CanvasBasedWindow
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
@@ -10,6 +11,7 @@ private const val CANVAS_ELEMENT_ID = "ComposeTarget" // Hardwired into ComposeW
 /**
  * A Skiko/Canvas-based top-level window using the browser's entire viewport. Supports resizing.
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Suppress("FunctionName")
 fun BrowserViewportWindow(
     title: String,
@@ -57,7 +59,10 @@ fun BrowserViewportWindow(
         ?: document.createElement("title").also { htmlHeadElement.appendChild(it) }
     titleElement.textContent = title
 
-    Window(title = title) {
+
+    CanvasBasedWindow(title = title) {
         content()
     }
+
+
 }

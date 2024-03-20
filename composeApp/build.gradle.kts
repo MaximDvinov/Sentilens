@@ -7,8 +7,8 @@ plugins {
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.kotlinx.serialization)
 
-    id("dev.icerock.mobile.multiplatform-resources")
-    id("io.realm.kotlin") version "1.10.0"
+//    id("dev.icerock.mobile.multiplatform-resources")
+    id("io.realm.kotlin") version "1.13.0"
 }
 
 kotlin {
@@ -23,7 +23,7 @@ kotlin {
     jvm("desktop")
 
     js {
-        browser{
+        browser {
 
         }
         binaries.executable()
@@ -37,6 +37,8 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
+                implementation(compose.components.uiToolingPreview)
+                implementation(compose.components.resources)
                 implementation(libs.napier)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
@@ -51,13 +53,13 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.multiplatformSettings)
                 implementation(libs.koin.core)
-                implementation(libs.mokoResources)
-                implementation(libs.mokoResourcesCompose)
                 implementation(libs.ktor.client.auth)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.kamel)
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.uuid.core)
+                implementation(libs.constraintlayout.compose.multiplatform)
+                implementation(libs.compottie)
             }
         }
 
@@ -98,10 +100,9 @@ kotlin {
     }
 }
 
-multiplatformResources {
-    multiplatformResourcesPackage = "org.senti.lens"
-
-}
+//multiplatformResources {
+//    multiplatformResourcesPackage = "org.senti.lens"
+//}
 
 val version = "1.0.0"
 
@@ -170,7 +171,7 @@ compose.experimental {
 }
 
 dependencies {
-    implementation("androidx.window:window:1.1.0")
+    implementation("androidx.window:window:1.2.0")
 //    implementation(project(":composeApp"))
 }
 

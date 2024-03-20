@@ -1,4 +1,4 @@
-package org.senti.lens.screens.list.ui
+package org.senti.lens.screens.commons.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -14,13 +14,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -44,18 +41,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
-import org.senti.lens.BodyText
-import org.senti.lens.PlatformGrid
 import org.senti.lens.VerticalScrollBar
 import org.senti.lens.bounceClick
 import org.senti.lens.dateFormatWithEnter
 import org.senti.lens.models.Note
-import org.senti.lens.screens.commons.ui.fadingEdge
 import org.senti.lens.theme.defaultShape
 import org.senti.lens.theme.onError
 import org.senti.lens.theme.smallShape
@@ -152,7 +145,7 @@ fun NoteItem(
                 .background(MaterialTheme.colors.secondary).padding(8.dp),
         ) {
             Column(
-                modifier = Modifier.width(80.dp).fillMaxHeight(),
+                modifier = Modifier.width(60.dp).fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
