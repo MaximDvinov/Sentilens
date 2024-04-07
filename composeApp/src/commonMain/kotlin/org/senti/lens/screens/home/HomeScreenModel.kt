@@ -1,22 +1,19 @@
 package org.senti.lens.screens.home
 
-import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.senti.lens.ApiResult
 import org.senti.lens.models.Note
-import org.senti.lens.network.SyncUseCase
-import org.senti.lens.screens.list.DiaryUseCase
+import org.senti.lens.repositories.SyncRepository
+import org.senti.lens.screens.list.NotesRepositoryImpl
 import org.senti.lens.screens.list.Intent
 
-class HomeScreenModel(diaryUseCase: DiaryUseCase, val syncUseCase: SyncUseCase) :
+class HomeScreenModel(diaryUseCase: NotesRepositoryImpl, val syncRepository: SyncRepository) :
     StateScreenModel<HomeScreenModel.UiState>(UiState.Idle) {
     sealed class UiState(val notes: ImmutableList<Note>) {
         data object Idle : UiState(persistentListOf())
@@ -55,7 +52,7 @@ class HomeScreenModel(diaryUseCase: DiaryUseCase, val syncUseCase: SyncUseCase) 
             mutableState.update {
                 UiState.Loading(it.notes)
             }
-            when (val result = syncUseCase.sync()) {
+            when (val result = syncRepository.sync()) {
                 is ApiResult.Failure -> {
                     mutableState.update {
                         UiState.Error(result.message, it.notes)

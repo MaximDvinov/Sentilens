@@ -14,6 +14,7 @@ import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
@@ -24,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.koin.getNavigatorScreenModel
@@ -32,7 +32,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.X
-import org.koin.core.component.KoinComponent
 import org.senti.lens.LoadState
 import org.senti.lens.models.Note
 import org.senti.lens.screens.list.onepane.OnePane
@@ -47,19 +46,18 @@ class DiaryListScreen(private val diary: Note? = null) : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val windowSizeClass = calculateWindowSizeClass()
 
-        val screenModel = navigator.getNavigatorScreenModel<DiaryListScreenModel>()
+        val screenModel = navigator.getNavigatorScreenModel<DiaryScreenModel>()
 
         LaunchedEffect(diary) {
             if (diary != null) {
-                screenModel.processIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(diary))
+                screenModel.processIntent(DiaryScreenModel.EditNoteIntent.SelectNote(diary))
             }
         }
 
-        val listState by screenModel.state.collectAsState()
-        val editState by screenModel.editNoteState.collectAsState()
+        val state by screenModel.state.collectAsState()
 
         Box {
-            if (listState.loadState is LoadState.Error) {
+            if (state.listNote.loadState is LoadState.Error) {
                 Snackbar(
                     elevation = 100.dp,
                     shape = RoundedCornerShape(16.dp),
@@ -71,7 +69,7 @@ class DiaryListScreen(private val diary: Note? = null) : Screen {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = (listState.loadState as LoadState.Error).message,
+                            text = (state.listNote.loadState as LoadState.Error).message,
                             color = MaterialTheme.colors.onPrimary,
                             style = MaterialTheme.typography.body1,
                             modifier = Modifier
@@ -80,7 +78,7 @@ class DiaryListScreen(private val diary: Note? = null) : Screen {
                         )
 
                         IconButton(onClick = {
-                            screenModel.processIntent(DiaryListScreenModel.NoteListIntent.CloseErrorMessage)
+                            screenModel.processIntent(DiaryScreenModel.NoteListIntent.CloseErrorMessage)
                         }, modifier = Modifier.padding(0.dp)) {
                             Icon(
                                 imageVector = FeatherIcons.X,
@@ -94,15 +92,18 @@ class DiaryListScreen(private val diary: Note? = null) : Screen {
             }
 
             Crossfade(
-                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact || windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact,
+                windowSizeClass.isCompact(),
                 animationSpec = tween(durationMillis = 150)
             ) {
                 if (it) {
-                    OnePane(listState, editState, screenModel, navigator)
+                    OnePane(state.listNote, state.editNoteState, screenModel, navigator)
                 } else {
-                    TwoPane(listState, editState, screenModel, navigator)
+                    TwoPane(state.listNote, state.editNoteState, screenModel, navigator)
                 }
             }
         }
     }
+
+    private fun WindowSizeClass.isCompact() =
+        widthSizeClass == WindowWidthSizeClass.Compact || heightSizeClass == WindowHeightSizeClass.Compact
 }

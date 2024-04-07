@@ -51,13 +51,11 @@ import org.senti.lens.models.Tag
 import org.senti.lens.screens.commons.ui.TagsFlow
 
 class SettingScreen : Screen, KoinComponent {
-
     override val key = uniqueScreenKey
 
     @Composable
     override fun Content() {
-        val settingScreenModel = rememberScreenModel { SettingScreenModel(get(), get()) }
-        val state by settingScreenModel.state.collectAsState()
+        val settingScreenModel = rememberScreenModel { SettingScreenModel(get()) }
         val settings: ObservableSettings by inject()
         val navigator = LocalNavigator.currentOrThrow
 
@@ -69,42 +67,38 @@ class SettingScreen : Screen, KoinComponent {
             )
         }
 
-        SettingScreenContent(isDarkTheme = isDarkTheme, state = state, onChangeTag = {
-            settingScreenModel.processIntent(SettingScreenModel.Intent.SelectTag(it))
-        }, onDeleteTag = {
-            settingScreenModel.processIntent(SettingScreenModel.Intent.DeleteTags)
-        }, onChangeTheme = {
-            isDarkTheme = when (isDarkTheme) {
-                true -> {
-                    settings.putBoolean("theme", false)
-                    false
-                }
+        SettingScreenContent(
+            isDarkTheme = isDarkTheme,
+            onChangeTheme = {
+                isDarkTheme = when (isDarkTheme) {
+                    true -> {
+                        settings.putBoolean("theme", false)
+                        false
+                    }
 
-                false -> {
-                    settings.remove("theme")
-                    null
-                }
+                    false -> {
+                        settings.remove("theme")
+                        null
+                    }
 
-                null -> {
-                    settings.putBoolean("theme", true)
-                    true
+                    null -> {
+                        settings.putBoolean("theme", true)
+                        true
+                    }
                 }
+            },
+            onBackClick = { navigator.pop() },
+            onLogoutClick = {
+                settingScreenModel.processIntent(SettingScreenModel.Intent.Logout)
             }
-
-        }, onBackClick = { navigator.pop() }, onLogoutClick = {
-            settingScreenModel.processIntent(SettingScreenModel.Intent.Logout)
-        })
+        )
 
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingScreenContent(
     isDarkTheme: Boolean?,
-    onDeleteTag: () -> Unit,
-    state: SettingScreenModel.UiState,
-    onChangeTag: (Tag) -> Unit,
     onChangeTheme: () -> Unit,
     onBackClick: () -> Unit,
     onLogoutClick: () -> Unit
@@ -152,37 +146,6 @@ fun SettingScreenContent(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
-
-            if (!state.tags.isNullOrEmpty()) {
-                Text(
-                    "Теги",
-                    style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.onBackground,
-                    modifier = Modifier
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TagsFlow(
-                    modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp).padding()
-                        .verticalScroll(
-                            rememberScrollState()
-                        ),
-                    tagsState = state.tags.map { it.first },
-                    selectedTagsState = state.tags.filter { it.second }.map { it.first },
-                    changeSelectedTags = onChangeTag
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                AnimatedVisibility(state.tags.any { it.second }) {
-                    SecondaryButton(modifier = Modifier.fillMaxWidth(), onClick = onDeleteTag) {
-                        Text(
-                            "Удалить теги",
-                            style = MaterialTheme.typography.body1.copy(MaterialTheme.colors.onSecondary)
-                        )
-                    }
-                }
-            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -191,7 +154,7 @@ fun SettingScreenContent(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             onClick = onLogoutClick,
             color = MaterialTheme.colors.error,
-        ){
+        ) {
             Text(
                 "Выйти",
                 style = MaterialTheme.typography.body1,

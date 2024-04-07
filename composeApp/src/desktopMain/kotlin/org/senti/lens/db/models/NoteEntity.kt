@@ -53,7 +53,6 @@ class NoteEntity() : RealmObject {
             createdAt = createdAt,
             updatedAt = updatedAt,
             sentiment = sentiment?.toSentiment(),
-            tags = tags?.toList()?.map { it.toTag() } ?: listOf(),
             isNew = isNew,
             isDeleted = isDeleted
         )

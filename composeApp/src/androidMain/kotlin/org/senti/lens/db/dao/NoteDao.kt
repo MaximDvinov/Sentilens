@@ -46,7 +46,6 @@ class NoteDaoImpl(private val realm: Realm) : NoteDao {
                         advices = upsertAdvices(note)
                     }
                 }
-                this.tags = upsertTags(note)
                 this.isNew = note.isNew ?: true
 
             })
@@ -81,39 +80,10 @@ class NoteDaoImpl(private val realm: Realm) : NoteDao {
                         advices = upsertAdvices(note)
                     }
                 }
-                val addedTags = upsertTags(note)
-                this.tags = addedTags
                 this.isNew = note.isNew ?: true
             }
         }?.toNote()
     }
-
-    private fun MutableRealm.upsertTags(
-        note: Note,
-    ) = note.tags.map { tag ->
-        var tagEntity = if (tag.uuid == null) null else {
-            val found = realm.query<TagEntity>(
-                "uuid == $0", RealmUUID.from(tag.uuid.toString())
-            ).find().firstOrNull()
-            if (found != null) {
-                findLatest(found)
-            } else {
-                null
-            }
-        }
-
-        if (tagEntity == null) {
-            tagEntity = TagEntity().apply {
-                this.uuid = RealmUUID.from(
-                    UUID.generateUUID(Random).toString()
-                )
-                this.title = tag.title
-                this.isNew = tag.isNew ?: true
-            }
-        }
-
-        tagEntity
-    }.toRealmList()
 
     private fun MutableRealm.upsertAdvices(
         note: Note,
@@ -152,7 +122,6 @@ class NoteDaoImpl(private val realm: Realm) : NoteDao {
                         advices = upsertAdvices(note)
                     }
                 }
-                this.tags = upsertTags(note)
                 this.isNew = note.isNew ?: true
             } ?: this.copyToRealm(NoteEntity().apply {
                 this._id = RealmUUID.from(note.uuid.toString())
@@ -168,7 +137,6 @@ class NoteDaoImpl(private val realm: Realm) : NoteDao {
                         advices = upsertAdvices(note)
                     }
                 }
-                this.tags = upsertTags(note)
                 this.isNew = note.isNew ?: true
             })
         }.toNote()

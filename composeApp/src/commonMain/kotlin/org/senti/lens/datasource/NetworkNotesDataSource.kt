@@ -1,4 +1,4 @@
-package org.senti.lens.network
+package org.senti.lens.datasource
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -13,8 +13,22 @@ import org.senti.lens.models.Note
 import org.senti.lens.models.NoteWrite
 import org.senti.lens.models.Sentiment
 
-class NotesDataSource(private val client: HttpClient) {
-    suspend fun getNotes(): ApiResult<List<Note>> {
+interface NetworkNotesDataSource {
+    suspend fun getNotes(): ApiResult<List<Note>>
+
+    suspend fun createNote(value: NoteWrite): ApiResult<Note>
+
+    suspend fun deleteNote(id: String): ApiResult<Unit>
+
+    suspend fun updateNote(value: Note): ApiResult<Note>
+
+    suspend fun analyzeNote(id: String): ApiResult<Sentiment>
+
+    suspend fun analyzeByText(text: AnalyzeText): ApiResult<Sentiment>
+}
+
+class NetworkNotesDataSourceImpl(private val client: HttpClient) : NetworkNotesDataSource {
+    override suspend fun getNotes(): ApiResult<List<Note>> {
         return try {
             val result = client.get("/notes/")
             return if (result.status.value in 200..299) {
@@ -27,7 +41,7 @@ class NotesDataSource(private val client: HttpClient) {
         }
     }
 
-    suspend fun createNote(value: NoteWrite): ApiResult<Note> {
+    override suspend fun createNote(value: NoteWrite): ApiResult<Note> {
         return try {
             val result = client.post("/notes/") {
                 setBody(value)
@@ -42,7 +56,7 @@ class NotesDataSource(private val client: HttpClient) {
         }
     }
 
-    suspend fun deleteNote(id: String): ApiResult<Unit> {
+    override suspend fun deleteNote(id: String): ApiResult<Unit> {
         return try {
             val result = client.delete("/notes/$id")
             return if (result.status.value in 200..299) {
@@ -56,7 +70,7 @@ class NotesDataSource(private val client: HttpClient) {
 
     }
 
-    suspend fun updateNote(value: Note): ApiResult<Note> {
+    override suspend fun updateNote(value: Note): ApiResult<Note> {
         return try {
             val result = client.put("/notes/${value.uuid.toString()}") {
                 setBody(value)
@@ -72,7 +86,7 @@ class NotesDataSource(private val client: HttpClient) {
         }
     }
 
-    suspend fun analyzeNote(id: String): ApiResult<Sentiment> {
+    override suspend fun analyzeNote(id: String): ApiResult<Sentiment> {
         return try {
             val result = client.get("/notes/$id/analyze")
             return if (result.status.value in 200..299) {
@@ -86,7 +100,7 @@ class NotesDataSource(private val client: HttpClient) {
 
     }
 
-    suspend fun analyzeByText(text: AnalyzeText): ApiResult<Sentiment> {
+    override suspend fun analyzeByText(text: AnalyzeText): ApiResult<Sentiment> {
         return try {
             val result = client.post("/analyze-by-text") {
                 setBody(text)

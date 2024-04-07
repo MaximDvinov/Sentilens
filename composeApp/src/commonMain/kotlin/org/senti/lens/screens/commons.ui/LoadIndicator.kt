@@ -21,8 +21,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.senti.lens.LoadState
-import org.senti.lens.screens.list.DiaryListScreenModel
 
 
 @OptIn(ExperimentalMaterialApi::class)

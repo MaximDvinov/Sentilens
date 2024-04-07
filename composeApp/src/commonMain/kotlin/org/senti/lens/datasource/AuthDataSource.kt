@@ -1,4 +1,4 @@
-package org.senti.lens.network
+package org.senti.lens.datasource
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

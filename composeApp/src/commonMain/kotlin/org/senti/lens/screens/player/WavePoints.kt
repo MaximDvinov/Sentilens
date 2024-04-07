@@ -15,7 +15,7 @@ import kotlin.math.sin
 fun DrawScope.wavePoints(wavePoints: List<Offset>, color: Color, strokeWidth: Float = 2f) {
     drawPoints(
         wavePoints,
-        pointMode = PointMode.Polygon,
+        pointMode = PointMode.Points,
         color = color,
         strokeWidth = strokeWidth,
         StrokeCap.Round
@@ -44,7 +44,7 @@ fun generateWavePoints(
     for (i in 0 until numPoints) {
         val x = i
         val y = amplitude * func(x.toFloat(), waveLength, a)
-        points.add(Offset(x * 10f, y))
+        points.add(Offset(x * 15f, y))
     }
 
     return points.toPersistentList()

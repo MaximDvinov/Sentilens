@@ -5,7 +5,7 @@ import org.senti.lens.models.CreatedUser
 import org.senti.lens.models.LoginData
 import org.senti.lens.models.RegisterData
 import org.senti.lens.models.TokenData
-import org.senti.lens.network.AuthDataSource
+import org.senti.lens.datasource.AuthDataSource
 
 interface AuthRepository {
     suspend fun register(value: RegisterData): ApiResult<CreatedUser>

@@ -86,15 +86,6 @@ fun SettingNoteMenu(
             MaterialTheme.colors.secondary
         )
     ) {
-        DropdownMenuItem(onClick = onTagsClick) {
-            Icon(FeatherIcons.Tag, "Settings")
-
-            Text(
-                text = "Теги",
-                style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary),
-                modifier = Modifier.padding(10.dp)
-            )
-        }
         DropdownMenuItem(onClick = onDeleteClick) {
             Icon(Icons.Default.Delete, "Settings", tint = onError)
 

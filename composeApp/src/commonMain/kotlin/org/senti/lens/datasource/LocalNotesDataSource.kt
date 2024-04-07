@@ -1,15 +1,15 @@
-package org.senti.lens.repositories
+package org.senti.lens.datasource
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.uuid.UUID
 import org.senti.lens.db.NoteDao
 import org.senti.lens.models.Note
 
-interface NotesRepository {
+interface LocalNotesDataSource {
 
     fun getNotes(): Flow<List<Note>>
 
-    suspend fun createNotes(note: Note): Note?
+    suspend fun createNotes(note: Note): Note
     suspend fun updateNotes(note: Note): Note?
     suspend fun deleteNote(note: Note)
     suspend fun getNote(id: UUID): Note?
@@ -18,7 +18,7 @@ interface NotesRepository {
     suspend fun finalyDeleteNote(note: Note)
 }
 
-class DbNotesRepositoryImpl(private val noteDao: NoteDao) : NotesRepository {
+class LocalNotesDataSourceImpl(private val noteDao: NoteDao) : LocalNotesDataSource {
     override fun getNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes()
     }

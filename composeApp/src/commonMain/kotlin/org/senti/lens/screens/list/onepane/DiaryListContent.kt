@@ -26,14 +26,14 @@ import org.senti.lens.screens.commons.ui.LoadIndicator
 import org.senti.lens.screens.commons.ui.NotesList
 import org.senti.lens.screens.commons.ui.PrimaryIconButton
 import org.senti.lens.screens.commons.ui.DiaryTopBar
-import org.senti.lens.screens.list.DiaryListScreenModel
+import org.senti.lens.screens.list.DiaryScreenModel
 import org.senti.lens.screens.list.Intent
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NotesListContent(
     modifier: Modifier = Modifier,
-    state: DiaryListScreenModel.NoteListUiState,
+    state: DiaryScreenModel.NoteList,
     onIntent: (Intent) -> Unit,
     onClickSetting: () -> Unit,
 ) {
@@ -41,7 +41,7 @@ fun NotesListContent(
     val refreshState = rememberPullRefreshState(
         state.loadState == LoadState.Loading,
         onRefresh = {
-            onIntent(DiaryListScreenModel.NoteListIntent.LoadData)
+            onIntent(DiaryScreenModel.NoteListIntent.LoadData)
         },
         refreshThreshold = 80.dp
     )
@@ -65,13 +65,13 @@ fun NotesListContent(
                 ),
                 searchQuery = state.searchQuery,
                 changeSearchQuery = {
-                    onIntent(DiaryListScreenModel.NoteListIntent.ChangeSearchQuery(it))
+                    onIntent(DiaryScreenModel.NoteListIntent.ChangeSearchQuery(it))
                 },
                 onBackClick = {
                     navigator?.pop()
                 },
                 onRefresh = {
-                    onIntent(DiaryListScreenModel.NoteListIntent.LoadData)
+                    onIntent(DiaryScreenModel.NoteListIntent.LoadData)
                 }
             )
 
@@ -79,12 +79,12 @@ fun NotesListContent(
                 NotesList(
                     modifier = Modifier.weight(1f),
                     onItemClick = {
-                        onIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(it))
+                        onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(it))
                     },
                     notes = state.filteredNotes,
                     currentNote = null,
                     onDeleteClick = {
-                        onIntent(DiaryListScreenModel.NoteListIntent.DeleteNote(it))
+                        onIntent(DiaryScreenModel.NoteListIntent.DeleteNote(it))
                     },
                     contentPadding = PaddingValues(
                         start = 16.dp, end = 16.dp, top = 8.dp, bottom = 40.dp
@@ -97,7 +97,7 @@ fun NotesListContent(
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.BottomEnd),
-            onClick = { onIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(Note())) }
+            onClick = { onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(Note())) }
         ) {
             Icon(Icons.Default.Add, "", tint = MaterialTheme.colors.onPrimary)
         }

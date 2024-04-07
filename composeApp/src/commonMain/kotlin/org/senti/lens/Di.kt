@@ -11,23 +11,23 @@ import io.ktor.util.appendIfNameAbsent
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.senti.lens.network.AuthDataSource
-import org.senti.lens.network.NotesDataSource
-import org.senti.lens.network.SyncUseCase
-import org.senti.lens.network.TagsDataSource
-import org.senti.lens.repositories.DbNotesRepositoryImpl
-import org.senti.lens.repositories.DbTagsRepositoryImpl
-import org.senti.lens.repositories.NotesRepository
-import org.senti.lens.repositories.TagsRepository
+import org.senti.lens.datasource.AuthDataSource
+import org.senti.lens.datasource.NetworkNotesDataSource
+import org.senti.lens.datasource.NetworkNotesDataSourceImpl
+import org.senti.lens.repositories.SyncRepository
+import org.senti.lens.repositories.SyncRepositoryImpl
+import org.senti.lens.datasource.LocalNotesDataSourceImpl
+import org.senti.lens.datasource.LocalNotesDataSource
 import org.senti.lens.screens.auth.AuthRepository
-import org.senti.lens.screens.auth.AuthRepositoryImpl
 import org.senti.lens.screens.auth.MockAuthRepository
 import org.senti.lens.screens.auth.login.TOKEN
 import org.senti.lens.screens.home.HomeScreenModel
-import org.senti.lens.screens.list.DiaryListScreen
-import org.senti.lens.screens.list.DiaryListScreenModel
-import org.senti.lens.screens.list.DiaryUseCase
+import org.senti.lens.screens.list.DiaryScreenModel
+import org.senti.lens.screens.list.NotesRepository
+import org.senti.lens.screens.list.NotesRepositoryImpl
 
 
 expect val platformModule: Module
@@ -57,39 +57,25 @@ val commonModule = module {
         }
     }
 
-    single<NotesRepository> {
-        DbNotesRepositoryImpl(get())
-    }
-
-    single<TagsRepository> {
-        DbTagsRepositoryImpl(get())
+    single<LocalNotesDataSource> {
+        LocalNotesDataSourceImpl(get())
     }
 
     single {
         AuthDataSource(get())
     }
 
-    single {
-        DiaryUseCase(get(), get())
-    }
-
     single<AuthRepository> {
         MockAuthRepository()
     }
 
-    single {
-        NotesDataSource(get())
-    }
+    singleOf(::NotesRepositoryImpl) bind NotesRepository::class
 
-    single {
-        TagsDataSource(get())
-    }
+    singleOf(::NetworkNotesDataSourceImpl) bind NetworkNotesDataSource::class
+    singleOf(::SyncRepositoryImpl) bind SyncRepository::class
 
-    single {
-        SyncUseCase(get(), get(), get(), get())
-    }
 
-    factory { DiaryListScreenModel(get(), get()) }
+    factory { DiaryScreenModel(get(), get()) }
 
     factoryOf(::HomeScreenModel)
 }

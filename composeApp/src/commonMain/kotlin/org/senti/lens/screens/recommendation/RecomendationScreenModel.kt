@@ -5,9 +5,9 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.launch
 import kotlinx.uuid.UUID
 import org.senti.lens.models.Note
-import org.senti.lens.repositories.NotesRepository
+import org.senti.lens.datasource.LocalNotesDataSource
 
-class RecommendationScreenModel(private val notesRepository: NotesRepository, val id: String?) :
+class RecommendationScreenModel(private val localNotesDataSource: LocalNotesDataSource, val id: String?) :
     StateScreenModel<RecommendationScreenModel.UiState>(UiState()) {
     data class UiState(
         val currentNote: Note? = null,
@@ -31,7 +31,7 @@ class RecommendationScreenModel(private val notesRepository: NotesRepository, va
         when (intent) {
             is Intent.LoadNote -> {
                 return value.copy(
-                    currentNote = notesRepository.getNote(UUID(intent.id ?: ""))
+                    currentNote = localNotesDataSource.getNote(UUID(intent.id ?: ""))
                 )
             }
         }

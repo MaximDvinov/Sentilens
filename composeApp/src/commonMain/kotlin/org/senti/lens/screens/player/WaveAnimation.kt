@@ -41,13 +41,13 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
     val color = MaterialTheme.colors.primary
     val colorBackground = MaterialTheme.colors.background
     var sizeWave by remember { mutableStateOf(Size.Zero) }
-    val numPoints = remember(sizeWave) { (sizeWave.width / 5).toInt() + 5 }
+    val numPoints = remember(sizeWave) { (sizeWave.width / 15).toInt() + 5 }
     var isPlayingLocalState by remember {
         mutableStateOf(true)
     }
 
     val animatedAmplitude by animateFloatAsState(
-        if (!isPlaying) 0.2f else 1.3f,
+        if (!isPlaying) 0.3f else 2f,
         animationSpec = spring(stiffness = Spring.StiffnessLow)
     ){
         isPlayingLocalState = false
@@ -88,16 +88,16 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
                 wavePoints = generateWavePoints(
                     numPoints,
                     0.15f,
-                    80f * animatedAmplitude,
+                    70f * animatedAmplitude,
                     a
                 ) { x, waveLength, a ->
-                    sin(x * waveLength + a) * cos((x * sin(10f)) / del)
+                    cos(x * waveLength + a) * cos((x * sin(10f)) / del)
 
                 }
                 wavePoints2 = generateWavePoints(
                     numPoints,
                     0.24f,
-                    70f * animatedAmplitude,
+                    50f * animatedAmplitude,
                     a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * sin(x / del)
@@ -105,13 +105,13 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
                 wavePoints3 = generateWavePoints(
                     numPoints,
                     0.20f,
-                    60f * animatedAmplitude,
+                    30f * animatedAmplitude,
                     a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * cos(x / del)
                 }
                 delay(16)
-                a += 0.05f * animatedAmplitude
+                a += if (isPlaying) 0.05f else animatedAmplitude
             }
         }
 

@@ -5,27 +5,20 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import org.senti.lens.LoadState
 import org.senti.lens.PlatformDialog
 import org.senti.lens.models.Note
-import org.senti.lens.screens.commons.ui.fadingEdge
-import org.senti.lens.screens.list.DiaryListScreenModel
+import org.senti.lens.screens.list.DiaryScreenModel
 import org.senti.lens.screens.list.Intent
 import org.senti.lens.screens.list.editDiary.ui.BottomBarEdit
 import org.senti.lens.screens.list.editDiary.ui.ContentNote
@@ -57,11 +50,11 @@ fun EditNoteContent(
                 if (it != null) {
                     TopBarEdit(
                         onBackClick = {
-                            onIntent(DiaryListScreenModel.EditNoteIntent.SelectNote(null))
+                            onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(null))
                         },
                         loadState = loadState,
                         onDeleteClick = {
-                            onIntent(DiaryListScreenModel.EditNoteIntent.DeleteNote)
+                            onIntent(DiaryScreenModel.EditNoteIntent.DeleteNote)
                         },
                         onTagsClick = {
                             tagDialogShowed = !tagDialogShowed
@@ -73,26 +66,23 @@ fun EditNoteContent(
                         modifier = Modifier.weight(1f).fillMaxSize(),
                         currentNote = it,
                         onChangeTitleNote = {
-                            onIntent(DiaryListScreenModel.EditNoteIntent.ChangeTitle(it))
+                            onIntent(DiaryScreenModel.EditNoteIntent.ChangeTitle(it))
                         }
                     ) {
-                        onIntent(DiaryListScreenModel.EditNoteIntent.ChangeBody(it))
+                        onIntent(DiaryScreenModel.EditNoteIntent.ChangeBody(it))
                     }
                     BottomBarEdit(
                         modifier = Modifier.fillMaxWidth(),
                         sentiment = it.sentiment,
                         onSaveClick = {
-                            onIntent(DiaryListScreenModel.EditNoteIntent.SaveNote)
+                            onIntent(DiaryScreenModel.EditNoteIntent.SaveNote)
                         },
                         loadState = loadState
                     ) {
                         sentimentDialogShowed = true
                     }
-
-
                 }
             }
-
         }
     }
 
@@ -116,7 +106,6 @@ fun EditNoteContent(
             )
         }
     }
-
 }
 
 
