@@ -31,12 +31,6 @@ fun OnePane(
     screenModel: DiaryScreenModel,
     navigator: Navigator?
 ) {
-    PlatformBackHandler(editState?.currentNote != null) {
-        screenModel.processIntent(
-            DiaryScreenModel.EditNoteIntent.SelectNote(null)
-        )
-    }
-
     var currentNote by remember {
         mutableStateOf<Note?>(null)
     }

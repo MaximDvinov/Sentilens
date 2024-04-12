@@ -3,6 +3,7 @@ package org.senti.lens.screens.list
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,7 +34,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.X
 import org.senti.lens.LoadState
+import org.senti.lens.PlatformBackHandler
 import org.senti.lens.models.Note
+import org.senti.lens.screens.commons.ui.ErrorSnackbar
 import org.senti.lens.screens.list.onepane.OnePane
 import org.senti.lens.screens.list.twopane.TwoPane
 
@@ -47,6 +50,7 @@ class DiaryListScreen(private val diary: Note? = null) : Screen {
         val windowSizeClass = calculateWindowSizeClass()
 
         val screenModel = navigator.getNavigatorScreenModel<DiaryScreenModel>()
+        val state by screenModel.state.collectAsState()
 
         LaunchedEffect(diary) {
             if (diary != null) {
@@ -54,46 +58,26 @@ class DiaryListScreen(private val diary: Note? = null) : Screen {
             }
         }
 
-        val state by screenModel.state.collectAsState()
+        PlatformBackHandler(state.editNoteState?.currentNote != null) {
+            if (diary != null) {
+                navigator.pop()
+            } else {
+                screenModel.processIntent(
+                    DiaryScreenModel.EditNoteIntent.SelectNote(null)
+                )
+            }
+        }
 
         Box {
             if (state.listNote.loadState is LoadState.Error) {
-                Snackbar(
-                    elevation = 100.dp,
-                    shape = RoundedCornerShape(16.dp),
-                    backgroundColor = MaterialTheme.colors.error.copy(alpha = 0.7f),
-                    modifier = Modifier.zIndex(100f).align(Alignment.BottomCenter).padding(16.dp),
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = (state.listNote.loadState as LoadState.Error).message,
-                            color = MaterialTheme.colors.onPrimary,
-                            style = MaterialTheme.typography.body1,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 5.dp)
-                        )
-
-                        IconButton(onClick = {
-                            screenModel.processIntent(DiaryScreenModel.NoteListIntent.CloseErrorMessage)
-                        }, modifier = Modifier.padding(0.dp)) {
-                            Icon(
-                                imageVector = FeatherIcons.X,
-                                contentDescription = null,
-                                tint = MaterialTheme.colors.onPrimary,
-                                modifier = Modifier.padding(7.dp)
-                            )
-                        }
-                    }
-                }
+                ErrorSnackbar(error = (state.listNote.loadState as? LoadState.Error)?.message ?: "",
+                    onDismiss = {
+                        screenModel.processIntent(DiaryScreenModel.NoteListIntent.CloseErrorMessage)
+                    })
             }
 
             Crossfade(
-                windowSizeClass.isCompact(),
-                animationSpec = tween(durationMillis = 150)
+                windowSizeClass.isCompact(), animationSpec = tween(durationMillis = 150)
             ) {
                 if (it) {
                     OnePane(state.listNote, state.editNoteState, screenModel, navigator)
@@ -103,6 +87,7 @@ class DiaryListScreen(private val diary: Note? = null) : Screen {
             }
         }
     }
+
 
     private fun WindowSizeClass.isCompact() =
         widthSizeClass == WindowWidthSizeClass.Compact || heightSizeClass == WindowHeightSizeClass.Compact

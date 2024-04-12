@@ -47,7 +47,7 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
     }
 
     val animatedAmplitude by animateFloatAsState(
-        if (!isPlaying) 0.3f else 2f,
+        if (!isPlaying) 0.1f else 1f,
         animationSpec = spring(stiffness = Spring.StiffnessLow)
     ){
         isPlayingLocalState = false

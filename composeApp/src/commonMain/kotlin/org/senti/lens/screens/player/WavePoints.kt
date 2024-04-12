@@ -15,7 +15,7 @@ import kotlin.math.sin
 fun DrawScope.wavePoints(wavePoints: List<Offset>, color: Color, strokeWidth: Float = 2f) {
     drawPoints(
         wavePoints,
-        pointMode = PointMode.Points,
+        pointMode = PointMode.Lines,
         color = color,
         strokeWidth = strokeWidth,
         StrokeCap.Round
