@@ -4,19 +4,19 @@ compottie = "1.1.1"
 constraintlayoutComposeMultiplatform = "0.3.0-alpha01"
 indexeddb = "0.6.1"
 jSystemThemeDetector = "3.8"
-kotlin = "1.9.20"
-agp = "8.2.2"
+kotlin = "1.9.23"
+agp = "8.3.2"
 compose = "1.6.1"
 androidx-appcompat = "1.6.1"
-androidx-activityCompose = "1.8.2"
-compose-uitooling = "1.6.3"
+androidx-activityCompose = "1.9.0"
+compose-uitooling = "1.6.6"
 kotlinxCollectionsImmutable = "0.3.7"
 kotlinxUuidCore = "0.0.22"
 material3WindowSizeClassMultiplatform = "0.5.0"
 realm = "1.13.0"
 napier = "2.7.1"
 libres = "1.2.1"
-voyager = "1.1.0-alpha03"
+voyager = "1.1.0-alpha04"
 composeImageLoader = "1.7.0"
 kotlinx-coroutines = "1.8.0"
 buildConfig = "4.1.2"
@@ -30,14 +30,18 @@ kstore = "0.6.0"
 mokoResourcesVersion = "0.23.0"
 windowStyler = "0.3.2"
 ztExec = "1.12"
-org-jetbrains-kotlin-android = "1.9.20"
-core-ktx = "1.12.0"
+org-jetbrains-kotlin-android = "1.9.22"
+core-ktx = "1.13.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 material = "1.11.0"
 kamel = "0.7.2"
 constraintlayout = "2.1.4"
+jetbrainsKotlinJvm = "1.9.22"
+lifecycleRuntimeKtx = "2.7.0"
+composeBom = "2023.08.00"
+core = "1.13.0"
 
 [libraries]
 
@@ -89,13 +93,25 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
+
 [plugins]
 
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 libres = { id = "io.github.skeptick.libres", version.ref = "libres" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
