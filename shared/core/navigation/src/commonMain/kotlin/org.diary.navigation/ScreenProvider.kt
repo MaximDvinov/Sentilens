@@ -14,4 +14,6 @@ sealed class DiaryScreenProvider : ScreenProvider {
         val username: String? = null,
         val password: String? = null,
     ) : DiaryScreenProvider()
+
+    data object SplashScreen : DiaryScreenProvider()
 }

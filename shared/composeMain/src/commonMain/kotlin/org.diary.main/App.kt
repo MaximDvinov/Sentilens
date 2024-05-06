@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
 import org.diary.auth.login.LoginScreen
+import org.diary.auth.splash.SplashScreen
 
 
 @Composable
@@ -15,7 +16,7 @@ fun App() {
         color = Color.Transparent,
         contentColor = MaterialTheme.colors.onBackground
     ) {
-        Navigator(LoginScreen()){
+        Navigator(SplashScreen()){
             FadeTransition(it)
         }
     }

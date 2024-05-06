@@ -22,6 +22,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.napier)
+                implementation(libs.multiplatformSettings)
 
                 implementation(project(":shared:core:network"))
                 implementation(project(":shared:core:database"))

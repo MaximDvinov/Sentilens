@@ -1,5 +1,6 @@
 package org.diary.main
 
+import org.diary.auth.authModule
 import org.diary.data.dataModule
 import org.diary.diary.diaryModule
 import org.koin.core.module.Module
@@ -11,7 +12,7 @@ expect val platformModule: Module
 
 val commonModule = module {
     includes(
-        dataModule, diaryModule
+        dataModule, diaryModule, authModule
     )
     factoryOf(::HomeScreenModel)
 }

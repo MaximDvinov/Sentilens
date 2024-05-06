@@ -46,6 +46,10 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.napier)
 
+                implementation(libs.compottie)
+
+                implementation(libs.multiplatformSettings)
+
                 implementation(project(":shared:core:data"))
                 implementation(project(":shared:core:composeUi"))
                 implementation(project(":shared:core:utils"))
