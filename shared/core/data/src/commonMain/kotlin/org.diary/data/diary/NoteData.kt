@@ -1,4 +1,4 @@
-package org.diary.data.models
+package org.diary.data.diary
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.uuid.UUID

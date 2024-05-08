@@ -17,8 +17,8 @@ import kotlinx.uuid.generateUUID
 import org.diary.composeui.LoadState
 import org.diary.data.ApiResult
 import org.diary.diary.Note
-import org.diary.data.NotesRepository
-import org.diary.data.SyncRepository
+import org.diary.data.diary.NotesRepository
+import org.diary.data.diary.SyncRepository
 import org.diary.diary.toNoteData
 import org.diary.diary.toUiNote
 

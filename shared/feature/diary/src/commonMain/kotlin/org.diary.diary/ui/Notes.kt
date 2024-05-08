@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
@@ -48,11 +49,13 @@ import kotlinx.collections.immutable.ImmutableList
 import org.diary.composeui.VerticalScrollBar
 import org.diary.composeui.bounceClick
 import org.diary.composeui.components.fadingEdge
+import org.diary.composeui.theme.SentimentColor
 import org.senti.lens.dateFormatWithEnter
 import org.diary.composeui.theme.defaultShape
 import org.diary.composeui.theme.onError
 import org.diary.composeui.theme.smallShape
 import org.diary.diary.Note
+import org.diary.diary.SentimentCategory
 import org.senti.lens.timeFormat
 
 
@@ -145,7 +148,7 @@ fun NoteItem(
                 .background(MaterialTheme.colors.secondary).padding(8.dp),
         ) {
             Column(
-                modifier = Modifier.width(60.dp).fillMaxHeight(),
+                modifier = Modifier.width(70.dp).fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -162,8 +165,10 @@ fun NoteItem(
             }
 
             Spacer(
-                modifier = Modifier.clip(RoundedCornerShape(50))
-                    .background(MaterialTheme.colors.primary).width(2.dp)
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(note.sentiment?.category.getSentimentColor())
+                    .width(2.5.dp)
                     .fillMaxHeight()
 
             )
@@ -218,4 +223,12 @@ fun NoteItem(
 
 }
 
+fun SentimentCategory?.getSentimentColor(): Color = when (this) {
+    SentimentCategory.terrible -> SentimentColor.TERRIBLE.value
+    SentimentCategory.bad -> SentimentColor.BAD.value
+    SentimentCategory.neutral -> SentimentColor.NEUTRAL.value
+    SentimentCategory.good -> SentimentColor.GOOD.value
+    SentimentCategory.awesome -> SentimentColor.AWESOME.value
+    null -> SentimentColor.NEUTRAL.value
+}
 

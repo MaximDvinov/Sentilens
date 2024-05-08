@@ -6,7 +6,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.diary.data.AuthRepository
+import org.diary.data.auth.AuthRepository
 
 sealed class SplashEvent {
     data object Authenticated : SplashEvent()

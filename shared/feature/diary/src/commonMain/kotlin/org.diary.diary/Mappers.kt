@@ -1,8 +1,8 @@
 package org.diary.diary
 
-import org.diary.data.models.NoteData
-import org.diary.data.models.SentimentCategoryData
-import org.diary.data.models.SentimentData
+import org.diary.data.diary.NoteData
+import org.diary.data.diary.SentimentCategoryData
+import org.diary.data.diary.SentimentData
 
 fun NoteData.toUiNote() = Note(
     content = content,

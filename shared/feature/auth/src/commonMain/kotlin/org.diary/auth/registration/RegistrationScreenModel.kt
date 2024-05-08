@@ -5,9 +5,9 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.launch
 import org.diary.composeui.LoadState
 import org.diary.data.ApiResult
-import org.diary.data.AuthRepository
-import org.diary.data.models.CreatedUserData
-import org.diary.data.models.RegisterData
+import org.diary.data.auth.AuthRepository
+import org.diary.data.auth.CreatedUserData
+import org.diary.data.auth.RegisterData
 
 class RegistrationScreenModel(private val authRepository: AuthRepository) :
     StateScreenModel<RegistrationScreenModel.UiState>(UiState()) {

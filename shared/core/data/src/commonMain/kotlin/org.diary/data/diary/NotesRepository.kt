@@ -1,4 +1,4 @@
-package org.diary.data
+package org.diary.data.diary
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -7,10 +7,12 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.uuid.UUID
-import org.diary.data.models.NoteData
+import org.diary.data.ApiResult
+import org.diary.data.map
 import org.diary.data.models.toNote
 import org.diary.data.models.toNoteDBO
 import org.diary.data.models.toNoteDTO
+import org.diary.data.toApiResult
 import org.diary.database.LocalNotesDataSource
 import org.diary.nerwork.NetworkNotesDataSource
 import org.diary.nerwork.models.NoteDTO

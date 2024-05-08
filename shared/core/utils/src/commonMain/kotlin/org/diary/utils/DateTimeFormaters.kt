@@ -1,5 +1,6 @@
 package org.senti.lens
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
@@ -30,8 +31,10 @@ fun LocalDateTime?.dateFormat(): String {
     if (this == null) {
         return ""
     }
-    val timeZonedDate = this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
-    val day = if (timeZonedDate.dayOfMonth < 10) "0${timeZonedDate.dayOfMonth}" else "${timeZonedDate.dayOfMonth}"
+    val timeZonedDate =
+        this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
+    val day =
+        if (timeZonedDate.dayOfMonth < 10) "0${timeZonedDate.dayOfMonth}" else "${timeZonedDate.dayOfMonth}"
     val month = timeZonedDate.month.mothFormat()
     val year = timeZonedDate.year.toString()
     return "$day $month $year"
@@ -42,8 +45,10 @@ fun LocalDateTime?.dateFormatWithEnter(): String {
     if (this == null) {
         return ""
     }
-    val timeZonedDate = this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
-    val day = if (timeZonedDate.dayOfMonth < 10) "0${timeZonedDate.dayOfMonth}" else "${timeZonedDate.dayOfMonth}"
+    val timeZonedDate =
+        this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
+    val day =
+        if (timeZonedDate.dayOfMonth < 10) "0${timeZonedDate.dayOfMonth}" else "${timeZonedDate.dayOfMonth}"
     val month = timeZonedDate.month.mothFormat()
     val year = timeZonedDate.year.toString()
     return "$day $month\n$year"
@@ -53,9 +58,11 @@ fun LocalDateTime?.dateFormatWithEnter(): String {
 //"HH:mm"
 fun LocalDateTime?.timeFormat(): String {
     if (this == null) return ""
-    val timeZonedDate = this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
+    val timeZonedDate =
+        this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
     val hour = if (timeZonedDate.hour < 10) "0${timeZonedDate.hour}" else "${timeZonedDate.hour}"
-    val minute = if (timeZonedDate.minute < 10) "0${timeZonedDate.minute}" else "${timeZonedDate.minute}"
+    val minute =
+        if (timeZonedDate.minute < 10) "0${timeZonedDate.minute}" else "${timeZonedDate.minute}"
     return "$hour:$minute"
 }
 
@@ -64,12 +71,20 @@ fun LocalDateTime?.dateTimeFormat(): String {
     if (this == null) {
         return ""
     }
-    val timeZonedDate = this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
-    val day = if (timeZonedDate.dayOfMonth < 10) "0${timeZonedDate.dayOfMonth}" else "${timeZonedDate.dayOfMonth}"
+    val timeZonedDate =
+        this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
+    val day =
+        if (timeZonedDate.dayOfMonth < 10) "0${timeZonedDate.dayOfMonth}" else "${timeZonedDate.dayOfMonth}"
     val month = timeZonedDate.month.mothFormat()
     val year = timeZonedDate.year.toString()
     val hour = if (timeZonedDate.hour < 10) "0${timeZonedDate.hour}" else "${timeZonedDate.hour}"
-    val minute = if (timeZonedDate.minute < 10) "0${timeZonedDate.minute}" else "${timeZonedDate.minute}"
+    val minute =
+        if (timeZonedDate.minute < 10) "0${timeZonedDate.minute}" else "${timeZonedDate.minute}"
 
     return "$day $month $year в $hour:$minute"
 }
+
+val currentTimeZone
+    get() = TimeZone.currentSystemDefault()
+
+fun Instant.toDateTime() = this.toLocalDateTime(currentTimeZone)

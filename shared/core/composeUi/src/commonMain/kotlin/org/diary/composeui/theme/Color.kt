@@ -36,3 +36,10 @@ val lightOnSurface = Color(0xff000000)
 val lightTagColor = Color(0xFFF7F4F2)
 val tagColor = Color(0xFF3A281D)
 
+enum class SentimentColor(val value: Color) {
+    TERRIBLE(Color(0xFFA28FFF)),
+    BAD(Color(0xFFFF824D)),
+    NEUTRAL(Color(0xFF916247)),
+    GOOD(Color(0xFFFFCF5C)),
+    AWESOME(Color(0xFF9AB168))
+}

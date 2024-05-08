@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.diary.composeui.Intent
 import org.diary.data.ApiResult
-import org.diary.data.NotesRepository
-import org.diary.data.SyncRepository
+import org.diary.data.diary.NotesRepository
+import org.diary.data.diary.SyncRepository
 import org.diary.diary.Note
 import org.diary.diary.toUiNote
 

@@ -63,6 +63,7 @@ fun CompactHomeContent(
     val navigator = LocalNavigator.current
     val createScreen =
         rememberScreen(DiaryScreenProvider.DiaryScreen(InitialDiaryScreenState.CreateDiary))
+    val statsScreen = rememberScreen(DiaryScreenProvider.HomeStatsScreen)
     val refreshState = rememberPullRefreshState(
         state is HomeScreenModel.UiState.Loading, onRefresh = {
             onIntent(HomeScreenModel.HomeIntent.LoadData)
@@ -109,7 +110,9 @@ fun CompactHomeContent(
                         onBreathClick = {
 //                            navigator?.push(BreathScreen()) TODO
                         },
-                        onStatsClick = {})
+                        onStatsClick = {
+                            navigator?.push(statsScreen)
+                        })
                 }
 
 

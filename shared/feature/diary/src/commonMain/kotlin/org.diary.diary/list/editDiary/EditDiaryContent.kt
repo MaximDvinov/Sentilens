@@ -98,7 +98,7 @@ fun EditNoteContent(
             SentimentDialog(
                 Modifier,
                 onCloseClick = { sentimentDialogShowed = false },
-                onRecommendationClick = {
+                onActionClick = {
                     sentimentDialogShowed = false
                     onClickRecommendation(currentNote.uuid.toString())
                 },

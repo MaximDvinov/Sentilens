@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Save
@@ -18,6 +19,7 @@ import org.diary.composeui.LoadState
 import org.diary.diary.Sentiment
 import org.diary.composeui.components.PrimaryIconButton
 import org.diary.composeui.components.SecondaryButton
+import org.diary.diary.ui.getSentimentColor
 
 @Composable
 fun BottomBarEdit(
@@ -33,14 +35,18 @@ fun BottomBarEdit(
     ) {
         Row(modifier = Modifier.weight(1f)) {
             AnimatedVisibility(sentiment?.category?.value != null, modifier = Modifier.weight(1f)) {
-                SecondaryButton(onClick = {
-                    onClickAnalyze()
-                }, enabled = sentiment?.category?.value != null) {
+                SecondaryButton(
+                    onClick = {
+                        onClickAnalyze()
+                    },
+                    enabled = sentiment?.category?.value != null,
+                    color = sentiment?.category.getSentimentColor()
+                ) {
                     Box(modifier = Modifier) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
                             text = sentiment?.category?.value ?: "",
-                            style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
+                            style = MaterialTheme.typography.body1.copy(color = Color.White)
                         )
                     }
                 }

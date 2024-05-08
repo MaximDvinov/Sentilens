@@ -4,16 +4,10 @@ plugins {
     alias(libs.plugins.compose)
 }
 
-android.namespace = "org.diary.compose"
+android.namespace = "org.diary.stats"
 
 kotlin {
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-        }
-    }
+    androidTarget()
     jvm("desktop")
     js {
         browser { }
@@ -49,18 +43,16 @@ kotlin {
                 implementation(libs.kotlinx.uuid.core)
                 implementation(libs.kotlinx.collections.immutable)
 
+                implementation(libs.chart)
+
+                implementation(libs.compottie)
+
                 implementation(libs.koin.core)
                 implementation(libs.napier)
 
                 implementation(project(":shared:core:data"))
                 implementation(project(":shared:core:composeUi"))
                 implementation(project(":shared:core:utils"))
-                implementation(project(":shared:core:navigation"))
-
-                implementation(project(":shared:feature:advice"))
-                implementation(project(":shared:feature:auth"))
-                implementation(project(":shared:feature:diary"))
-                implementation(project(":shared:feature:stats"))
 
             }
         }

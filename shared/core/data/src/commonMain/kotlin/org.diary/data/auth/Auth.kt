@@ -1,4 +1,4 @@
-package org.diary.data.models
+package org.diary.data.auth
 
 import kotlinx.datetime.LocalDateTime
 

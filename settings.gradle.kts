@@ -28,6 +28,7 @@ include(":shared:core:navigation")
 include(":shared:feature:auth")
 include(":shared:feature:diary")
 include(":shared:feature:advice")
+include(":shared:feature:stats")
 
 include(":shared:composeMain")
 

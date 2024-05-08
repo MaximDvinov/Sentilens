@@ -7,12 +7,13 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import org.diary.main.home.HomeScreenModel
+import org.diary.stats.statsModule
 
 expect val platformModule: Module
 
 val commonModule = module {
     includes(
-        dataModule, diaryModule, authModule
+        dataModule, diaryModule, authModule, statsModule
     )
     factoryOf(::HomeScreenModel)
 }

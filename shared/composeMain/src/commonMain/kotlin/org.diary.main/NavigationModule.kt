@@ -8,6 +8,7 @@ import org.diary.auth.splash.SplashScreen
 import org.diary.navigation.DiaryScreenProvider
 import org.diary.diary.list.DiaryScreen
 import org.diary.main.home.HomeScreen
+import org.diary.stats.screens.HomeStatsScreen
 
 val navigationModule = screenModule {
     register<DiaryScreenProvider.LoginScreen> {
@@ -26,9 +27,13 @@ val navigationModule = screenModule {
     register<DiaryScreenProvider.SplashScreen> {
         SplashScreen()
     }
+
+    register<DiaryScreenProvider.HomeStatsScreen> {
+        HomeStatsScreen()
+    }
 }
 
-fun screenRegistry(){
+fun screenRegistry() {
     ScreenRegistry {
         navigationModule()
     }

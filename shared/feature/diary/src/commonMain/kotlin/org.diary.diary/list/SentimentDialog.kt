@@ -27,12 +27,14 @@ import org.diary.composeui.theme.defaultShape
 fun SentimentDialog(
     modifier: Modifier,
     onCloseClick: () -> Unit,
-    onRecommendationClick: () -> Unit,
-    sentiment: Sentiment
+    onActionClick: () -> Unit,
+    sentiment: Sentiment,
 ) {
 
     Box(
-        modifier = modifier.clip(defaultShape).background(MaterialTheme.colors.secondary)
+        modifier = modifier
+            .clip(defaultShape)
+            .background(MaterialTheme.colors.secondary)
     ) {
         SecondaryIconButton(
             modifier = Modifier.align(Alignment.TopEnd),

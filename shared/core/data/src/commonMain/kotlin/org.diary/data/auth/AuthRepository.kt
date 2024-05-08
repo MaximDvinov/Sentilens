@@ -1,13 +1,12 @@
-package org.diary.data
+package org.diary.data.auth
 
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.get
-import org.diary.data.models.CreatedUserData
-import org.diary.data.models.LoginData
-import org.diary.data.models.RegisterData
-import org.diary.data.models.TokenData
+import org.diary.data.ApiResult
+import org.diary.data.map
 import org.diary.data.models.toDTO
 import org.diary.data.models.toData
+import org.diary.data.toApiResult
 import org.diary.nerwork.ACCESS
 import org.diary.nerwork.AuthDataSource
 

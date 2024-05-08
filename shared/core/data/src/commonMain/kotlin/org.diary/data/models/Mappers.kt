@@ -1,5 +1,12 @@
 package org.diary.data.models
 
+import org.diary.data.auth.CreatedUserData
+import org.diary.data.auth.LoginData
+import org.diary.data.auth.RegisterData
+import org.diary.data.auth.TokenData
+import org.diary.data.diary.NoteData
+import org.diary.data.diary.SentimentCategoryData
+import org.diary.data.diary.SentimentData
 import org.diary.database.models.NoteDBO
 import org.diary.database.models.SentimentCategoryDBO
 import org.diary.nerwork.models.NoteDTO
@@ -14,7 +21,7 @@ import org.senti.lens.models.TokenDataDTO
 fun NoteDBO.toNote() = NoteData(
     content = content,
     createdAt = createdAt,
-    sentiment = sentiment.toSentiment(),
+    sentiment = sentiment?.toSentiment(),
     title = title,
     updatedAt = updatedAt,
     uuid = uuid,
@@ -98,13 +105,11 @@ private fun SentimentData?.toSentiment(): SentimentData? {
     }
 }
 
-private fun SentimentDBO?.toSentiment(): SentimentData? = this?.let {
-    SentimentData(
-        category = category?.toDTO(),
-        value = value,
-        advice = advice
-    )
-}
+fun SentimentDBO.toSentiment(): SentimentData = SentimentData(
+    category = category?.toDTO(),
+    value = value,
+    advice = advice
+)
 
 private fun SentimentCategoryDBO.toDTO(): SentimentCategoryData {
     return when (this) {

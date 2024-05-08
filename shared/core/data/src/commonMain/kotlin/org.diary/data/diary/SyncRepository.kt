@@ -1,10 +1,12 @@
-package org.diary.data
+package org.diary.data.diary
 
 import io.github.aakira.napier.Napier
+import org.diary.data.ApiResult
 import org.diary.database.LocalNotesDataSource
 import org.diary.nerwork.NetworkNotesDataSource
 import org.diary.data.models.toNote
 import org.diary.data.models.toNoteDBO
+import org.diary.data.toApiResult
 import org.diary.database.models.NoteDBO
 import org.diary.nerwork.models.NoteDTO
 import org.diary.nerwork.models.NoteWrite
