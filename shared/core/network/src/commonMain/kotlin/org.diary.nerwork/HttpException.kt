@@ -2,7 +2,7 @@ package org.diary.nerwork
 
 import io.ktor.client.plugins.ResponseException
 
-public suspend inline fun <R> runCatchingForApi(block: () -> R): Result<R> {
+inline fun <R> runCatchingForApi(block: () -> R): Result<R> {
     return try {
         Result.success(block())
     } catch (c: ResponseException) {

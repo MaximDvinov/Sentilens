@@ -10,5 +10,5 @@ val dataModule = module {
     includes(databaseModule, networkModule)
     singleOf(::NotesRepositoryImpl) bind NotesRepository::class
     singleOf(::SyncRepositoryImpl) bind SyncRepository::class
-    singleOf(::MockAuthRepository) bind AuthRepository::class
+    singleOf(::AuthRepositoryImpl) bind AuthRepository::class
 }

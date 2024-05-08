@@ -53,29 +53,20 @@ fun SentimentDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(text = sentiment.smile ?: "\uD83D\uDE42", fontSize = 80.sp)
+                Text(text = sentiment.category.toString(), fontSize = 80.sp)
                 Text(
-                    text = sentiment.title ?: "",
+                    text = sentiment.value.toString() ?: "",
                     style = MaterialTheme.typography.h2,
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = sentiment.description ?: "",
+                    text = sentiment.advice ?: "",
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.onSecondary.copy(0.7f)
                 )
             }
 
-            if (!sentiment.advices.isNullOrEmpty()) {
-                PrimaryButton(onClick = onRecommendationClick) {
-                    Text(
-                        text = "Открыть советы",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                }
-            }
         }
     }
 }

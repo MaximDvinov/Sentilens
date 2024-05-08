@@ -1,6 +1,7 @@
 package org.diary.diary
 
 import org.diary.data.models.NoteData
+import org.diary.data.models.SentimentCategoryData
 import org.diary.data.models.SentimentData
 
 fun NoteData.toUiNote() = Note(
@@ -16,10 +17,20 @@ fun NoteData.toUiNote() = Note(
 
 fun SentimentData.toSentiment(): Sentiment {
     return Sentiment(
-        description = description,
-        smile = smile,
-        title = title
+        category = category?.toStable(),
+        value = value,
+        advice = advice
     )
+}
+
+private fun SentimentCategoryData.toStable(): SentimentCategory {
+    return when (this) {
+        SentimentCategoryData.terrible -> SentimentCategory.terrible
+        SentimentCategoryData.bad -> SentimentCategory.bad
+        SentimentCategoryData.neutral -> SentimentCategory.neutral
+        SentimentCategoryData.good -> SentimentCategory.good
+        SentimentCategoryData.awesome -> SentimentCategory.awesome
+    }
 }
 
 fun Note.toNoteData() = NoteData(
@@ -34,7 +45,17 @@ fun Note.toNoteData() = NoteData(
 )
 
 fun Sentiment.toSentimentData() = SentimentData(
-    description = description,
-    smile = smile,
-    title = title
+    category = category?.toData(),
+    value = value,
+    advice = advice
 )
+
+private fun SentimentCategory.toData(): SentimentCategoryData {
+    return when (this) {
+        SentimentCategory.terrible -> SentimentCategoryData.terrible
+        SentimentCategory.bad -> SentimentCategoryData.bad
+        SentimentCategory.neutral -> SentimentCategoryData.neutral
+        SentimentCategory.good -> SentimentCategoryData.good
+        SentimentCategory.awesome -> SentimentCategoryData.awesome
+    }
+}

@@ -6,6 +6,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.uuid.UUID
 import org.diary.data.models.NoteData
 import org.diary.data.models.toNote
 import org.diary.data.models.toNoteDBO
@@ -27,6 +28,7 @@ interface NotesRepository {
     suspend fun updateNote(note: NoteData): NoteData?
 
     suspend fun deleteNote(note: NoteData)
+    suspend fun getNote(uuid: UUID): NoteData?
 }
 
 class NotesRepositoryImpl(
@@ -34,7 +36,7 @@ class NotesRepositoryImpl(
     private val networkNotesDataSource: NetworkNotesDataSource,
 ) : NotesRepository {
     override fun getNotes(): Flow<List<NoteData>> {
-        return localNotesDataSource.getNotes().map {list ->
+        return localNotesDataSource.getNotes().map { list ->
             list.map { it.toNote() }.filter { !it.isDeleted }
         }
     }
@@ -111,5 +113,9 @@ class NotesRepositoryImpl(
         if (networkResult is ApiResult.Success) {
             localNotesDataSource.finallyDeleteNote(note.toNoteDBO())
         }
+    }
+
+    override suspend fun getNote(uuid: UUID): NoteData? {
+        return localNotesDataSource.getNote(uuid)?.toNote()
     }
 }

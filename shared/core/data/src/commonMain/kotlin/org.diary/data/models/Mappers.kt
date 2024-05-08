@@ -1,8 +1,10 @@
 package org.diary.data.models
 
 import org.diary.database.models.NoteDBO
+import org.diary.database.models.SentimentCategoryDBO
 import org.diary.nerwork.models.NoteDTO
 import org.diary.database.models.SentimentDBO
+import org.diary.nerwork.models.SentimentCategoryDTO
 import org.diary.nerwork.models.SentimentDTO
 import org.senti.lens.models.CreatedUserDTO
 import org.senti.lens.models.LoginDataDTO
@@ -36,12 +38,20 @@ fun NoteDTO.toNote(): NoteData {
 }
 
 private fun SentimentDTO.toSentiment(): SentimentData {
-    return this.let {
-        SentimentData(
-            description = description,
-            smile = smile,
-            title = title
-        )
+    return SentimentData(
+        category = SentimentCategoryData.entries.getOrNull(category ?: 0),
+        value = value,
+        advice = advice
+    )
+}
+
+private fun SentimentCategoryDTO.toDTO(): SentimentCategoryData {
+    return when (this) {
+        SentimentCategoryDTO.bad -> SentimentCategoryData.bad
+        SentimentCategoryDTO.terrible -> SentimentCategoryData.terrible
+        SentimentCategoryDTO.neutral -> SentimentCategoryData.neutral
+        SentimentCategoryDTO.good -> SentimentCategoryData.good
+        SentimentCategoryDTO.awesome -> SentimentCategoryData.awesome
     }
 }
 
@@ -59,31 +69,51 @@ fun NoteData.toNoteDTO(): NoteDTO = this.let {
 }
 
 private fun SentimentData.toSentimentDTO(): SentimentDTO {
-    return this.let {
-        SentimentDTO(
-            description = description,
-            smile = smile,
-            title = title
-        )
-    }
+    return SentimentDTO(
+        category = category?.ordinal,
+        value = value,
+        advice = advice
+    )
+}
+
+private fun SentimentCategoryData.toData(): SentimentCategoryDTO {
+//    return when (this) {
+//        SentimentCategoryData.bad -> SentimentCategoryDTO.bad
+//        SentimentCategoryData.terrible -> SentimentCategoryDTO.terrible
+//        SentimentCategoryData.neutral -> SentimentCategoryDTO.neutral
+//        SentimentCategoryData.good -> SentimentCategoryDTO.good
+//        SentimentCategoryData.awesome -> SentimentCategoryDTO.awesome
+//    }
+
+    return SentimentCategoryDTO.entries.getOrNull(ordinal) ?: SentimentCategoryDTO.neutral
 }
 
 private fun SentimentData?.toSentiment(): SentimentData? {
     return this?.let {
         SentimentData(
-            description = description,
-            smile = smile,
-            title = title
+            category = category,
+            value = value,
+            advice = advice
         )
     }
 }
 
 private fun SentimentDBO?.toSentiment(): SentimentData? = this?.let {
     SentimentData(
-        description = description,
-        smile = smile,
-        title = title,
+        category = category?.toDTO(),
+        value = value,
+        advice = advice
     )
+}
+
+private fun SentimentCategoryDBO.toDTO(): SentimentCategoryData {
+    return when (this) {
+        SentimentCategoryDBO.bad -> SentimentCategoryData.bad
+        SentimentCategoryDBO.terrible -> SentimentCategoryData.terrible
+        SentimentCategoryDBO.neutral -> SentimentCategoryData.neutral
+        SentimentCategoryDBO.good -> SentimentCategoryData.good
+        SentimentCategoryDBO.awesome -> SentimentCategoryData.awesome
+    }
 }
 
 fun NoteData.toNoteDBO() = this.let {
@@ -113,19 +143,40 @@ fun NoteDTO.toNoteDBO() = NoteDBO(
 private fun SentimentData?.toSentimentDBO(): SentimentDBO? {
     return this?.let {
         SentimentDBO(
-            description = description,
-            smile = smile,
-            title = title
+            category = category?.toDBO(),
+            value = value,
+            advice = advice
         )
+    }
+}
+
+private fun SentimentCategoryData.toDBO(): SentimentCategoryDBO {
+    return when (this) {
+        SentimentCategoryData.bad -> SentimentCategoryDBO.bad
+        SentimentCategoryData.terrible -> SentimentCategoryDBO.terrible
+        SentimentCategoryData.neutral -> SentimentCategoryDBO.neutral
+        SentimentCategoryData.good -> SentimentCategoryDBO.good
+        SentimentCategoryData.awesome -> SentimentCategoryDBO.awesome
+
     }
 }
 
 private fun SentimentDTO.toSentimentDBO(): SentimentDBO {
     return SentimentDBO(
-        description = description,
-        smile = smile,
-        title = title
+        category = SentimentCategoryDBO.entries.getOrNull(category ?: 0),
+        value = value,
+        advice = advice
     )
+}
+
+private fun SentimentCategoryDTO.toDBO(): SentimentCategoryDBO {
+    return when (this) {
+        SentimentCategoryDTO.bad -> SentimentCategoryDBO.bad
+        SentimentCategoryDTO.terrible -> SentimentCategoryDBO.terrible
+        SentimentCategoryDTO.neutral -> SentimentCategoryDBO.neutral
+        SentimentCategoryDTO.good -> SentimentCategoryDBO.good
+        SentimentCategoryDTO.awesome -> SentimentCategoryDBO.awesome
+    }
 }
 
 fun RegisterData.toDTO() = RegisterDataDTO(
@@ -142,7 +193,7 @@ fun CreatedUserDTO.toData(): CreatedUserData = CreatedUserData(
     isSuperuser = isSuperuser
 )
 
-fun TokenDataDTO.toData(): TokenData = TokenData(accessToken, tokenType)
+fun TokenDataDTO.toData(): TokenData = TokenData(accessToken, refreshToken)
 
 fun LoginData.toDTO(): LoginDataDTO = LoginDataDTO(
     username = username,

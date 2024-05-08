@@ -29,6 +29,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
             implementation(libs.composeIcons.fontAwesome)
+            implementation(libs.window.size)
 
             implementation(project(":shared:core:utils"))
         }

@@ -8,6 +8,7 @@ import org.diary.data.models.RegisterData
 import org.diary.data.models.TokenData
 import org.diary.data.models.toDTO
 import org.diary.data.models.toData
+import org.diary.nerwork.ACCESS
 import org.diary.nerwork.AuthDataSource
 
 interface AuthRepository {
@@ -26,6 +27,6 @@ class AuthRepositoryImpl(
     override suspend fun login(value: LoginData) =
         authDataSource.login(value.toDTO()).toApiResult().map { it.toData() }
 
-    override suspend fun isAuthenticated() = setting.get<String>("token")?.isNotEmpty() ?: false
+    override suspend fun isAuthenticated() = setting.get<String>(ACCESS)?.isNotEmpty() ?: false
 }
 

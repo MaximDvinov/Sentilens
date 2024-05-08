@@ -53,6 +53,7 @@ kotlin {
                 implementation(libs.napier)
 
                 implementation(project(":shared:core:data"))
+                implementation(project(":shared:core:navigation"))
                 implementation(project(":shared:core:composeUi"))
                 implementation(project(":shared:core:utils"))
             }

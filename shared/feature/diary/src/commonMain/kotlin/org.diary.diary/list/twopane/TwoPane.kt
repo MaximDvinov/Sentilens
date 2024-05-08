@@ -9,13 +9,11 @@ fun TwoPane(
     state: DiaryScreenModel.NoteList,
     editState: DiaryScreenModel.EditNoteState?,
     screenModel: DiaryScreenModel,
-    navigator: Navigator?,
+    navigator: Navigator,
 ) {
     TwoPaneContent(state, editState,
         onIntent = screenModel::processIntent,
-        onClickSetting = {
-//            navigator?.singlePush(SettingScreen()) TODO: implement
-        },
+        onClickBack = navigator::pop,
         onClickRecommendation = { id: String ->
 //            navigator?.singlePush(RecommendationScreen(id)) TODO: implement
         })

@@ -32,14 +32,14 @@ fun BottomBarEdit(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(modifier = Modifier.weight(1f)) {
-            AnimatedVisibility(sentiment?.title != null, modifier = Modifier.weight(1f)) {
+            AnimatedVisibility(sentiment?.category?.value != null, modifier = Modifier.weight(1f)) {
                 SecondaryButton(onClick = {
                     onClickAnalyze()
-                }, enabled = sentiment?.title != null) {
+                }, enabled = sentiment?.category?.value != null) {
                     Box(modifier = Modifier) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
-                            text = "${sentiment?.smile ?: ""} ${sentiment?.title ?: ""}",
+                            text = sentiment?.category?.value ?: "",
                             style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
                         )
                     }

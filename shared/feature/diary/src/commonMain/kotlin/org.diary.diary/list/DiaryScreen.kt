@@ -4,11 +4,9 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.screen.Screen
@@ -21,10 +19,12 @@ import org.diary.composeui.LoadState
 import org.diary.composeui.PlatformBackHandler
 import org.diary.diary.list.onepane.OnePane
 import org.diary.composeui.components.ErrorSnackbar
+import org.diary.composeui.isCompact
 import org.diary.diary.list.twopane.TwoPane
-import org.koin.core.parameter.parametersOf
+import org.diary.navigation.InitialDiaryScreenState
 
-class DiaryListScreen(private val diaryId: UUID? = null) : Screen {
+
+class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
     override val key = uniqueScreenKey
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -33,14 +33,29 @@ class DiaryListScreen(private val diaryId: UUID? = null) : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val windowSizeClass = calculateWindowSizeClass()
 
-        val screenModel = navigator.koinNavigatorScreenModel<DiaryScreenModel> {
-            parametersOf(diaryId)
-        }
+        val screenModel = navigator.koinNavigatorScreenModel<DiaryScreenModel>()
 
         val state by screenModel.state.collectAsState()
 
+        LaunchedEffect(initialState) {
+            when (initialState) {
+                InitialDiaryScreenState.CreateDiary -> screenModel.processIntent(
+                    DiaryScreenModel.EditNoteIntent.CreateNote
+                )
+
+                InitialDiaryScreenState.Idle -> {}
+                is InitialDiaryScreenState.UpdateDiary -> screenModel.processIntent(
+                    DiaryScreenModel.EditNoteIntent.SelectNote(initialState.diaryId)
+                )
+
+                InitialDiaryScreenState.Search -> {
+                    DiaryScreenModel.NoteListIntent.ChangeSearchQuery("")
+                }
+            }
+        }
+
         PlatformBackHandler(state.editNoteState?.currentNote != null) {
-            if (diaryId != null) {
+            if (initialState is InitialDiaryScreenState.Idle) {
                 navigator.pop()
             } else {
                 screenModel.processIntent(
@@ -68,8 +83,4 @@ class DiaryListScreen(private val diaryId: UUID? = null) : Screen {
             }
         }
     }
-
-
-    private fun WindowSizeClass.isCompact() =
-        widthSizeClass == WindowWidthSizeClass.Compact || heightSizeClass == WindowHeightSizeClass.Compact
 }

@@ -1,5 +1,8 @@
 package org.diary.main.home
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
@@ -11,6 +14,7 @@ import cafe.adriel.voyager.koin.getNavigatorScreenModel
 import cafe.adriel.voyager.koin.koinNavigatorScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.diary.composeui.isCompact
 
 class HomeScreen : Screen {
 
@@ -23,11 +27,21 @@ class HomeScreen : Screen {
         val screenModel = navigator.koinNavigatorScreenModel<HomeScreenModel>()
         val state by screenModel.state.collectAsState()
 
-        CompactHomeContent(
-            modifier = Modifier,
-            state = state,
-            onIntent = screenModel::processIntent
-        )
+        AnimatedContent(windowSizeClass.isCompact()) {
+            if (it) {
+                CompactHomeContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onIntent = screenModel::processIntent
+                )
+            } else {
+                ExpandHomeContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onIntent = screenModel::processIntent
+                )
+            }
+        }
     }
 }
 

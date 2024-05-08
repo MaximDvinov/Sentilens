@@ -28,7 +28,7 @@ fun TwoPaneContent(
     state: DiaryScreenModel.NoteList,
     editorUiStat: DiaryScreenModel.EditNoteState?,
     onIntent: (Intent) -> Unit,
-    onClickSetting: () -> Unit,
+    onClickBack: () -> Unit,
     onClickRecommendation: (String) -> Unit,
 ) {
     Column {
@@ -36,13 +36,13 @@ fun TwoPaneContent(
             modifier = Modifier.padding(
                 start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp
             ),
-            onClickSetting = onClickSetting,
+            onClickBack = onClickBack,
             searchQuery = state.searchQuery,
             changeSearchQuery = {
                 onIntent(DiaryScreenModel.NoteListIntent.ChangeSearchQuery(it))
             },
             onCreateClick = {
-                onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(Note()))
+                onIntent(DiaryScreenModel.EditNoteIntent.CreateNote)
             },
             onRefresh = {
                 onIntent(DiaryScreenModel.NoteListIntent.LoadData)
@@ -56,7 +56,7 @@ fun TwoPaneContent(
             ) {
                 NotesList(
                     onItemClick = {
-                        onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(it))
+                        onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(it.uuid))
                     },
                     notes = state.filteredNotes ?: persistentListOf(),
                     currentNote = editorUiStat?.currentNote,

@@ -15,11 +15,14 @@ data class NoteData(
 )
 
 data class Sentiment(
-    val description: String? = null,
-    val smile: String? = null,
-    val title: String? = null,
-    val advices: List<Advice?>? = null,
+    val category: SentimentCategoryData? = null,
+    val value: Float? = null,
+    val advice: String? = null,
 )
+
+enum class SentimentCategoryData(value: String) {
+    terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер")
+}
 
 data class AnalyzeText(
     val text: String,

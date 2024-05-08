@@ -22,6 +22,7 @@ import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import org.diary.auth.loadAnimation
 import org.diary.navigation.DiaryScreenProvider
+import org.diary.navigation.singlePush
 
 class SplashScreen : Screen {
     @Composable
@@ -35,8 +36,8 @@ class SplashScreen : Screen {
         LaunchedEffect(event) {
             event?.let {
                 when (it) {
-                    is SplashEvent.Authenticated -> navigator.push(homeScreen)
-                    is SplashEvent.Unauthenticated -> navigator.push(loginScreen)
+                    is SplashEvent.Authenticated -> navigator.replace(homeScreen)
+                    is SplashEvent.Unauthenticated -> navigator.replace(loginScreen)
                 }
             }
         }
@@ -44,7 +45,6 @@ class SplashScreen : Screen {
         val composition by rememberLottieComposition(
             LottieCompositionSpec.JsonString(loadAnimation)
         )
-
 
         Box(
             modifier = Modifier.fillMaxSize(),

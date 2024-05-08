@@ -8,27 +8,31 @@ import kotlinx.uuid.UUID
 
 @Serializable
 data class NoteDTO(
-    @SerialName("content") val content: String? = null,
-    @SerialName("created_at") val createdAt: LocalDateTime? = null,
-    @SerialName("sentiment") val sentiment: SentimentDTO? = null,
     @SerialName("title") val title: String = "",
-    @SerialName("updated_at") val updatedAt: LocalDateTime? = null,
+    @SerialName("content") val content: String? = null,
     @Serializable(with = UUIDSerializer::class) @SerialName("uuid") val uuid: UUID? = null,
+    @SerialName("created_at") val createdAt: LocalDateTime? = null,
+    @SerialName("updated_at") val updatedAt: LocalDateTime? = null,
+    @SerialName("sentiment") val sentiment: SentimentDTO? = null,
+
     val isNew: Boolean = false,
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
 )
 
 @Serializable
 data class SentimentDTO(
-    @SerialName("description") val description: String? = null,
-    @SerialName("smile") val smile: String? = null,
-    @SerialName("title") val title: String? = null,
-    @SerialName("advices") val advices: List<Advice?>? = null
+    @SerialName("category") val category: Int? = null,
+    @SerialName("value") val value: Float? = null,
+    @SerialName("advice") val advice: String? = null,
 )
+
+enum class SentimentCategoryDTO(value: String) {
+    terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер")
+}
 
 @Serializable
 data class AnalyzeText(
-    @SerialName("text") val text: String
+    @SerialName("text") val text: String,
 )
 
 @Serializable
@@ -36,12 +40,4 @@ data class NoteWrite(
     @SerialName("content") val content: String? = null,
     @SerialName("title") val title: String? = null,
     @Serializable(with = UUIDSerializer::class) @SerialName("uuid") val uuid: UUID? = null,
-)
-
-@Serializable
-data class Advice(
-    @SerialName("title") val title: String? = null,
-    @SerialName("description") val description: String? = null,
-    @SerialName("url") val url: String? = null,
-    @SerialName("image_url") val imageUrl: String? = null
 )

@@ -70,16 +70,13 @@ fun NotesListContent(
                 onBackClick = {
                     navigator?.pop()
                 },
-                onRefresh = {
-                    onIntent(DiaryScreenModel.NoteListIntent.LoadData)
-                }
             )
 
             if (state.filteredNotes != null) {
                 NotesList(
                     modifier = Modifier.weight(1f),
                     onItemClick = {
-                        onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(it))
+                        onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(it.uuid))
                     },
                     notes = state.filteredNotes,
                     currentNote = null,
@@ -97,7 +94,7 @@ fun NotesListContent(
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.BottomEnd),
-            onClick = { onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(Note())) }
+            onClick = { onIntent(DiaryScreenModel.EditNoteIntent.CreateNote) }
         ) {
             Icon(Icons.Default.Add, "", tint = MaterialTheme.colors.onPrimary)
         }

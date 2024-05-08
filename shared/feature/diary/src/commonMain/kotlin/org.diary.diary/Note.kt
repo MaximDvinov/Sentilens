@@ -1,8 +1,10 @@
 package org.diary.diary
 
+import androidx.compose.runtime.Stable
 import kotlinx.datetime.LocalDateTime
 import kotlinx.uuid.UUID
 
+@Stable
 data class Note(
     val content: String? = null,
     val createdAt: LocalDateTime? = null,
@@ -14,19 +16,13 @@ data class Note(
     val isDeleted: Boolean = false,
 )
 
+@Stable
 data class Sentiment(
-    val description: String? = null,
-    val smile: String? = null,
-    val title: String? = null,
-    val advices: List<Advice?>? = null,
+    val category: SentimentCategory? = null,
+    val value: Float? = null,
+    val advice: String? = null,
 )
 
-data class AnalyzeText(
-    val text: String,
-)
-data class Advice(
-    val title: String? = null,
-    val description: String? = null,
-    val url: String? = null,
-    val imageUrl: String? = null,
-)
+enum class SentimentCategory(val value: String) {
+    terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер")
+}

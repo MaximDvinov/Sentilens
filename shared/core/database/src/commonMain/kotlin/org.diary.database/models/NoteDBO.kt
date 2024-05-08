@@ -16,15 +16,11 @@ data class NoteDBO(
 )
 
 data class SentimentDBO(
-    val description: String? = null,
-    val smile: String? = null,
-    val title: String? = null,
-    val advices: List<AdviceDBO?>? = null
+    val category: SentimentCategoryDBO? = null,
+    val value: Float? = null,
+    val advice: String? = null,
 )
 
-data class AdviceDBO(
-    val title: String? = null,
-    val description: String? = null,
-    val url: String? = null,
-    val imageUrl: String? = null
-)
+enum class SentimentCategoryDBO(value: String) {
+    terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер")
+}

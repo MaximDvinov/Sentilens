@@ -27,7 +27,6 @@ interface Intent
 class DiaryScreenModel(
     private val notesRepository: NotesRepository,
     private val syncRepository: SyncRepository,
-    private val diaryId: UUID? = null,
 ) : StateScreenModel<DiaryScreenModel.UiState>(UiState()) {
     data class UiState(
         val listNote: NoteList = NoteList(),
@@ -36,7 +35,7 @@ class DiaryScreenModel(
 
     data class NoteList(
         val notes: ImmutableList<Note>? = null,
-        val searchQuery: String = "",
+        val searchQuery: String? = null,
         val loadState: LoadState = LoadState.Idle,
         val filteredNotes: ImmutableList<Note>? = notes?.toImmutableList(),
     )
@@ -48,7 +47,7 @@ class DiaryScreenModel(
 
     sealed class NoteListIntent : Intent {
         data object LoadData : NoteListIntent()
-        data class ChangeSearchQuery(val query: String) : NoteListIntent()
+        data class ChangeSearchQuery(val query: String?) : NoteListIntent()
         data class DeleteNote(val note: Note) : NoteListIntent()
         data object CloseErrorMessage : NoteListIntent()
     }
@@ -58,7 +57,8 @@ class DiaryScreenModel(
         data object DeleteNote : EditNoteIntent()
         data class ChangeTitle(val title: String) : EditNoteIntent()
         data class ChangeBody(val body: String) : EditNoteIntent()
-        data class SelectNote(val note: Note?) : EditNoteIntent()
+        data class SelectNote(val note: UUID?) : EditNoteIntent()
+        data object CreateNote : EditNoteIntent()
     }
 
     init {
@@ -71,15 +71,6 @@ class DiaryScreenModel(
                             filteredNotes = newList.map { it.toUiNote() }.toPersistentList()
                         )
                     )
-                }
-
-                if (diaryId != null) {
-                    mutableState.update { oldState ->
-                        oldState.updateEditNote(
-                            newList.find { it.uuid == diaryId }?.toUiNote(),
-                            loadState = LoadState.Idle
-                        )
-                    }
                 }
             }
         }
@@ -157,7 +148,11 @@ class DiaryScreenModel(
             EditNoteIntent.SaveNote -> saveNote(editNoteUiState)
 
             is EditNoteIntent.SelectNote -> mutableState.update {
-                it.updateEditNote(editNoteIntent.note, loadState = LoadState.Idle)
+                it.selectNote(editNoteIntent.note, loadState = LoadState.Idle)
+            }
+
+            EditNoteIntent.CreateNote -> mutableState.update {
+                it.updateEditNote(Note())
             }
         }
     }
@@ -247,6 +242,13 @@ class DiaryScreenModel(
         )
     }
 
+    private suspend fun UiState.selectNote(
+        uuid: UUID? = this.editNoteState?.currentNote?.uuid,
+        loadState: LoadState = this.editNoteState?.loadState ?: LoadState.Idle,
+    ) = updateEditNote(uuid?.let {
+        notesRepository.getNote(uuid)?.toUiNote()
+    }, loadState)
+
     private suspend fun editNote(
         currentNote: Note,
         editNoteUiState: EditNoteState,
@@ -314,9 +316,10 @@ class DiaryScreenModel(
     }
 
     private fun changeSearchQuery(
-        query: String, currentState: NoteList,
+        query: String?, currentState: NoteList,
     ): NoteList {
-        val newFilteredNotes = filterList(currentState.notes, query)
+        val newFilteredNotes =
+            query?.let { filterList(currentState.notes, it) } ?: currentState.notes
 
         return currentState.copy(
             searchQuery = query, filteredNotes = newFilteredNotes?.toPersistentList()

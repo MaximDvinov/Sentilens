@@ -22,6 +22,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
@@ -37,12 +39,13 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import kotlinx.collections.immutable.ImmutableList
 import org.diary.composeui.components.HomeTopBar
 import org.diary.composeui.components.LoadIndicator
+import org.diary.composeui.components.PrimaryIconButton
 import org.diary.composeui.theme.defaultShape
 import org.diary.diary.Note
-import org.diary.diary.list.DiaryListScreen
 import org.diary.main.setting.SettingScreen
 import org.diary.diary.ui.NoteItem
 import org.diary.navigation.DiaryScreenProvider
+import org.diary.navigation.InitialDiaryScreenState
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import sentilens.shared.composemain.generated.resources.Res
@@ -58,6 +61,8 @@ fun CompactHomeContent(
     onIntent: (org.diary.composeui.Intent) -> Unit,
 ) {
     val navigator = LocalNavigator.current
+    val createScreen =
+        rememberScreen(DiaryScreenProvider.DiaryScreen(InitialDiaryScreenState.CreateDiary))
     val refreshState = rememberPullRefreshState(
         state is HomeScreenModel.UiState.Loading, onRefresh = {
             onIntent(HomeScreenModel.HomeIntent.LoadData)
@@ -111,15 +116,30 @@ fun CompactHomeContent(
                 actualDiaries(
                     state.notes,
                     onClickAll = {
-                        navigator?.push(ScreenRegistry.get(DiaryScreenProvider.DiaryListScreen()))
+                        navigator?.push(ScreenRegistry.get(DiaryScreenProvider.DiaryScreen()))
                     },
                     onClickNote = { diary: Note ->
                         navigator?.push(
                             ScreenRegistry.get(
-                                DiaryScreenProvider.DiaryListScreen(diaryId = diary.uuid)
+                                DiaryScreenProvider.DiaryScreen(
+                                    InitialDiaryScreenState.UpdateDiary(
+                                        diaryId = diary.uuid
+                                    )
+                                )
                             )
                         )
                     })
+            }
+
+            PrimaryIconButton(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd),
+                onClick = {
+                    navigator?.push(createScreen)
+                }
+            ) {
+                Icon(Icons.Default.Add, "", tint = MaterialTheme.colors.onPrimary)
             }
         }
     }

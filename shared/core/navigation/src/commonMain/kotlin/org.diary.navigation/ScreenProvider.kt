@@ -9,11 +9,20 @@ sealed class DiaryScreenProvider : ScreenProvider {
     data object BreathScreen : DiaryScreenProvider()
     data object PlayerScreen : DiaryScreenProvider()
     data object RegistrationScreen : DiaryScreenProvider()
-    data class DiaryListScreen(val diaryId: UUID? = null) : DiaryScreenProvider()
+    data class DiaryScreen(val initialState: InitialDiaryScreenState = InitialDiaryScreenState.Idle) :
+        DiaryScreenProvider()
+
     data class LoginScreen(
         val username: String? = null,
         val password: String? = null,
     ) : DiaryScreenProvider()
 
     data object SplashScreen : DiaryScreenProvider()
+}
+
+sealed class InitialDiaryScreenState() {
+    data object CreateDiary : InitialDiaryScreenState()
+    data object Idle : InitialDiaryScreenState()
+    data class UpdateDiary(val diaryId: UUID?) : InitialDiaryScreenState()
+    data object Search : InitialDiaryScreenState()
 }

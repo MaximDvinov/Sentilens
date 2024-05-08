@@ -6,7 +6,7 @@ import org.diary.auth.login.LoginScreen
 import org.diary.auth.registration.RegistrationScreen
 import org.diary.auth.splash.SplashScreen
 import org.diary.navigation.DiaryScreenProvider
-import org.diary.diary.list.DiaryListScreen
+import org.diary.diary.list.DiaryScreen
 import org.diary.main.home.HomeScreen
 
 val navigationModule = screenModule {
@@ -16,8 +16,8 @@ val navigationModule = screenModule {
     register<DiaryScreenProvider.RegistrationScreen> {
         RegistrationScreen()
     }
-    register<DiaryScreenProvider.DiaryListScreen> {
-        DiaryListScreen(it.diaryId)
+    register<DiaryScreenProvider.DiaryScreen> {
+        DiaryScreen(it.initialState)
     }
     register<DiaryScreenProvider.HomeScreen> {
         HomeScreen()

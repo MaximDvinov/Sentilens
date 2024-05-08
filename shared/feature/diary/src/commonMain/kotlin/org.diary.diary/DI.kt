@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val diaryModule = module {
 //    factoryOf(::DiaryScreenModel)
     factory {
-        DiaryScreenModel(get(), get(), diaryId = it.getOrNull<UUID>())
+        DiaryScreenModel(get(), get())
     }
 
     // TODO: проверить что все работает автоматом

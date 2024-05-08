@@ -2,7 +2,6 @@ package org.diary.composeui.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,8 +18,10 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -44,20 +45,17 @@ import org.diary.composeui.theme.defaultShape
 @Composable
 fun DiaryTopBar(
     modifier: Modifier = Modifier,
-    searchQuery: String,
-    changeSearchQuery: (String) -> Unit,
-    onRefresh: () -> Unit,
-    onBackClick: () -> Unit
+    searchQuery: String?,
+    changeSearchQuery: (String?) -> Unit,
+    onBackClick: () -> Unit,
 ) {
-    var searchable by remember {
-        mutableStateOf(false)
+    var searchable by remember(searchQuery != null) {
+        mutableStateOf(searchQuery != null)
     }
 
 
     val (text, onChangeText) = remember(false) {
-        mutableStateOf(
-            searchQuery
-        )
+        mutableStateOf(searchQuery)
     }
 
     LaunchedEffect(text) {
@@ -71,7 +69,7 @@ fun DiaryTopBar(
         modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        AnimatedVisibility(!searchable && text.isEmpty()) {
+        AnimatedVisibility(!searchable && text.isNullOrEmpty()) {
             SecondaryIconButton(
                 onClick = onBackClick,
                 modifier = Modifier
@@ -84,7 +82,7 @@ fun DiaryTopBar(
         SearchText(
             searchable = searchable,
             focusRequester = focusRequester,
-            searchQuery = text,
+            searchQuery = text ?: "",
             changeSearchQuery = onChangeText,
         )
 
@@ -94,11 +92,13 @@ fun DiaryTopBar(
                 if (!searchable) {
                     changeSearchQuery("")
                     onChangeText("")
+                } else {
+                    changeSearchQuery(null)
                 }
             },
             modifier = Modifier.padding(start = 6.dp)
         ) {
-            AnimatedContent(searchable || text.isNotEmpty()) {
+            AnimatedContent(searchable || !text.isNullOrEmpty()) {
                 if (it) {
                     Icon(Icons.Default.Close, "Close Search")
                 } else {
@@ -106,27 +106,6 @@ fun DiaryTopBar(
                 }
             }
         }
-//
-//        if (getTypeDevice() == TypeDevice.DESKTOP || getTypeDevice() == TypeDevice.WEB) {
-//            AnimatedVisibility(!searchable && text.isEmpty()) {
-//                SecondaryIconButton(
-//                    onClick = onRefresh,
-//                    modifier = Modifier.padding(start = 6.dp)
-//                ) {
-//                    Icon(FeatherIcons.RotateCcw, "Refresh")
-//                }
-//            }
-//        }
-
-//        AnimatedVisibility(!searchable && text.isEmpty()) {
-//            Spacer(Modifier.width(6.dp))
-//            SecondaryIconButton(
-//                onClick = onClickSetting,
-//                modifier = Modifier.padding(start = 6.dp)
-//            ) {
-//                Icon(FeatherIcons.Settings, "Setting")
-//            }
-//        }
     }
 }
 
@@ -134,7 +113,7 @@ fun DiaryTopBar(
 fun HomeTopBar(
     modifier: Modifier = Modifier,
     onRefresh: () -> Unit,
-    onClickSetting: () -> Unit
+    onClickSetting: () -> Unit,
 ) {
     Row(
         modifier.fillMaxWidth(),
@@ -168,6 +147,65 @@ fun HomeTopBar(
 }
 
 @Composable
+fun HomeTopBarExpanded(
+    modifier: Modifier = Modifier,
+    onCreateClick: () -> Unit,
+    onClickSetting: () -> Unit,
+    onRefresh: () -> Unit,
+    onSearchClick: () -> Unit,
+    isLoad: Boolean,
+) {
+    Row(
+        modifier.fillMaxWidth().clip(defaultShape).background(MaterialTheme.colors.secondary)
+            .padding(start = 0.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        SecondaryIconButton(
+            onClick = onSearchClick,
+        ) {
+            Icon(Icons.Default.Search, "Search")
+        }
+
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "Дневник",
+            style = MaterialTheme.typography.h1,
+            color = MaterialTheme.colors.onSecondary,
+        )
+
+        SecondaryIconButton(
+            onClick = onRefresh,
+        ) {
+            AnimatedContent(isLoad) {
+                if (it) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.onSecondary,
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.3.dp
+                    )
+                } else {
+                    Icon(FeatherIcons.RotateCcw, "Search")
+                }
+            }
+        }
+
+        SecondaryIconButton(
+            onClick = onClickSetting,
+        ) {
+            Icon(FeatherIcons.Settings, "setting")
+        }
+
+
+        PrimaryIconButton(
+            onClick = onCreateClick,
+        ) {
+            Icon(Icons.Default.Add, "Search", tint = MaterialTheme.colors.onPrimary)
+        }
+    }
+}
+
+@Composable
 fun ActionTopBar(
     modifier: Modifier = Modifier,
     title: String,
@@ -175,7 +213,7 @@ fun ActionTopBar(
     rightButtonIcon: ImageVector? = null,
     onClickLeft: () -> Unit = {},
     onClickRight: () -> Unit = {},
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
 ) {
     Row(
         modifier.fillMaxWidth(),
@@ -211,19 +249,18 @@ fun ActionTopBar(
 }
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DiaryTopBarExpanded(
     modifier: Modifier = Modifier,
-    searchQuery: String,
-    changeSearchQuery: (String) -> Unit,
+    searchQuery: String?,
+    changeSearchQuery: (String?) -> Unit,
     onCreateClick: () -> Unit,
-    onClickSetting: () -> Unit,
+    onClickBack: () -> Unit,
     onRefresh: () -> Unit,
     loadState: LoadState,
 ) {
-    var searchable by remember {
-        mutableStateOf(false)
+    var searchable by remember(searchQuery != null) {
+        mutableStateOf(searchQuery != null)
     }
     val focusRequester = remember { FocusRequester() }
 
@@ -234,10 +271,25 @@ fun DiaryTopBarExpanded(
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         SecondaryIconButton(
+            onClick = onClickBack,
+        ) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+        }
+        SearchText(
+            searchable = searchable,
+            focusRequester = focusRequester,
+            searchQuery = searchQuery ?: "",
+            changeSearchQuery = changeSearchQuery,
+            isCenter = false
+        )
+
+        SecondaryIconButton(
             onClick = {
                 searchable = !searchable
                 if (!searchable) {
                     changeSearchQuery("")
+                } else {
+                    changeSearchQuery(null)
                 }
             },
         ) {
@@ -250,13 +302,6 @@ fun DiaryTopBarExpanded(
             }
         }
 
-        SearchText(
-            searchable = searchable,
-            focusRequester = focusRequester,
-            searchQuery = searchQuery,
-            changeSearchQuery = changeSearchQuery,
-            isCenter = false
-        )
 
         SecondaryIconButton(
             onClick = onRefresh,
@@ -269,15 +314,9 @@ fun DiaryTopBarExpanded(
                         strokeWidth = 2.3.dp
                     )
                 } else {
-                    Icon(FeatherIcons.RotateCcw, "Search")
+                    Icon(FeatherIcons.RotateCcw, "Update")
                 }
             }
-        }
-
-        SecondaryIconButton(
-            onClick = onClickSetting,
-        ) {
-            Icon(FeatherIcons.Settings, "theme")
         }
 
 
