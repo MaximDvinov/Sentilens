@@ -13,11 +13,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinNavigatorScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowLeft
+import org.diary.composeui.components.ActionTopBar
 import org.diary.composeui.theme.defaultShape
 import org.diary.stats.components.SentimentChart
 
@@ -30,6 +34,15 @@ class HomeStatsScreen : Screen {
         val state by screenModel.state.collectAsState()
 
         Column(Modifier.fillMaxSize()) {
+            ActionTopBar(
+                modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                title = "Статистика",
+                onClickLeft = {
+                    navigator.pop()
+                },
+                leftButtonIcon = FeatherIcons.ArrowLeft,
+                textAlign = TextAlign.Start
+            )
             SentimentChart(
                 modifier = Modifier
                     .fillMaxWidth()

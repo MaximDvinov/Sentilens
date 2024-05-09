@@ -6,8 +6,8 @@ import org.diary.data.diary.SentimentData
 
 interface StatsRepository {
     suspend fun sentimentForPeriod(
-        startDate: LocalDateTime,
-        endDate: LocalDateTime,
-    ): Map<LocalDateTime, SentimentStatItemData>
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): Map<LocalDate, SentimentStatItemData>
 }
 

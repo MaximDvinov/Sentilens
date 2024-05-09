@@ -11,22 +11,19 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
-import kotlinx.datetime.toLocalDateTime
-import org.diary.data.diary.SentimentData
 import org.diary.data.stats.SentimentStatItemData
 import org.diary.data.stats.StatsRepository
-import org.senti.lens.currentTimeZone
-import org.senti.lens.toDateTime
-import kotlin.jvm.JvmInline
+import org.diary.utils.currentTimeZone
+import org.diary.utils.toDate
+import org.diary.utils.toDateTime
 
 
 data class StatsScreenState(
-    val sentimentForPeriod: ImmutableList<Pair<LocalDateTime, SentimentStatItemData>> = persistentListOf(),
-    val period: Pair<LocalDateTime, LocalDateTime>,
+    val sentimentForPeriod: ImmutableList<Pair<LocalDate, SentimentStatItemData>> = persistentListOf(),
+    val period: Pair<LocalDate, LocalDate>,
 
     )
 
@@ -54,10 +51,10 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
         }
     }
 
-    private fun getBasePeriod(): Pair<LocalDateTime, LocalDateTime> {
+    private fun getBasePeriod(): Pair<LocalDate, LocalDate> {
         val instant = Clock.System.now()
         return instant.minus(7, DateTimeUnit.DAY, currentTimeZone)
-            .toDateTime() to instant.toDateTime()
+            .toDate() to instant.toDate()
     }
 
 }

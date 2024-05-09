@@ -10,14 +10,14 @@ import com.aay.compose.lineChart.LineChart
 import com.aay.compose.lineChart.model.LineParameters
 import com.aay.compose.lineChart.model.LineType
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 import org.diary.data.stats.SentimentStatItemData
-import org.senti.lens.dateFormat
+import org.diary.utils.dateFormat
 
 @Composable
 fun SentimentChart(
     modifier: Modifier,
-    sentimentForPeriod: ImmutableList<Pair<LocalDateTime, SentimentStatItemData>>,
+    sentimentForPeriod: ImmutableList<Pair<LocalDate, SentimentStatItemData>>,
 ) {
     val color = MaterialTheme.colors.primary
 
@@ -46,18 +46,10 @@ fun SentimentChart(
         }
     }
 
-    val yAxisRange by remember {
-        derivedStateOf {
-            Pair(
-                sentimentForPeriod.minOf { it.second.value },
-                sentimentForPeriod.maxOf { it.second.value })
-        }
-    }
-
     LineChart(
         modifier = modifier,
         linesParameters = linesParameters,
         xAxisData = xAxisData,
 
-    )
+        )
 }

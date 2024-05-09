@@ -50,13 +50,13 @@ import org.diary.composeui.VerticalScrollBar
 import org.diary.composeui.bounceClick
 import org.diary.composeui.components.fadingEdge
 import org.diary.composeui.theme.SentimentColor
-import org.senti.lens.dateFormatWithEnter
+import org.diary.utils.dateFormatWithEnter
 import org.diary.composeui.theme.defaultShape
 import org.diary.composeui.theme.onError
 import org.diary.composeui.theme.smallShape
 import org.diary.diary.Note
 import org.diary.diary.SentimentCategory
-import org.senti.lens.timeFormat
+import org.diary.utils.timeFormat
 
 
 @Composable

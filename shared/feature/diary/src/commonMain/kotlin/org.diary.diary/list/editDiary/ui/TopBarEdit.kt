@@ -29,7 +29,7 @@ import compose.icons.feathericons.Settings
 import org.diary.composeui.LoadState
 import org.diary.composeui.SettingNoteMenu
 import org.diary.diary.Note
-import org.senti.lens.dateTimeFormat
+import org.diary.utils.dateTimeFormat
 import org.diary.composeui.components.SecondaryIconButton
 
 @OptIn(ExperimentalAnimationApi::class)

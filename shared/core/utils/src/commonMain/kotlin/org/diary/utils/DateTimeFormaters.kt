@@ -1,11 +1,16 @@
-package org.senti.lens
+package org.diary.utils
 
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
 
 
 fun Month.mothFormat(): String {
@@ -40,6 +45,12 @@ fun LocalDateTime?.dateFormat(): String {
     return "$day $month $year"
 }
 
+@OptIn(FormatStringsInDatetimeFormats::class)
+fun LocalDate.dateFormat(): String = format(LocalDate.Format {
+    byUnicodePattern("dd.MM")
+})
+
+
 //"d MMMM yyyy"
 fun LocalDateTime?.dateFormatWithEnter(): String {
     if (this == null) {
@@ -56,17 +67,14 @@ fun LocalDateTime?.dateFormatWithEnter(): String {
 
 
 //"HH:mm"
-fun LocalDateTime?.timeFormat(): String {
-    if (this == null) return ""
-    val timeZonedDate =
-        this.toInstant(TimeZone.UTC).toLocalDateTime(TimeZone.currentSystemDefault())
-    val hour = if (timeZonedDate.hour < 10) "0${timeZonedDate.hour}" else "${timeZonedDate.hour}"
-    val minute =
-        if (timeZonedDate.minute < 10) "0${timeZonedDate.minute}" else "${timeZonedDate.minute}"
-    return "$hour:$minute"
-}
+@OptIn(FormatStringsInDatetimeFormats::class)
+fun LocalDateTime?.timeFormat(): String = this?.format(LocalDateTime.Format {
+    byUnicodePattern("HH:mm")
+}) ?: ""
+
 
 //"d MMM yyy в HH:mm"
+@OptIn(FormatStringsInDatetimeFormats::class)
 fun LocalDateTime?.dateTimeFormat(): String {
     if (this == null) {
         return ""
@@ -88,3 +96,4 @@ val currentTimeZone
     get() = TimeZone.currentSystemDefault()
 
 fun Instant.toDateTime() = this.toLocalDateTime(currentTimeZone)
+fun Instant.toDate() = this.toLocalDateTime(currentTimeZone).date
