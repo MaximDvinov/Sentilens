@@ -30,6 +30,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(libs.composeIcons.fontAwesome)
             implementation(libs.window.size)
+            implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.kotlinx.datetime)
 
             implementation(project(":shared:core:utils"))
         }

@@ -31,6 +31,24 @@ fun Month.mothFormat(): String {
     }
 }
 
+fun Month.mothFormatFull(): String {
+    return when (this.ordinal) {
+        0 -> "Январь"
+        1 -> "Февраль"
+        2 -> "Март"
+        3 -> "Апрель"
+        4 -> "Май"
+        5 -> "Июнь"
+        6 -> "Июль"
+        7 -> "Август"
+        8 -> "Сентярь"
+        9 -> "Октябрь"
+        10 -> "Ноябрь"
+        11 -> "Декабрь"
+        else -> ""
+    }
+}
+
 //"d MMMM yyyy"
 fun LocalDateTime?.dateFormat(): String {
     if (this == null) {

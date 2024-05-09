@@ -24,7 +24,7 @@ class SplashScreenModel(private val authRepository: AuthRepository) : ScreenMode
     private fun isAuthenticated() {
         screenModelScope.launch {
             if (authRepository.isAuthenticated()) {
-                delay(5000)
+                delay(1000)
                 _event.send(SplashEvent.Authenticated)
             } else {
                 delay(1000)
