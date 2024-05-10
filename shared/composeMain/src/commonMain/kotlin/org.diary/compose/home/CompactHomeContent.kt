@@ -1,4 +1,4 @@
-package org.diary.main.home
+package org.diary.compose.home
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -42,7 +42,7 @@ import org.diary.composeui.components.LoadIndicator
 import org.diary.composeui.components.PrimaryIconButton
 import org.diary.composeui.theme.defaultShape
 import org.diary.diary.Note
-import org.diary.main.setting.SettingScreen
+import org.diary.compose.setting.SettingScreen
 import org.diary.diary.ui.NoteItem
 import org.diary.navigation.DiaryScreenProvider
 import org.diary.navigation.InitialDiaryScreenState

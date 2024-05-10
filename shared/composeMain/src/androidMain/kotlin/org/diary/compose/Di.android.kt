@@ -1,4 +1,4 @@
-package org.diary.main
+package org.diary.compose
 
 import android.content.Context
 import android.content.SharedPreferences

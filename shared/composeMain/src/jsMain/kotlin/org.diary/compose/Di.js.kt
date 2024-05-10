@@ -1,10 +1,10 @@
-package org.senti.lens
+package org.diary.compose
 
 import com.russhwolf.settings.ObservableSettings
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
-
-actual val platformModule = module {
+actual val platformModule: Module = module {
     single<ObservableSettings> {
         ObservableStorageSettings()
     }

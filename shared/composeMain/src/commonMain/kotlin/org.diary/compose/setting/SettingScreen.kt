@@ -1,4 +1,4 @@
-package org.diary.main.setting
+package org.diary.compose.setting
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement

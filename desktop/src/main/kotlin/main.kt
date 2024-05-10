@@ -1,5 +1,4 @@
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -69,10 +68,10 @@ import org.diary.composeui.theme.smallShape
 import org.diary.desktop.generated.resources.Nunito_Bold
 import org.diary.desktop.generated.resources.Res
 import org.diary.desktop.generated.resources.icon
-import org.diary.main.App
-import org.diary.main.commonModule
-import org.diary.main.platformModule
-import org.diary.main.screenRegistry
+import org.diary.compose.App
+import org.diary.compose.commonModule
+import org.diary.compose.platformModule
+import org.diary.compose.screenRegistry
 import java.awt.Dimension
 
 

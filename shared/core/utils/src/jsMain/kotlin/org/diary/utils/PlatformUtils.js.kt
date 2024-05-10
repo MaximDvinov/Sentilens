@@ -1,15 +1,18 @@
 package org.diary.utils
 
 import com.russhwolf.settings.Settings
+import com.russhwolf.settings.StorageSettings
+import kotlinx.browser.window
 import org.diary.utils.TypeDevice
 
+actual fun openLink(context: Any?, url: String) {
+    window.open(url)
+}
+
 actual fun getSettings(delegate: Any): Settings {
-    TODO("Not yet implemented")
+    return StorageSettings()
 }
 
 actual fun getTypeDevice(): TypeDevice {
-    TODO("Not yet implemented")
-}
-
-actual fun openLink(context: Any?, url: String) {
+    return TypeDevice.WEB
 }

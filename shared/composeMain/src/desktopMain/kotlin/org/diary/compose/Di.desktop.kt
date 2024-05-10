@@ -1,4 +1,4 @@
-package org.diary.main
+package org.diary.compose
 
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.PreferencesSettings

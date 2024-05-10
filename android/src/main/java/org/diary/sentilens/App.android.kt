@@ -21,11 +21,10 @@ import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import org.diary.composeui.components.tileBack
 import org.diary.composeui.theme.AppTheme
-import org.diary.main.App
-import org.diary.main.commonModule
-import org.diary.main.navigationModule
-import org.diary.main.platformModule
-import org.diary.main.screenRegistry
+import org.diary.compose.App
+import org.diary.compose.commonModule
+import org.diary.compose.platformModule
+import org.diary.compose.screenRegistry
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

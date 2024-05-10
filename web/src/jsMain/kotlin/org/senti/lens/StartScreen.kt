@@ -27,6 +27,7 @@ import org.diary.composeui.components.SecondaryButton
 import org.diary.composeui.theme.icons.androidIcon
 import org.diary.composeui.theme.icons.webIcon
 import org.diary.composeui.theme.icons.windowIcon
+import org.diary.utils.openLink
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -82,11 +83,17 @@ fun StartScreenContent(onClick: () -> Unit) {
             if (sizeScreen.widthSizeClass == WindowWidthSizeClass.Compact) {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     VersionButton(windowIcon, "Windows") {
-                        openLink("https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensWindows.msi")
+                        openLink(
+                            null,
+                            url = "https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensWindows.msi"
+                        )
                     }
 
                     VersionButton(androidIcon, "Android") {
-                        openLink("https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensAndroid.apk")
+                        openLink(
+                            null,
+                            "https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensAndroid.apk"
+                        )
                     }
 
                     VersionButton(webIcon, "Web-версия", onClick = onClick)
@@ -94,11 +101,17 @@ fun StartScreenContent(onClick: () -> Unit) {
             } else {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     VersionButton(windowIcon, "Windows") {
-                        openLink("https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensWindows.msi")
+                        openLink(
+                            null,
+                            "https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensWindows.msi"
+                        )
                     }
 
                     VersionButton(androidIcon, "Android") {
-                        openLink("https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensAndroid.apk")
+                        openLink(
+                            null,
+                            "https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensAndroid.apk"
+                        )
                     }
 
                     VersionButton(webIcon, "Web-версия", onClick = onClick)

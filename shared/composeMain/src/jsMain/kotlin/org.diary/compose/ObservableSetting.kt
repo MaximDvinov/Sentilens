@@ -1,9 +1,8 @@
-package org.senti.lens
+package org.diary.compose
 
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SettingsListener
 import kotlinx.browser.window
-import org.w3c.dom.StorageEvent
 import org.w3c.dom.events.Event
 import org.w3c.dom.get
 import org.w3c.dom.set

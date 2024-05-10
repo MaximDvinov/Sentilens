@@ -1,4 +1,4 @@
-package org.diary.main.home
+package org.diary.compose.home
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope

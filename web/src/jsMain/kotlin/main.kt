@@ -8,11 +8,15 @@ import androidx.compose.ui.Modifier
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SettingsListener
 import kotlinx.browser.window
+import org.diary.compose.App
 import org.koin.core.context.startKoin
 import org.diary.composeui.components.tileBack
-import org.diary.main.commonModule
-import org.diary.main.platformModule
-import org.diary.main.screenRegistry
+import org.diary.compose.commonModule
+import org.diary.compose.platformModule
+import org.diary.compose.screenRegistry
+import org.diary.composeui.theme.AppTheme
+import org.jetbrains.skiko.wasm.onWasmReady
+import org.senti.lens.StartScreenContent
 import org.w3c.dom.MediaQueryListEvent
 
 private lateinit var settingsListener: SettingsListener
@@ -27,6 +31,9 @@ fun main() {
 
         BrowserViewportWindow("Sentilens") {
             val settings: ObservableSettings by koin.inject()
+            var isStartScreen by remember {
+                mutableStateOf(true)
+            }
 
             var isDarkTheme by remember {
                 mutableStateOf(
@@ -59,7 +66,7 @@ fun main() {
                             isStartScreen = false
                         }
                     } else {
-                        App(isLogin)
+                        App()
                     }
                 }
             }
