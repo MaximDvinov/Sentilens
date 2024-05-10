@@ -3,6 +3,17 @@ plugins {
     id("org.jetbrains.compose")
 }
 
+//
+//val copyJsResources = tasks.create("copyJsResourcesWorkaround", Copy::class.java) {
+//    from(project(":shared:core:composeUi").file("src/commonMain/composeResources"))
+//    into("build/processedResources/js/main")
+//}
+//
+//afterEvaluate {
+//    project.tasks.getByName("jsProcessResources").finalizedBy(copyJsResources)
+//}
+
+
 kotlin {
     js {
         browser { }
@@ -20,7 +31,6 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
 
-                implementation(compose.components.resources)
                 implementation(libs.composeIcons.fontAwesome)
 
                 implementation(libs.koin.core)
