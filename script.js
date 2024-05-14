@@ -15,7 +15,7 @@ if (userSelectedTheme) {
 var loadingScreen = document.getElementsByClassName("loading")[0];
 loadingScreen.style.display = "block";
 
-var composeApp = "composeApp.js";
+var composeApp = "web.js";
 
 function loadScriptInBody(src) {
     var script = document.createElement("script");
