@@ -25,11 +25,11 @@ fun SentimentData.toSentiment(): Sentiment {
 
 private fun SentimentCategoryData.toStable(): SentimentCategory {
     return when (this) {
-        SentimentCategoryData.terrible -> SentimentCategory.terrible
-        SentimentCategoryData.bad -> SentimentCategory.bad
-        SentimentCategoryData.neutral -> SentimentCategory.neutral
-        SentimentCategoryData.good -> SentimentCategory.good
-        SentimentCategoryData.awesome -> SentimentCategory.awesome
+        SentimentCategoryData.TERRIBLE -> SentimentCategory.terrible
+        SentimentCategoryData.BAD -> SentimentCategory.bad
+        SentimentCategoryData.NEUTRAL -> SentimentCategory.neutral
+        SentimentCategoryData.GOOD -> SentimentCategory.good
+        SentimentCategoryData.AWESOME -> SentimentCategory.awesome
     }
 }
 
@@ -52,10 +52,10 @@ fun Sentiment.toSentimentData() = SentimentData(
 
 private fun SentimentCategory.toData(): SentimentCategoryData {
     return when (this) {
-        SentimentCategory.terrible -> SentimentCategoryData.terrible
-        SentimentCategory.bad -> SentimentCategoryData.bad
-        SentimentCategory.neutral -> SentimentCategoryData.neutral
-        SentimentCategory.good -> SentimentCategoryData.good
-        SentimentCategory.awesome -> SentimentCategoryData.awesome
+        SentimentCategory.terrible -> SentimentCategoryData.TERRIBLE
+        SentimentCategory.bad -> SentimentCategoryData.BAD
+        SentimentCategory.neutral -> SentimentCategoryData.NEUTRAL
+        SentimentCategory.good -> SentimentCategoryData.GOOD
+        SentimentCategory.awesome -> SentimentCategoryData.AWESOME
     }
 }

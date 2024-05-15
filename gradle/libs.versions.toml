@@ -3,6 +3,7 @@
 chart = "Beta-0.0.5"
 compottie = "1.1.1"
 constraintlayoutComposeMultiplatform = "0.3.0-alpha01"
+emojiKt = "1.4.0"
 indexeddb = "0.6.1"
 jSystemThemeDetector = "3.8"
 kotlin = "1.9.23"
@@ -49,6 +50,8 @@ core = "1.13.1"
 chart = { module = "io.github.thechance101:chart", version.ref = "chart" }
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 constraintlayout-compose-multiplatform = { module = "tech.annexflow.compose:constraintlayout-compose-multiplatform", version.ref = "constraintlayoutComposeMultiplatform" }
+emoji-compose-m3 = { module = "org.kodein.emoji:emoji-compose-m3", version.ref = "emojiKt" }
+emoji-kt = { module = "org.kodein.emoji:emoji-kt", version.ref = "emojiKt" }
 indexeddb-core = { module = "com.juul.indexeddb:core", version.ref = "indexeddb" }
 jSystemThemeDetector = { module = "com.github.Dansoftowner:jSystemThemeDetector", version.ref = "jSystemThemeDetector" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }

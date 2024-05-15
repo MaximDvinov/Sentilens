@@ -93,8 +93,8 @@ fun NotesList(
         ) {
             items(notes) {
                 key(it.uuid) {
-                    val color by animateColorAsState(if (currentNote?.uuid == it.uuid) MaterialTheme.colors.primary else MaterialTheme.colors.secondary)
-                    val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 2.dp else 0.dp)
+                    val color by animateColorAsState(if (currentNote?.uuid == it.uuid) it.sentiment?.category.getSentimentColor() else MaterialTheme.colors.secondary)
+                    val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 0.5.dp else 0.dp)
 
                     NoteItem(
                         modifier = Modifier.bounceClick().border(
@@ -135,6 +135,8 @@ fun NoteItem(
         mutableStateOf(false)
     }
 
+    val color by animateColorAsState(note.sentiment?.category.getSentimentColor())
+
     Box {
         Row(
             modifier = modifier
@@ -167,7 +169,7 @@ fun NoteItem(
             Spacer(
                 modifier = Modifier
                     .clip(RoundedCornerShape(50))
-                    .background(note.sentiment?.category.getSentimentColor())
+                    .background(color)
                     .width(2.5.dp)
                     .fillMaxHeight()
 
@@ -210,11 +212,11 @@ fun NoteItem(
             )
         ) {
             DropdownMenuItem(onClick = onDeleteItemClick) {
-                Icon(Icons.Default.Delete, "Delete", tint = onError)
+                Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colors.onError)
 
                 Text(
                     text = "Удалить",
-                    style = MaterialTheme.typography.body1.copy(color = onError),
+                    style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onError),
                     modifier = Modifier.padding(10.dp)
                 )
             }
@@ -228,7 +230,8 @@ fun SentimentCategory?.getSentimentColor(): Color = when (this) {
     SentimentCategory.bad -> SentimentColor.BAD.value
     SentimentCategory.neutral -> SentimentColor.NEUTRAL.value
     SentimentCategory.good -> SentimentColor.GOOD.value
-    SentimentCategory.awesome -> SentimentColor.AWESOME.value
+    SentimentCategory.awesome -> SentimentColor.GREAT.value
     null -> SentimentColor.NEUTRAL.value
 }
+
 

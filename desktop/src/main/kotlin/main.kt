@@ -97,6 +97,7 @@ fun main() = application {
         }
     }
 
+
     screenRegistry()
 
     CompositionLocalProvider(LocalEscapeEvent provides mutableStateOf(null)) {

@@ -41,6 +41,6 @@ enum class SentimentColor(val value: Color) {
     BAD(Color(0xFFFF824D)),
     NEUTRAL(Color(0xFF916247)),
     GOOD(Color(0xFFFFCF5C)),
-    AWESOME(Color(0xFF9AB168)),
+    GREAT(Color(0xFF9AB168)),
     UNKNOWN(Color(0xFF8F8F8F))
 }

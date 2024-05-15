@@ -4,6 +4,8 @@ import androidx.compose.runtime.Stable
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.until
 import org.diary.utils.toDate
@@ -32,7 +34,9 @@ object CalendarUtils {
 data class MonthWithYear(
     val month: Int,
     val year: Int,
-)
+) {
+    companion object
+}
 
 
 fun MonthWithYear.unaryMinus(): MonthWithYear {
@@ -50,4 +54,22 @@ fun MonthWithYear.unaryPlus(): MonthWithYear {
     }
 
     return MonthWithYear(month + 1, year)
+}
+
+fun MonthWithYear.minus(value: Int): MonthWithYear {
+    return LocalDate(year, month, 1).minus(value, DateTimeUnit.MONTH).toMonthWithYear()
+}
+
+fun MonthWithYear.plus(value: Int): MonthWithYear {
+    return LocalDate(year, month, 1).plus(value, DateTimeUnit.MONTH).toMonthWithYear()
+}
+
+fun MonthWithYear.Companion.current(): MonthWithYear {
+    val clock = Clock.System.now()
+    val now = clock.toDate()
+    return MonthWithYear(now.month.number, now.year)
+}
+
+private fun LocalDate.toMonthWithYear(): MonthWithYear {
+    return MonthWithYear(month.number, year)
 }

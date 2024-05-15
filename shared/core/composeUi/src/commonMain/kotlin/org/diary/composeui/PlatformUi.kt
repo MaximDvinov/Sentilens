@@ -64,11 +64,11 @@ fun SettingNoteMenu(
         )
     ) {
         DropdownMenuItem(onClick = onDeleteClick) {
-            Icon(Icons.Default.Delete, "Settings", tint = onError)
+            Icon(Icons.Default.Delete, "Settings", tint = MaterialTheme.colors.onError)
 
             Text(
                 text = "Удалить",
-                style = MaterialTheme.typography.body1.copy(color = onError),
+                style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onError),
                 modifier = Modifier.padding(10.dp)
             )
         }

@@ -4,30 +4,36 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,19 +41,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
-import compose.icons.feathericons.AlignRight
 import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.ArrowRight
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import kotlinx.datetime.number
 import org.diary.composeui.components.SecondaryIconButton
+import org.diary.composeui.icons.Emoji
 import org.diary.composeui.theme.SentimentColor
 import org.diary.composeui.theme.defaultShape
 import org.diary.composeui.theme.primary
 import org.diary.composeui.theme.sixDpShape
 import org.diary.composeui.theme.smallShape
 import org.diary.utils.mothFormatFull
+import org.diary.utils.toDate
+import kotlin.math.max
 
 @Stable
 data class SentimentItem(
@@ -55,26 +66,19 @@ data class SentimentItem(
     val color: Color = primary,
 )
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SentimentCalendar(
     modifier: Modifier,
     selectedPeriod: MonthWithYear,
+    initialPeriod: MonthWithYear = MonthWithYear.current(),
     changeMonth: (MonthWithYear) -> Unit,
     onSelectDate: (LocalDate) -> Unit,
     items: ImmutableMap<LocalDate, SentimentItem>,
 ) {
-    val days by remember(selectedPeriod) {
-        derivedStateOf {
-            CalendarUtils.getDaysInMonth(selectedPeriod.month, selectedPeriod.year)
-        }
-    }
-
-    val startDayOfWeek by remember(selectedPeriod) {
-        derivedStateOf {
-            days.firstOrNull()?.dayOfWeek?.ordinal ?: 0
-        }
-    }
+    val scope = rememberCoroutineScope()
+    val pageCount = 12000
+    val pagerState = rememberPagerState(initialPage = pageCount / 2) { pageCount }
 
     Column(
         modifier = modifier
@@ -96,72 +100,76 @@ fun SentimentCalendar(
                 style = MaterialTheme.typography.subtitle1
             )
 
-            Spacer(modifier.weight(1f))
+            Spacer(Modifier.weight(1f))
 
             SecondaryIconButton(onClick = {
-                changeMonth(selectedPeriod.unaryMinus())
+                scope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                }
+
             }, color = Color.Transparent) {
                 Icon(FeatherIcons.ArrowLeft, null, tint = MaterialTheme.colors.onBackground)
             }
 
             SecondaryIconButton(onClick = {
-                changeMonth(selectedPeriod.unaryPlus())
+                scope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                }
             }, color = Color.Transparent) {
                 Icon(FeatherIcons.ArrowRight, null, tint = MaterialTheme.colors.onBackground)
             }
         }
 
-        AnimatedContent(days, contentKey = { selectedPeriod }, transitionSpec = {
-            (fadeIn()).togetherWith(fadeOut())
-        }) {
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxWidth(),
-                columns = object : GridCells {
-                    override fun Density.calculateCrossAxisCellSizes(
-                        availableSize: Int,
-                        spacing: Int,
-                    ): List<Int> {
-                        return List(7) { 40 }
-                    }
+        LaunchedEffect(pagerState.currentPage) {
+            changeMonth(initialPeriod.plus(pagerState.currentPage - pageCount / 2))
+        }
 
-                },
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                items(startDayOfWeek) {
-                    Column { }
-                }
-
-                items(it) {
-                    DateItem(modifier = Modifier, data = it to items[it])
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth(),
+            pageSpacing = 10.dp,
+            key = { it }
+        ) {
+            val selected = initialPeriod.plus(it - pageCount / 2)
+            val days by remember(selected) {
+                derivedStateOf {
+                    CalendarUtils.getDaysInMonth(
+                        selected.month, selected.year
+                    )
                 }
             }
+
+            CalendarGrid(days, items)
         }
+
 
     }
 }
 
 @Composable
-fun DateItem(modifier: Modifier = Modifier, data: Pair<LocalDate, SentimentItem?>) {
-    val (date, sentiment) = data
-    Column(
-        modifier = modifier
-            .clip(sixDpShape)
-            .background(SentimentColor.UNKNOWN.value)
-            .padding(vertical = 4.dp, horizontal = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+private fun CalendarGrid(
+    days: List<LocalDate>,
+    items: ImmutableMap<LocalDate, SentimentItem>,
+) {
+    val startDayOfWeek by remember(days) {
+        derivedStateOf {
+            days.firstOrNull()?.dayOfWeek?.ordinal ?: 0
+        }
+    }
+
+    LazyVerticalGrid(
+        modifier = Modifier.fillMaxWidth(),
+        columns = GridCells.Fixed(7),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(
-            text = "\uD83D\uDE42",
-            style = MaterialTheme.typography.h2,
-            color = Color.White
-        )
-        Text(
-            text = date.dayOfMonth.toString(),
-            style = MaterialTheme.typography.body1,
-            color = Color.White
-        )
+        items(startDayOfWeek) {
+            Column { }
+        }
+
+        items(days) { date ->
+            DateItem(modifier = Modifier, data = date to items[date])
+        }
     }
 }
-
 

@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -53,7 +55,7 @@ fun ExpandHomeContent(
             Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(Modifier.weight(1f)) {
+            Column(Modifier.widthIn(max = 300.dp)) {
                 val (selectedPeriod, onChangePeriod) = remember {
                     mutableStateOf(MonthWithYear(5, 2024))
                 }
@@ -85,7 +87,6 @@ fun ExpandHomeContent(
                     }
                 }
             }
-            Column(Modifier.weight(1f)) { }
         }
     }
 }

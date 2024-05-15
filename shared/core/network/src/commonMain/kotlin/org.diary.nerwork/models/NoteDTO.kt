@@ -21,13 +21,13 @@ data class NoteDTO(
 
 @Serializable
 data class SentimentDTO(
-    @SerialName("category") val category: Int? = null,
+    @SerialName("category") val category: SentimentCategoryDTO? = null,
     @SerialName("value") val value: Float? = null,
     @SerialName("advice") val advice: String? = null,
 )
 
 enum class SentimentCategoryDTO(value: String) {
-    terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер")
+    TERRIBLE("Ужасно"), BAD("Плохо"), NEUTRAL("Так себе"), GOOD("Хорошо"), AWESOME("Супер")
 }
 
 @Serializable

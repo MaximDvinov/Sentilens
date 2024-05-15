@@ -46,7 +46,7 @@ fun NoteDTO.toNote(): NoteData {
 
 private fun SentimentDTO.toSentiment(): SentimentData {
     return SentimentData(
-        category = SentimentCategoryData.entries.getOrNull(category ?: 0),
+        category = category?.toDTO(),
         value = value,
         advice = advice
     )
@@ -54,11 +54,11 @@ private fun SentimentDTO.toSentiment(): SentimentData {
 
 private fun SentimentCategoryDTO.toDTO(): SentimentCategoryData {
     return when (this) {
-        SentimentCategoryDTO.bad -> SentimentCategoryData.bad
-        SentimentCategoryDTO.terrible -> SentimentCategoryData.terrible
-        SentimentCategoryDTO.neutral -> SentimentCategoryData.neutral
-        SentimentCategoryDTO.good -> SentimentCategoryData.good
-        SentimentCategoryDTO.awesome -> SentimentCategoryData.awesome
+        SentimentCategoryDTO.BAD -> SentimentCategoryData.BAD
+        SentimentCategoryDTO.TERRIBLE -> SentimentCategoryData.TERRIBLE
+        SentimentCategoryDTO.NEUTRAL -> SentimentCategoryData.NEUTRAL
+        SentimentCategoryDTO.GOOD -> SentimentCategoryData.GOOD
+        SentimentCategoryDTO.AWESOME -> SentimentCategoryData.AWESOME
     }
 }
 
@@ -77,22 +77,20 @@ fun NoteData.toNoteDTO(): NoteDTO = this.let {
 
 private fun SentimentData.toSentimentDTO(): SentimentDTO {
     return SentimentDTO(
-        category = category?.ordinal,
+        category = category?.toDTO(),
         value = value,
         advice = advice
     )
 }
 
-private fun SentimentCategoryData.toData(): SentimentCategoryDTO {
-//    return when (this) {
-//        SentimentCategoryData.bad -> SentimentCategoryDTO.bad
-//        SentimentCategoryData.terrible -> SentimentCategoryDTO.terrible
-//        SentimentCategoryData.neutral -> SentimentCategoryDTO.neutral
-//        SentimentCategoryData.good -> SentimentCategoryDTO.good
-//        SentimentCategoryData.awesome -> SentimentCategoryDTO.awesome
-//    }
-
-    return SentimentCategoryDTO.entries.getOrNull(ordinal) ?: SentimentCategoryDTO.neutral
+private fun SentimentCategoryData.toDTO(): SentimentCategoryDTO {
+    return when (this) {
+        SentimentCategoryData.BAD -> SentimentCategoryDTO.BAD
+        SentimentCategoryData.TERRIBLE -> SentimentCategoryDTO.TERRIBLE
+        SentimentCategoryData.NEUTRAL -> SentimentCategoryDTO.NEUTRAL
+        SentimentCategoryData.GOOD -> SentimentCategoryDTO.GOOD
+        SentimentCategoryData.AWESOME -> SentimentCategoryDTO.AWESOME
+    }
 }
 
 private fun SentimentData?.toSentiment(): SentimentData? {
@@ -106,33 +104,31 @@ private fun SentimentData?.toSentiment(): SentimentData? {
 }
 
 fun SentimentDBO.toSentiment(): SentimentData = SentimentData(
-    category = category?.toDTO(),
+    category = category?.toData(),
     value = value,
     advice = advice
 )
 
-private fun SentimentCategoryDBO.toDTO(): SentimentCategoryData {
+private fun SentimentCategoryDBO.toData(): SentimentCategoryData {
     return when (this) {
-        SentimentCategoryDBO.bad -> SentimentCategoryData.bad
-        SentimentCategoryDBO.terrible -> SentimentCategoryData.terrible
-        SentimentCategoryDBO.neutral -> SentimentCategoryData.neutral
-        SentimentCategoryDBO.good -> SentimentCategoryData.good
-        SentimentCategoryDBO.awesome -> SentimentCategoryData.awesome
+        SentimentCategoryDBO.bad -> SentimentCategoryData.BAD
+        SentimentCategoryDBO.terrible -> SentimentCategoryData.TERRIBLE
+        SentimentCategoryDBO.neutral -> SentimentCategoryData.NEUTRAL
+        SentimentCategoryDBO.good -> SentimentCategoryData.GOOD
+        SentimentCategoryDBO.awesome -> SentimentCategoryData.AWESOME
     }
 }
 
-fun NoteData.toNoteDBO() = this.let {
-    NoteDBO(
-        content = content,
-        createdAt = createdAt,
-        sentiment = sentiment?.toSentimentDBO(),
-        title = title,
-        updatedAt = updatedAt,
-        uuid = uuid,
-        isNew = isNew,
-        isDeleted = isDeleted
-    )
-}
+fun NoteData.toNoteDBO() = NoteDBO(
+    content = content,
+    createdAt = createdAt,
+    sentiment = sentiment?.toSentimentDBO(),
+    title = title,
+    updatedAt = updatedAt,
+    uuid = uuid,
+    isNew = isNew,
+    isDeleted = isDeleted
+)
 
 fun NoteDTO.toNoteDBO() = NoteDBO(
     content = content,
@@ -157,18 +153,18 @@ private fun SentimentData?.toSentimentDBO(): SentimentDBO? {
 
 private fun SentimentCategoryData.toDBO(): SentimentCategoryDBO {
     return when (this) {
-        SentimentCategoryData.bad -> SentimentCategoryDBO.bad
-        SentimentCategoryData.terrible -> SentimentCategoryDBO.terrible
-        SentimentCategoryData.neutral -> SentimentCategoryDBO.neutral
-        SentimentCategoryData.good -> SentimentCategoryDBO.good
-        SentimentCategoryData.awesome -> SentimentCategoryDBO.awesome
+        SentimentCategoryData.BAD -> SentimentCategoryDBO.bad
+        SentimentCategoryData.TERRIBLE -> SentimentCategoryDBO.terrible
+        SentimentCategoryData.NEUTRAL -> SentimentCategoryDBO.neutral
+        SentimentCategoryData.GOOD -> SentimentCategoryDBO.good
+        SentimentCategoryData.AWESOME -> SentimentCategoryDBO.awesome
 
     }
 }
 
 private fun SentimentDTO.toSentimentDBO(): SentimentDBO {
     return SentimentDBO(
-        category = SentimentCategoryDBO.entries.getOrNull(category ?: 0),
+        category = category?.toDBO(),
         value = value,
         advice = advice
     )
@@ -176,11 +172,11 @@ private fun SentimentDTO.toSentimentDBO(): SentimentDBO {
 
 private fun SentimentCategoryDTO.toDBO(): SentimentCategoryDBO {
     return when (this) {
-        SentimentCategoryDTO.bad -> SentimentCategoryDBO.bad
-        SentimentCategoryDTO.terrible -> SentimentCategoryDBO.terrible
-        SentimentCategoryDTO.neutral -> SentimentCategoryDBO.neutral
-        SentimentCategoryDTO.good -> SentimentCategoryDBO.good
-        SentimentCategoryDTO.awesome -> SentimentCategoryDBO.awesome
+        SentimentCategoryDTO.BAD -> SentimentCategoryDBO.bad
+        SentimentCategoryDTO.TERRIBLE -> SentimentCategoryDBO.terrible
+        SentimentCategoryDTO.NEUTRAL -> SentimentCategoryDBO.neutral
+        SentimentCategoryDTO.GOOD -> SentimentCategoryDBO.good
+        SentimentCategoryDTO.AWESOME -> SentimentCategoryDBO.awesome
     }
 }
 
