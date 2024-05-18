@@ -23,7 +23,7 @@ fun DateItem(modifier: Modifier = Modifier, data: Pair<LocalDate, SentimentItem?
     Column(
         modifier = modifier
             .clip(sixDpShape)
-            .background(SentimentColor.UNKNOWN.value)
+            .background(sentiment?.color ?: SentimentColor.UNKNOWN.value)
             .padding(vertical = 4.dp, horizontal = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

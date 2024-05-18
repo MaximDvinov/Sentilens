@@ -1,18 +1,8 @@
 package org.diary.composeui.components.calendar
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -38,27 +28,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.ArrowRight
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
-import kotlinx.datetime.number
 import org.diary.composeui.components.SecondaryIconButton
-import org.diary.composeui.icons.Emoji
-import org.diary.composeui.theme.SentimentColor
 import org.diary.composeui.theme.defaultShape
 import org.diary.composeui.theme.primary
-import org.diary.composeui.theme.sixDpShape
 import org.diary.composeui.theme.smallShape
-import org.diary.utils.mothFormatFull
-import org.diary.utils.toDate
-import kotlin.math.max
+import org.diary.utils.monthFormatFull
 
 @Stable
 data class SentimentItem(
@@ -95,7 +77,7 @@ fun SentimentCalendar(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 12.dp),
-                text = "${Month(selectedPeriod.month).mothFormatFull()} ${selectedPeriod.year}",
+                text = "${Month(selectedPeriod.month).monthFormatFull()} ${selectedPeriod.year}",
                 style = MaterialTheme.typography.subtitle1
             )
 

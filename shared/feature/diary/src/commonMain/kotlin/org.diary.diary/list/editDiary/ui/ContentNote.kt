@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.diary.diary.Note
 import org.diary.composeui.components.fadingEdge
@@ -70,7 +71,7 @@ fun ContentNote(
                 onChangeBody(it)
                 onChangeBodyNote(it)
             },
-            style = MaterialTheme.typography.body1.copy(MaterialTheme.colors.onSecondary),
+            style = MaterialTheme.typography.body1.copy(MaterialTheme.colors.onSecondary, textAlign = TextAlign.Justify),
             placeholder = "Введите текст заметки...",
             paddingValues = PaddingValues(bottom = 64.dp)
         )
