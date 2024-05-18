@@ -79,7 +79,7 @@ class AppActivity : ComponentActivity() {
                     modifier = Modifier
                         .tileBack()
                         .systemBarsPadding()
-                        .navigationBarsPadding()
+//                        .navigationBarsPadding()
                         .imePadding()
                 ) {
                     App()

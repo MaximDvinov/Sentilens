@@ -79,47 +79,47 @@ fun NotesList(
         }
     }
 
-    Box {
-        LazyColumn(
-            modifier = modifier.fillMaxHeight().fadingEdge(
-                startingColor = MaterialTheme.colors.background,
-                length = 10f,
-                length1 = 40f,
-                horizontal = false
-            ),
-            state = state,
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = contentPadding
-        ) {
-            items(notes) {
-                key(it.uuid) {
-                    val color by animateColorAsState(if (currentNote?.uuid == it.uuid) it.sentiment?.category.getSentimentColor() else MaterialTheme.colors.secondary)
-                    val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 0.5.dp else 0.dp)
+//    Box {
+    LazyColumn(
+        modifier = modifier.fillMaxHeight().fadingEdge(
+            startingColor = MaterialTheme.colors.background,
+            length = 10f,
+            length1 = 40f,
+            horizontal = false
+        ),
+        state = state,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = contentPadding
+    ) {
+        items(notes) {
+            key(it.uuid) {
+                val color by animateColorAsState(if (currentNote?.uuid == it.uuid) it.sentiment?.category.getSentimentColor() else MaterialTheme.colors.secondary)
+                val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 0.5.dp else 0.dp)
 
-                    NoteItem(
-                        modifier = Modifier.bounceClick().border(
-                            width = width,
-                            color = color,
-                            shape = smallShape
-                        ),
-                        note = it,
-                        onDeleteItemClick = remember {
-                            { onDeleteClick(it) }
-                        }
-                    ) {
-                        onItemClick(it)
+                NoteItem(
+                    modifier = Modifier.bounceClick().border(
+                        width = width,
+                        color = color,
+                        shape = smallShape
+                    ),
+                    note = it,
+                    onDeleteItemClick = remember {
+                        { onDeleteClick(it) }
                     }
+                ) {
+                    onItemClick(it)
                 }
-
             }
 
-            item {
-                Spacer(modifier = Modifier.height(1.dp))
-            }
         }
 
-        VerticalScrollBar(state)
+        item {
+            Spacer(modifier = Modifier.height(1.dp))
+        }
     }
+//
+//        VerticalScrollBar(state)
+//    }
 }
 
 

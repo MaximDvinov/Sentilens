@@ -16,7 +16,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import org.diary.composeui.LoadState
-import org.diary.diary.Note
 import org.diary.diary.list.DiaryScreenModel
 import org.diary.diary.list.Intent
 import org.diary.composeui.components.DiaryTopBarExpanded
@@ -29,6 +28,7 @@ fun TwoPaneContent(
     editorUiStat: DiaryScreenModel.EditNoteState?,
     onIntent: (Intent) -> Unit,
     onClickBack: () -> Unit,
+    onCloseNote: () -> Unit,
     onClickRecommendation: (String) -> Unit,
 ) {
     Column {
@@ -37,9 +37,13 @@ fun TwoPaneContent(
                 start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp
             ),
             onClickBack = onClickBack,
-            searchQuery = state.searchQuery,
+            isSearchable = state.searchState.isSearched,
+            searchQuery = state.searchState.query,
             changeSearchQuery = {
                 onIntent(DiaryScreenModel.NoteListIntent.ChangeSearchQuery(it))
+            },
+            changeSearchable = {
+                onIntent(DiaryScreenModel.NoteListIntent.ChangeSearchable(it))
             },
             onCreateClick = {
                 onIntent(DiaryScreenModel.EditNoteIntent.CreateNote)
@@ -52,7 +56,7 @@ fun TwoPaneContent(
 
         Row(modifier = Modifier.widthIn(max = 1500.dp).align(Alignment.Start)) {
             Column(
-                modifier = Modifier.weight(1.2f)
+                modifier = Modifier.weight(1.3f)
             ) {
                 NotesList(
                     onItemClick = {
@@ -87,7 +91,7 @@ fun TwoPaneContent(
                 currentNote = editorUiStat?.currentNote,
                 onIntent = onIntent,
                 loadState = editorUiStat?.loadState ?: LoadState.Idle,
-                onClickRecommendation = onClickRecommendation,
+                onClickBack = onCloseNote,
             )
         }
     }

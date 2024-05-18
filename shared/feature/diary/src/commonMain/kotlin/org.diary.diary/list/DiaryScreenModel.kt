@@ -1,5 +1,6 @@
 package org.diary.diary.list
 
+import androidx.compose.runtime.Stable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.collections.immutable.ImmutableList
@@ -28,18 +29,27 @@ class DiaryScreenModel(
     private val notesRepository: NotesRepository,
     private val syncRepository: SyncRepository,
 ) : StateScreenModel<DiaryScreenModel.UiState>(UiState()) {
+    @Stable
     data class UiState(
         val listNote: NoteList = NoteList(),
         val editNoteState: EditNoteState? = null,
     )
 
+    @Stable
+    data class SearchState(
+        val query: String = "",
+        val isSearched: Boolean = false,
+    )
+
+    @Stable
     data class NoteList(
         val notes: ImmutableList<Note>? = null,
-        val searchQuery: String? = null,
+        val searchState: SearchState = SearchState(),
         val loadState: LoadState = LoadState.Idle,
         val filteredNotes: ImmutableList<Note>? = notes?.toImmutableList(),
     )
 
+    @Stable
     data class EditNoteState(
         val currentNote: Note,
         val loadState: LoadState = LoadState.Idle,
@@ -47,7 +57,8 @@ class DiaryScreenModel(
 
     sealed class NoteListIntent : Intent {
         data object LoadData : NoteListIntent()
-        data class ChangeSearchQuery(val query: String?) : NoteListIntent()
+        data class ChangeSearchQuery(val query: String) : NoteListIntent()
+        data class ChangeSearchable(val isSearchable: Boolean) : NoteListIntent()
         data class DeleteNote(val note: Note) : NoteListIntent()
         data object CloseErrorMessage : NoteListIntent()
     }
@@ -68,7 +79,11 @@ class DiaryScreenModel(
                     state.copy(
                         listNote = state.listNote.copy(
                             notes = newList.map { it.toUiNote() }.toImmutableList(),
-                            filteredNotes = newList.map { it.toUiNote() }.toPersistentList()
+                            filteredNotes = if (state.listNote.searchState.isSearched) smartSearch(
+                                newList.map { it.toUiNote() },
+                                state.listNote.searchState.query
+                            ).toPersistentList() else newList.map { it.toUiNote() }
+                                .toImmutableList()
                         )
                     )
                 }
@@ -121,6 +136,10 @@ class DiaryScreenModel(
 
             is NoteListIntent.ChangeSearchQuery -> mutableState.update {
                 it.copy(listNote = changeSearchQuery(noteListIntent.query, noteList))
+            }
+
+            is NoteListIntent.ChangeSearchable -> mutableState.update {
+                it.copy(listNote = changeSearchable(noteListIntent.isSearchable, noteList))
             }
 
             NoteListIntent.CloseErrorMessage -> mutableState.update {
@@ -316,20 +335,50 @@ class DiaryScreenModel(
     }
 
     private fun changeSearchQuery(
-        query: String?, currentState: NoteList,
+        query: String, currentState: NoteList,
     ): NoteList {
         val newFilteredNotes =
-            query?.let { filterList(currentState.notes, it) } ?: currentState.notes
+            smartSearch(currentState.notes ?: emptyList(), query)
 
         return currentState.copy(
-            searchQuery = query, filteredNotes = newFilteredNotes?.toPersistentList()
+            searchState = currentState.searchState.copy(query = query),
+            filteredNotes = newFilteredNotes.toPersistentList()
         )
     }
 
-    private fun filterList(
-        notes: List<Note>?, query: String,
-    ) = notes?.filter { note ->
-        note.title.lowercase().contains(query.lowercase()) || note.content?.lowercase()
-            ?.contains(query.lowercase()) == true
+    private fun changeSearchable(searchable: Boolean, noteList: NoteList): NoteList {
+        return noteList.copy(
+            searchState = noteList.searchState.copy(
+                isSearched = searchable,
+                query = ""
+            ),
+            filteredNotes = noteList.notes
+        )
+    }
+
+    private fun generateGrams(input: String): Set<String> {
+        val grams = mutableSetOf<String>()
+        val normalizedInput = input.trim().replace(" ", "").toLowerCase()
+
+        for (i in 0 until normalizedInput.length - 1) {
+            grams.add(normalizedInput.substring(i, i + 2))
+        }
+
+        return grams
+    }
+
+    private fun smartSearch(notes: List<Note>, query: String): List<Note> {
+        val queryGrams = generateGrams(query)
+        return notes.map { note ->
+            val combinedText = note.title + " " + note.content
+            val noteGrams = generateGrams(combinedText)
+            val commonGrams = noteGrams.intersect(queryGrams).size
+            val score = 2.0 * commonGrams / (noteGrams.size + queryGrams.size)
+            Pair(note, score)
+        }
+            .filter { it.second > 0.3 } // Пороговый коэффициент (можно подстроить)
+            .sortedByDescending { it.second }
+            .map { it.first }
     }
 }
+

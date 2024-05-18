@@ -25,5 +25,4 @@ sealed class InitialDiaryScreenState() {
     data object CreateDiary : InitialDiaryScreenState()
     data object Idle : InitialDiaryScreenState()
     data class UpdateDiary(val diaryId: UUID?) : InitialDiaryScreenState()
-    data object Search : InitialDiaryScreenState()
 }

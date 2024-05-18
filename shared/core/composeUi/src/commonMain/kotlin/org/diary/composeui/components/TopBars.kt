@@ -45,15 +45,12 @@ import org.diary.composeui.theme.defaultShape
 @Composable
 fun DiaryTopBar(
     modifier: Modifier = Modifier,
-    searchQuery: String?,
-    changeSearchQuery: (String?) -> Unit,
+    isSearchable: Boolean,
+    changeSearchable: (Boolean) -> Unit,
+    searchQuery: String,
+    changeSearchQuery: (String) -> Unit,
     onBackClick: () -> Unit,
 ) {
-    var searchable by remember(searchQuery != null) {
-        mutableStateOf(searchQuery != null)
-    }
-
-
     val (text, onChangeText) = remember(false) {
         mutableStateOf(searchQuery)
     }
@@ -64,12 +61,11 @@ fun DiaryTopBar(
 
     val focusRequester = remember { FocusRequester() }
 
-
     Row(
         modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        AnimatedVisibility(!searchable && text.isNullOrEmpty()) {
+        AnimatedVisibility(!isSearchable) {
             SecondaryIconButton(
                 onClick = onBackClick,
                 modifier = Modifier
@@ -78,33 +74,99 @@ fun DiaryTopBar(
             }
         }
 
-
         SearchText(
-            searchable = searchable,
+            searchable = isSearchable,
             focusRequester = focusRequester,
-            searchQuery = text ?: "",
+            searchQuery = text,
             changeSearchQuery = onChangeText,
         )
 
         SecondaryIconButton(
             onClick = {
-                searchable = !searchable
-                if (!searchable) {
-                    changeSearchQuery("")
-                    onChangeText("")
-                } else {
-                    changeSearchQuery(null)
-                }
+                changeSearchable(!isSearchable)
             },
             modifier = Modifier.padding(start = 6.dp)
         ) {
-            AnimatedContent(searchable || !text.isNullOrEmpty()) {
+            AnimatedContent(isSearchable) {
                 if (it) {
                     Icon(Icons.Default.Close, "Close Search")
                 } else {
                     Icon(Icons.Default.Search, "Search")
                 }
             }
+        }
+    }
+}
+
+
+@Composable
+fun DiaryTopBarExpanded(
+    modifier: Modifier = Modifier,
+    isSearchable: Boolean,
+    changeSearchable: (Boolean) -> Unit,
+    searchQuery: String,
+    changeSearchQuery: (String) -> Unit,
+    onCreateClick: () -> Unit,
+    onClickBack: () -> Unit,
+    onRefresh: () -> Unit,
+    loadState: LoadState,
+) {
+    val focusRequester = remember { FocusRequester() }
+
+    Row(
+        modifier.fillMaxWidth().clip(defaultShape).background(MaterialTheme.colors.secondary)
+            .padding(start = 0.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        SecondaryIconButton(
+            onClick = onClickBack,
+        ) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+        }
+
+        SearchText(
+            searchable = isSearchable,
+            focusRequester = focusRequester,
+            searchQuery = searchQuery,
+            changeSearchQuery = changeSearchQuery,
+            isCenter = false
+        )
+
+        SecondaryIconButton(
+            onClick = {
+                changeSearchable(!isSearchable)
+            },
+        ) {
+            AnimatedContent(isSearchable) {
+                if (it) {
+                    Icon(Icons.Default.Close, "Search")
+                } else {
+                    Icon(Icons.Default.Search, "Search")
+                }
+            }
+        }
+
+        SecondaryIconButton(
+            onClick = onRefresh,
+        ) {
+            AnimatedContent(loadState == LoadState.Loading) {
+                if (it) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.onSecondary,
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.3.dp
+                    )
+                } else {
+                    Icon(FeatherIcons.RotateCcw, "Update")
+                }
+            }
+        }
+
+        PrimaryIconButton(
+            onClick = onCreateClick,
+        ) {
+            Icon(Icons.Default.Add, "Search", tint = MaterialTheme.colors.onPrimary)
         }
     }
 }
@@ -152,7 +214,6 @@ fun HomeTopBarExpanded(
     onCreateClick: () -> Unit,
     onClickSetting: () -> Unit,
     onRefresh: () -> Unit,
-    onSearchClick: () -> Unit,
     isLoad: Boolean,
 ) {
     Row(
@@ -162,9 +223,9 @@ fun HomeTopBarExpanded(
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         SecondaryIconButton(
-            onClick = onSearchClick,
+            onClick = onClickSetting,
         ) {
-            Icon(Icons.Default.Search, "Search")
+            Icon(FeatherIcons.Settings, "setting")
         }
 
         Text(
@@ -189,13 +250,6 @@ fun HomeTopBarExpanded(
                 }
             }
         }
-
-        SecondaryIconButton(
-            onClick = onClickSetting,
-        ) {
-            Icon(FeatherIcons.Settings, "setting")
-        }
-
 
         PrimaryIconButton(
             onClick = onCreateClick,
@@ -250,85 +304,6 @@ fun ActionTopBar(
 
 
 @Composable
-fun DiaryTopBarExpanded(
-    modifier: Modifier = Modifier,
-    searchQuery: String?,
-    changeSearchQuery: (String?) -> Unit,
-    onCreateClick: () -> Unit,
-    onClickBack: () -> Unit,
-    onRefresh: () -> Unit,
-    loadState: LoadState,
-) {
-    var searchable by remember(searchQuery != null) {
-        mutableStateOf(searchQuery != null)
-    }
-    val focusRequester = remember { FocusRequester() }
-
-    Row(
-        modifier.fillMaxWidth().clip(defaultShape).background(MaterialTheme.colors.secondary)
-            .padding(start = 0.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        SecondaryIconButton(
-            onClick = onClickBack,
-        ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
-        }
-        SearchText(
-            searchable = searchable,
-            focusRequester = focusRequester,
-            searchQuery = searchQuery ?: "",
-            changeSearchQuery = changeSearchQuery,
-            isCenter = false
-        )
-
-        SecondaryIconButton(
-            onClick = {
-                searchable = !searchable
-                if (!searchable) {
-                    changeSearchQuery("")
-                } else {
-                    changeSearchQuery(null)
-                }
-            },
-        ) {
-            AnimatedContent(searchable) {
-                if (it) {
-                    Icon(Icons.Default.Close, "Search")
-                } else {
-                    Icon(Icons.Default.Search, "Search")
-                }
-            }
-        }
-
-
-        SecondaryIconButton(
-            onClick = onRefresh,
-        ) {
-            AnimatedContent(loadState == LoadState.Loading) {
-                if (it) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colors.onSecondary,
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.3.dp
-                    )
-                } else {
-                    Icon(FeatherIcons.RotateCcw, "Update")
-                }
-            }
-        }
-
-
-        PrimaryIconButton(
-            onClick = onCreateClick,
-        ) {
-            Icon(Icons.Default.Add, "Search", tint = MaterialTheme.colors.onPrimary)
-        }
-    }
-}
-
-@Composable
 private fun RowScope.SearchText(
     searchable: Boolean,
     focusRequester: FocusRequester,
@@ -342,12 +317,17 @@ private fun RowScope.SearchText(
         Modifier.Companion.weight(1f),
         contentAlignment = if (isCenter) Alignment.Center else Alignment.CenterStart
     ) {
-        AnimatedContent(searchable || text.isNotEmpty()) {
+        AnimatedContent(searchable) {
             if (it) {
                 BasicTextField(modifier = Modifier.focusRequester(focusRequester)
                     .fillMaxWidth(),
                     value = text,
-                    onValueChange = { value -> changeSearchQuery(value); onChangeText(value) },
+                    onValueChange = { value ->
+                        if (searchable) {
+                            changeSearchQuery(value)
+                            onChangeText(value)
+                        }
+                    },
                     textStyle = MaterialTheme.typography.h1.copy(MaterialTheme.colors.onBackground),
                     singleLine = true,
                     cursorBrush = SolidColor(MaterialTheme.colors.onSecondary),

@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.diary.composeui.LoadState
 import org.diary.composeui.PlatformDialog
@@ -30,8 +32,8 @@ fun EditNoteContent(
     modifier: Modifier,
     currentNote: Note?,
     onIntent: (Intent) -> Unit,
+    onClickBack: () -> Unit,
     loadState: LoadState,
-    onClickRecommendation: (String) -> Unit,
 ) {
     var tagDialogShowed by remember { mutableStateOf(false) }
     var sentimentDialogShowed by remember { mutableStateOf(false) }
@@ -49,9 +51,7 @@ fun EditNoteContent(
             ) {
                 if (it != null) {
                     TopBarEdit(
-                        onBackClick = {
-                            onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(null))
-                        },
+                        onBackClick = onClickBack,
                         loadState = loadState,
                         onDeleteClick = {
                             onIntent(DiaryScreenModel.EditNoteIntent.DeleteNote)
@@ -62,25 +62,28 @@ fun EditNoteContent(
                         note = it
                     )
 
-                    ContentNote(
-                        modifier = Modifier.weight(1f).fillMaxSize(),
-                        currentNote = it,
-                        onChangeTitleNote = {
-                            onIntent(DiaryScreenModel.EditNoteIntent.ChangeTitle(it))
+                    Box(modifier = Modifier.weight(1f)) {
+                        ContentNote(
+                            modifier = Modifier.fillMaxSize(),
+                            currentNote = it,
+                            onChangeTitleNote = {
+                                onIntent(DiaryScreenModel.EditNoteIntent.ChangeTitle(it))
+                            }
+                        ) {
+                            onIntent(DiaryScreenModel.EditNoteIntent.ChangeBody(it))
                         }
-                    ) {
-                        onIntent(DiaryScreenModel.EditNoteIntent.ChangeBody(it))
+                        BottomBarEdit(
+                            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                            sentiment = it.sentiment,
+                            onSaveClick = {
+                                onIntent(DiaryScreenModel.EditNoteIntent.SaveNote)
+                            },
+                            loadState = loadState
+                        ) {
+                            sentimentDialogShowed = true
+                        }
                     }
-                    BottomBarEdit(
-                        modifier = Modifier.fillMaxWidth(),
-                        sentiment = it.sentiment,
-                        onSaveClick = {
-                            onIntent(DiaryScreenModel.EditNoteIntent.SaveNote)
-                        },
-                        loadState = loadState
-                    ) {
-                        sentimentDialogShowed = true
-                    }
+
                 }
             }
         }
@@ -100,7 +103,6 @@ fun EditNoteContent(
                 onCloseClick = { sentimentDialogShowed = false },
                 onActionClick = {
                     sentimentDialogShowed = false
-                    onClickRecommendation(currentNote.uuid.toString())
                 },
                 sentiment = currentNote.sentiment
             )

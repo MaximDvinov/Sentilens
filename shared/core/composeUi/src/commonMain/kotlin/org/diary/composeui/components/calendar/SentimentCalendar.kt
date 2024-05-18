@@ -84,12 +84,11 @@ fun SentimentCalendar(
         modifier = modifier
             .clip(defaultShape)
             .background(MaterialTheme.colors.secondary)
-            .padding(10.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp)
+                .padding(10.dp)
                 .clip(smallShape)
                 .background(MaterialTheme.colors.background),
             verticalAlignment = Alignment.CenterVertically
@@ -128,6 +127,7 @@ fun SentimentCalendar(
             state = pagerState,
             modifier = Modifier.fillMaxWidth(),
             pageSpacing = 10.dp,
+            contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
             key = { it }
         ) {
             val selected = initialPeriod.plus(it - pageCount / 2)

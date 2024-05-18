@@ -1,10 +1,15 @@
 package org.diary.diary.list.editDiary.ui
 
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -37,17 +42,10 @@ fun ContentNote(
     }
 
     Column(
-        modifier = modifier.padding(vertical = 16.dp, horizontal = 4.dp).fadingEdge(
-            startingColor = Color.Transparent,
-            ending1Color = MaterialTheme.colors.background,
-            length = 40f,
-            length1 = 40f,
-            horizontal = false
-        ),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = modifier.padding(vertical = 0.dp, horizontal = 4.dp),
     ) {
         TextField(
-            Modifier.fillMaxWidth(),
+            Modifier.padding(vertical = 4.dp).fillMaxWidth(),
             text = title,
             onTextChange = {
                 onChangeTitle(it)
@@ -59,15 +57,22 @@ fun ContentNote(
         )
 
         TextField(
-            modifier = Modifier
-                .weight(1f).fillMaxSize(),
+            modifier = Modifier.fillMaxSize().fadingEdge(
+                startingColor = Color.Transparent,
+                ending1Color = MaterialTheme.colors.background,
+                length = 80f,
+                length1 = 80f,
+                horizontal = false
+            )
+                .weight(1f),
             text = body,
             onTextChange = {
                 onChangeBody(it)
                 onChangeBodyNote(it)
             },
             style = MaterialTheme.typography.body1.copy(MaterialTheme.colors.onSecondary),
-            placeholder = "Введите текст заметки..."
+            placeholder = "Введите текст заметки...",
+            paddingValues = PaddingValues(bottom = 64.dp)
         )
 
     }

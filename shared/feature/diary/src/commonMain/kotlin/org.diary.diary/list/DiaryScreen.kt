@@ -14,7 +14,6 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.koin.koinNavigatorScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import kotlinx.uuid.UUID
 import org.diary.composeui.LoadState
 import org.diary.composeui.PlatformBackHandler
 import org.diary.diary.list.onepane.OnePane
@@ -42,25 +41,32 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
                 InitialDiaryScreenState.CreateDiary -> screenModel.processIntent(
                     DiaryScreenModel.EditNoteIntent.CreateNote
                 )
-
-                InitialDiaryScreenState.Idle -> {}
+                InitialDiaryScreenState.Idle -> screenModel.processIntent(
+                    DiaryScreenModel.EditNoteIntent.SelectNote(null)
+                )
                 is InitialDiaryScreenState.UpdateDiary -> screenModel.processIntent(
                     DiaryScreenModel.EditNoteIntent.SelectNote(initialState.diaryId)
                 )
-
-                InitialDiaryScreenState.Search -> {
-                    DiaryScreenModel.NoteListIntent.ChangeSearchQuery("")
-                }
             }
         }
 
-        PlatformBackHandler(state.editNoteState?.currentNote != null) {
-            if (initialState is InitialDiaryScreenState.Idle) {
-                navigator.pop()
-            } else {
-                screenModel.processIntent(
-                    DiaryScreenModel.EditNoteIntent.SelectNote(null)
-                )
+        PlatformBackHandler(true) {
+            when (initialState) {
+                InitialDiaryScreenState.CreateDiary -> {
+                    navigator.pop()
+                }
+
+                InitialDiaryScreenState.Idle -> {
+                    if (state.editNoteState?.currentNote == null) {
+                        navigator.pop()
+                    } else {
+                        screenModel.processIntent(DiaryScreenModel.EditNoteIntent.SelectNote(null))
+                    }
+                }
+
+                is InitialDiaryScreenState.UpdateDiary -> {
+                    navigator.pop()
+                }
             }
         }
 
@@ -76,9 +82,26 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
                 windowSizeClass.isCompact(), animationSpec = tween(durationMillis = 150)
             ) {
                 if (it) {
-                    OnePane(state.listNote, state.editNoteState, screenModel, navigator)
+                    OnePane(
+                        state = state.listNote,
+                        editState = state.editNoteState,
+                        onClickBack = {
+                            if (initialState is InitialDiaryScreenState.CreateDiary || initialState is InitialDiaryScreenState.UpdateDiary) {
+                                navigator.pop()
+                            } else {
+                                screenModel.processIntent(DiaryScreenModel.EditNoteIntent.SelectNote(null))
+                            }
+                        },
+                        onIntent = screenModel::processIntent,
+                        initialState = initialState
+                    )
                 } else {
-                    TwoPane(state.listNote, state.editNoteState, screenModel, navigator)
+                    TwoPane(
+                        state = state.listNote,
+                        editState = state.editNoteState,
+                        onClickBack = navigator::pop,
+                        onIntent = screenModel::processIntent
+                    )
                 }
             }
         }
