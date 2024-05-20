@@ -368,6 +368,7 @@ class DiaryScreenModel(
     }
 
     private fun smartSearch(notes: List<Note>, query: String): List<Note> {
+        if (query.isEmpty()) return notes
         val queryGrams = generateGrams(query)
         return notes.map { note ->
             val combinedText = note.title + " " + note.content

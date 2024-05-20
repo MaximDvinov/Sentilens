@@ -17,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -40,6 +42,7 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.diary.composeui.components.SecondaryButton
 import org.diary.composeui.components.SecondaryIconButton
+import org.diary.navigation.DiaryScreenProvider
 
 class SettingScreen : Screen, KoinComponent {
     override val key = uniqueScreenKey
@@ -49,6 +52,7 @@ class SettingScreen : Screen, KoinComponent {
         val settingScreenModel = rememberScreenModel { SettingScreenModel(get()) }
         val settings: ObservableSettings by inject()
         val navigator = LocalNavigator.currentOrThrow
+        val authScreen = rememberScreen(DiaryScreenProvider.LoginScreen())
 
         var isDarkTheme by remember(false) {
             mutableStateOf(
@@ -56,6 +60,14 @@ class SettingScreen : Screen, KoinComponent {
                     "theme"
                 )
             )
+        }
+
+        LaunchedEffect(Unit) {
+            settingScreenModel.singleEvent.collect {
+                if (it is SettingScreenModel.SingleEvent.Logout) {
+                    navigator.replaceAll(authScreen)
+                }
+            }
         }
 
         SettingScreenContent(
@@ -92,7 +104,7 @@ fun SettingScreenContent(
     isDarkTheme: Boolean?,
     onChangeTheme: () -> Unit,
     onBackClick: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
