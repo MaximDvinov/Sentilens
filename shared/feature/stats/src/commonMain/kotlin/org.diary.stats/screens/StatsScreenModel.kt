@@ -1,5 +1,6 @@
 package org.diary.stats.screens
 
+import androidx.compose.runtime.Stable
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.collections.immutable.ImmutableList
@@ -23,13 +24,16 @@ import org.diary.composeui.components.calendar.CalendarUtils.getDaysInMonth
 import org.diary.composeui.components.calendar.MonthWithYear
 import org.diary.data.stats.SentimentStatItemData
 import org.diary.data.stats.StatsRepository
+import org.diary.stats.models.SentimentStatItem
+import org.diary.stats.models.toStable
 import org.diary.utils.currentTimeZone
 import org.diary.utils.toDate
 import org.diary.utils.toDateTime
 
 
+@Stable
 data class StatsScreenState(
-    val sentimentForMonth: ImmutableMap<LocalDate, SentimentStatItemData> = persistentMapOf(),
+    val sentimentForMonth: ImmutableMap<LocalDate, SentimentStatItem> = persistentMapOf(),
     val selectedMonth: MonthWithYear,
 )
 
@@ -44,7 +48,6 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
     val state: StateFlow<StatsScreenState>
         get() = _state
 
-
     init {
         screenModelScope.launch {
             val sentimentForPeriod = statsRepository.sentimentForPeriod(
@@ -58,21 +61,41 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
                     ).size
                 )
             )
-            _state.update {
-                it.copy(
-                    sentimentForMonth = sentimentForPeriod.toImmutableMap()
+
+            _state.update { oldState ->
+                oldState.copy(
+                    sentimentForMonth = sentimentForPeriod.mapValues { it.value.toStable() }
+                        .toImmutableMap()
                 )
             }
         }
     }
 
-
     fun onEvent(event: StatsScreenEvent) {
         when (event) {
-            is StatsScreenEvent.ChangeMonth -> {
-                _state.update {
-                    it.copy(selectedMonth = event.month)
-                }
+            is StatsScreenEvent.ChangeMonth -> changeMonth(event.month)
+        }
+    }
+
+    private fun changeMonth(month: MonthWithYear) {
+        _state.update {
+            it.copy(selectedMonth = month)
+        }
+
+        screenModelScope.launch {
+            val sentimentForPeriod = statsRepository.sentimentForPeriod(
+                LocalDate(month.year, month.month, 1),
+                LocalDate(
+                    month.year, month.month,
+                    getDaysInMonth(month.month, month.year).size
+                )
+            )
+
+            _state.update { oldState ->
+                oldState.copy(
+                    sentimentForMonth = sentimentForPeriod.mapValues { it.value.toStable() }
+                        .toImmutableMap()
+                )
             }
         }
     }

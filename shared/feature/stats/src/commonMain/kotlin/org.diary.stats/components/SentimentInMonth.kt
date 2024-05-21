@@ -6,20 +6,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +21,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,25 +29,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.PointerId
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.aakira.napier.Napier
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import org.diary.composeui.components.calendar.CalendarUtils
 import org.diary.composeui.components.calendar.MonthWithYear
 import org.diary.composeui.theme.SentimentColor
-import org.diary.data.stats.SentimentStatItemData
+import org.diary.stats.models.SentimentStatItem
 import org.diary.utils.dateMonthFormat
+import org.diary.utils.monthFormatWithDigit
 
 @Composable
 fun SentimentInMonth(
     modifier: Modifier,
     selectedPeriod: MonthWithYear,
-    items: ImmutableMap<LocalDate, SentimentStatItemData>,
+    items: ImmutableMap<LocalDate, SentimentStatItem>,
 ) {
     val days by remember(selectedPeriod) {
         derivedStateOf {
@@ -69,6 +59,15 @@ fun SentimentInMonth(
     }
 
     Column(modifier) {
+        Text(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            text = "Среднее настроение по дням ${
+                remember(selectedPeriod) {
+                    Month(selectedPeriod.month).monthFormatWithDigit()
+                }
+            }",
+            style = MaterialTheme.typography.h2.copy(fontSize = 18.sp)
+        )
         AnimatedContent(modifier = Modifier.weight(1f), targetState = days) { list ->
             Row(
                 Modifier.fillMaxWidth().weight(1f),
@@ -78,7 +77,7 @@ fun SentimentInMonth(
                     val interactionSource = remember { MutableInteractionSource() }
                     val isHovered by interactionSource.collectIsHoveredAsState()
                     val day by remember(date) {
-                        derivedStateOf { items[date] }
+                        derivedStateOf { items[date]?.let { Day(date, it) } }
                     }
                     SentimentInDayColumn(
                         Modifier
@@ -89,12 +88,11 @@ fun SentimentInMonth(
                             .fillMaxHeight()
                             .weight(1f),
                         isSelected = selectedDay == date,
-                        day = day?.let { date to it }
+                        day = day
                     )
-                    Napier.wtf(tag = "day") { "${day?.value}" }
 
-                    LaunchedEffect(isHovered){
-                        if(isHovered){
+                    LaunchedEffect(isHovered) {
+                        if (isHovered) {
                             selectedDay = date
                         }
                     }
@@ -130,11 +128,13 @@ fun SentimentInMonth(
 
             Text(
                 modifier = Modifier.weight(1f),
-                text = LocalDate(
-                    selectedPeriod.year,
-                    selectedPeriod.month,
-                    days.size
-                ).dateMonthFormat(),
+                text = remember(selectedPeriod) {
+                    LocalDate(
+                        selectedPeriod.year,
+                        selectedPeriod.month,
+                        days.size
+                    ).dateMonthFormat()
+                },
                 style = MaterialTheme.typography.subtitle1.copy(
                     textAlign = TextAlign.End,
                     color = MaterialTheme.colors.onSecondary.copy(0.6f)
@@ -142,17 +142,16 @@ fun SentimentInMonth(
             )
         }
     }
-
 }
 
 @Composable
 fun SentimentInDayColumn(
     modifier: Modifier,
     isSelected: Boolean,
-    day: Pair<LocalDate, SentimentStatItemData>?,
+    day: Day?,
 ) {
     val color =
-        if (day == null) SentimentColor.UNKNOWN.value.copy(0.3f) else if (day.second.value > 0.4) SentimentColor.GREAT.value else SentimentColor.TERRIBLE.value
+        if (day == null) SentimentColor.UNKNOWN.value.copy(0.3f) else if (day.statItem.value > 0.4) SentimentColor.GREAT.value else SentimentColor.TERRIBLE.value
     val border by animateDpAsState(if (isSelected) 1.5.dp else 0.dp)
     val borderColor by animateColorAsState(if (isSelected) color.copy(0.7f) else color.copy(0.0f))
 
@@ -172,10 +171,16 @@ fun SentimentInDayColumn(
             Box(
                 modifier = Modifier.fillMaxWidth()
                     .clip(RoundedCornerShape(50))
-                    .fillMaxHeight(day.second.value.toFloat())
+                    .fillMaxHeight(day.statItem.value.toFloat())
                     .background(color)
             )
         }
 
     }
 }
+
+@Stable
+data class Day(
+    val date: LocalDate,
+    val statItem: SentimentStatItem,
+)

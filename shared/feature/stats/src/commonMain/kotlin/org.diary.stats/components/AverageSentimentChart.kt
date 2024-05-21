@@ -1,4 +1,12 @@
 package org.diary.stats.components
 
-class AverageSentimentChart {
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+
+@Composable
+fun LastWeek(
+    modifier: Modifier,
+
+){
+
 }

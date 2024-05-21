@@ -34,6 +34,22 @@ android {
         compose = true
     }
 
+    kotlinOptions {
+        freeCompilerArgs += listOf(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=" +
+                    "${project.path}/compose_compiler_config.conf"
+        )
+        freeCompilerArgs += listOf(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.buildDir.absolutePath + "/compose_metrics"
+        )
+        freeCompilerArgs += listOf(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.buildDir.absolutePath + "/compose_reports"
+        )
+    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
     }
@@ -42,6 +58,7 @@ android {
         jvmToolchain(17)
     }
 }
+
 
 dependencies {
 
