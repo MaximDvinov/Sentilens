@@ -1,6 +1,7 @@
 package org.diary.data.auth
 
 import kotlinx.datetime.LocalDateTime
+import org.diary.database.models.UserDataDBO
 
 data class RegisterData(
     val email: String? = null,

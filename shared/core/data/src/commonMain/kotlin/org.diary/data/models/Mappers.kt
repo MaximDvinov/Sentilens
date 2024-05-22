@@ -11,6 +11,7 @@ import org.diary.database.models.NoteDBO
 import org.diary.database.models.SentimentCategoryDBO
 import org.diary.nerwork.models.NoteDTO
 import org.diary.database.models.SentimentDBO
+import org.diary.database.models.UserDataDBO
 import org.diary.nerwork.models.SentimentCategoryDTO
 import org.diary.nerwork.models.SentimentDTO
 import org.senti.lens.models.CreatedUserDTO
@@ -187,6 +188,31 @@ fun RegisterData.toDTO() = RegisterDataDTO(
 )
 
 fun CreatedUserDTO.toData(): CreatedUserData = CreatedUserData(
+    email = email,
+    username = username,
+    createdAt = createdAt,
+    id = id,
+    isSuperuser = isSuperuser
+)
+
+
+fun CreatedUserData.toDTO(): CreatedUserDTO = CreatedUserDTO(
+    email = email,
+    username = username,
+    createdAt = createdAt,
+    id = id,
+    isSuperuser = isSuperuser
+)
+
+fun CreatedUserData.toDBO(): UserDataDBO = UserDataDBO(
+    email = email,
+    username = username,
+    createdAt = createdAt,
+    id = id,
+    isSuperuser = isSuperuser
+)
+
+fun UserDataDBO.toData(): CreatedUserData = CreatedUserData(
     email = email,
     username = username,
     createdAt = createdAt,

@@ -33,7 +33,6 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
         val windowSizeClass = calculateWindowSizeClass()
 
         val screenModel = navigator.koinNavigatorScreenModel<DiaryScreenModel>()
-
         val state by screenModel.state.collectAsState()
 
         LaunchedEffect(initialState) {

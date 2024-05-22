@@ -7,6 +7,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import org.diary.compose.home.HomeScreenModel
+import org.diary.compose.setting.SettingScreenModel
 import org.diary.stats.statsModule
 
 expect val platformModule: Module
@@ -16,4 +17,5 @@ val commonModule = module {
         dataModule, diaryModule, authModule, statsModule
     )
     factoryOf(::HomeScreenModel)
+    factoryOf(::SettingScreenModel)
 }

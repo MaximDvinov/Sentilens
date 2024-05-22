@@ -6,4 +6,5 @@ import org.koin.dsl.module
 
 val databaseModule = module {
     singleOf(::FakeLocalNotesDataSource) bind LocalNotesDataSource::class
+    singleOf(::FakeLocalUserDataSource) bind LocalUserDataSource::class
 }
