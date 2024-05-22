@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
-    id("org.jetbrains.compose")
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -35,11 +36,11 @@ android {
     }
 
     kotlinOptions {
-        freeCompilerArgs += listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=" +
-                    "${project.path}/compose_compiler_config.conf"
-        )
+//        freeCompilerArgs += listOf(
+//            "-P",
+//            "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=" +
+//                    "${project.path}/compose_compiler_config.conf"
+//        )
         freeCompilerArgs += listOf(
             "-P",
             "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.buildDir.absolutePath + "/compose_metrics"
@@ -50,9 +51,6 @@ android {
         )
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
-    }
 
     kotlin {
         jvmToolchain(17)

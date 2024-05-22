@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
 android.namespace = "org.diary.advice"
@@ -29,14 +30,9 @@ kotlin {
 
                 implementation(libs.window.size)
 
-                implementation(libs.constraintlayout.compose.multiplatform)
-
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
                 implementation(libs.voyager.koin)
-
-                implementation(libs.composeImageLoader)
-                implementation(libs.kamel)
 
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.datetime)

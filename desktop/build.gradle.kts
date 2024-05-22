@@ -2,7 +2,8 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.compose")
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
 group = "org.diary"

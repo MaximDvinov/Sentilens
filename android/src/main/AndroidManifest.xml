@@ -8,6 +8,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Sentilens"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+        android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".AppActivity"
