@@ -5,10 +5,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -32,8 +27,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import org.diary.composeui.components.calendar.CalendarUtils
@@ -58,6 +53,21 @@ fun SentimentInMonth(
         mutableStateOf<LocalDate?>(null)
     }
 
+    val histogramItems by remember(days) {
+        derivedStateOf {
+            days.mapIndexed { index, date ->
+                val value = items[date]
+                HistogramItem(
+                    color = value?.category?.color ?: SentimentColor.UNKNOWN.value,
+                    value = value?.value?.toFloat() ?: 0f,
+                    index = index
+                )
+            }.toImmutableList()
+        }
+    }
+
+    var selectedItem by remember { mutableStateOf<HistogramItem?>(null) }
+
     Column(modifier) {
         Text(
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
@@ -69,35 +79,19 @@ fun SentimentInMonth(
             style = MaterialTheme.typography.h2.copy(fontSize = 18.sp)
         )
         AnimatedContent(modifier = Modifier.weight(1f), targetState = days) { list ->
-            Row(
-                Modifier.fillMaxWidth().weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                list.forEach { date ->
-                    val interactionSource = remember { MutableInteractionSource() }
-                    val isHovered by interactionSource.collectIsHoveredAsState()
-                    val day by remember(date) {
-                        derivedStateOf { items[date]?.let { Day(date, it) } }
-                    }
-                    SentimentInDayColumn(
-                        Modifier
-                            .clickable {
-                                selectedDay = date
-                            }
-                            .hoverable(interactionSource, true)
-                            .fillMaxHeight()
-                            .weight(1f),
-                        isSelected = selectedDay == date,
-                        day = day
-                    )
-
-                    LaunchedEffect(isHovered) {
-                        if (isHovered) {
-                            selectedDay = date
-                        }
-                    }
-                }
-            }
+            Histogram(
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                items = histogramItems,
+                spacing = 4.dp,
+                max = 1f,
+                barTextStyle = MaterialTheme.typography.h2.copy(color = MaterialTheme.colors.onPrimary),
+                selectedItem = selectedItem,
+                onItemSelected = { item ->
+                    selectedItem = item
+                    selectedDay = list.getOrNull(item.index)
+                },
+                isSelectable = true
+            )
         }
 
         Row(

@@ -25,6 +25,7 @@ class HomeScreenModel(diaryUseCase: NotesRepository, val syncRepository: SyncRep
 
     sealed class HomeIntent : Intent {
         data object LoadData : HomeIntent()
+        data object CloseErrorMessage : HomeIntent()
     }
 
     init {
@@ -42,8 +43,11 @@ class HomeScreenModel(diaryUseCase: NotesRepository, val syncRepository: SyncRep
 
     fun processIntent(intent: Intent) {
         when (intent) {
-            is HomeIntent.LoadData -> {
-                sync()
+            is HomeIntent.LoadData -> sync()
+            is HomeIntent.CloseErrorMessage -> {
+                mutableState.update {
+                    UiState.Success(it.notes)
+                }
             }
         }
     }

@@ -128,7 +128,7 @@ fun NotesList(
 fun NoteItem(
     modifier: Modifier,
     note: Note,
-    onDeleteItemClick: () -> Unit,
+    onDeleteItemClick: (() -> Unit)? = null,
     onItemClick: () -> Unit,
 ) {
     var expanded by remember {
@@ -203,22 +203,24 @@ fun NoteItem(
             }
         }
 
-        DropdownMenu(
-            offset = DpOffset(x = 0.dp, y = 10.dp),
-            expanded = expanded,
-            onDismissRequest = { expanded = !expanded },
-            modifier = Modifier.clip(defaultShape).background(
-                MaterialTheme.colors.secondary
-            )
-        ) {
-            DropdownMenuItem(onClick = onDeleteItemClick) {
-                Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colors.onError)
-
-                Text(
-                    text = "Удалить",
-                    style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onError),
-                    modifier = Modifier.padding(10.dp)
+        if (onDeleteItemClick != null) {
+            DropdownMenu(
+                offset = DpOffset(x = 0.dp, y = 10.dp),
+                expanded = expanded,
+                onDismissRequest = { expanded = !expanded },
+                modifier = Modifier.clip(defaultShape).background(
+                    MaterialTheme.colors.secondary
                 )
+            ) {
+                DropdownMenuItem(onClick = onDeleteItemClick) {
+                    Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colors.onError)
+
+                    Text(
+                        text = "Удалить",
+                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onError),
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
             }
         }
     }

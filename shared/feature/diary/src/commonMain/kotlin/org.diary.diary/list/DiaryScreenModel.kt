@@ -358,7 +358,7 @@ class DiaryScreenModel(
 
     private fun generateGrams(input: String): Set<String> {
         val grams = mutableSetOf<String>()
-        val normalizedInput = input.trim().replace(" ", "").toLowerCase()
+        val normalizedInput = input.trim().replace(" ", "").lowercase()
 
         for (i in 0 until normalizedInput.length - 1) {
             grams.add(normalizedInput.substring(i, i + 2))

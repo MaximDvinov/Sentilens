@@ -10,5 +10,10 @@ interface StatsRepository {
         startDate: LocalDate,
         endDate: LocalDate,
     ): Map<LocalDate, SentimentStatItemData>
+
+    suspend fun frequenciesForPeriod(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): List<SentimentStatItemData>
 }
 

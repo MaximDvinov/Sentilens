@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import org.diary.composeui.components.calendar.MonthWithYear
 import org.diary.composeui.components.calendar.SentimentCalendar
 import org.diary.composeui.components.calendar.SentimentItem
 import org.diary.composeui.theme.defaultShape
+import org.diary.stats.components.FrequencyMoodHistogram
 import org.diary.stats.components.SentimentInMonth
 import org.diary.stats.screens.StatsScreenState
 
@@ -66,29 +68,16 @@ fun ScreenExpanded(
             }
 
             item {
-                SentimentInMonth(
+                FrequencyMoodHistogram(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .height(300.dp)
                         .clip(defaultShape)
                         .background(MaterialTheme.colors.secondary)
                         .padding(10.dp),
-                    selectedPeriod = state.selectedMonth,
-                    items = state.sentimentForMonth
+                    frequencies = state.frequencies,
                 )
             }
-
-            item {
-                SentimentInMonth(
-                    modifier = Modifier
-                        .height(300.dp)
-                        .clip(defaultShape)
-                        .background(MaterialTheme.colors.secondary)
-                        .padding(10.dp),
-                    selectedPeriod = state.selectedMonth,
-                    items = state.sentimentForMonth
-                )
-            }
-
         }
 
     }

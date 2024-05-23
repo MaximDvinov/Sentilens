@@ -83,7 +83,7 @@ fun ExpandHomeContent(
             Column(Modifier.weight(2f)) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(top = 16.dp),
+                    contentPadding = PaddingValues(top = 16.dp, bottom = 40.dp),
                 ) {
                     actualDiaries(
                         notes = state.notes,

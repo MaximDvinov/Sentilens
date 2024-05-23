@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ import org.diary.composeui.components.calendar.SentimentItem
 import org.diary.composeui.isCompact
 import org.diary.composeui.isMedium
 import org.diary.composeui.theme.defaultShape
+import org.diary.stats.components.FrequencyMoodHistogram
 import org.diary.stats.components.SentimentInMonth
 import org.diary.stats.screens.StatsScreenState
 import org.diary.stats.screens.width
@@ -64,6 +66,18 @@ fun ScreenCompact(
                     .padding(10.dp),
                 selectedPeriod = state.selectedMonth,
                 items = state.sentimentForMonth
+            )
+        }
+
+        item {
+            FrequencyMoodHistogram(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .clip(defaultShape)
+                    .background(MaterialTheme.colors.secondary)
+                    .padding(10.dp),
+                frequencies = state.frequencies,
             )
         }
     }

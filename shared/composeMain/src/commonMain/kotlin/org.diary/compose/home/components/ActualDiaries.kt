@@ -50,8 +50,8 @@ fun LazyListScope.actualDiaries(
     items(notes) {
         NoteItem(modifier = Modifier.bounceClick(),
             note = it,
-            onItemClick = { onClickNote(it) },
-            onDeleteItemClick = {})
+            onItemClick = { onClickNote(it) }
+        )
     }
 
 }

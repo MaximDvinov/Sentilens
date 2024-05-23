@@ -34,6 +34,7 @@ import org.diary.utils.toDateTime
 @Stable
 data class StatsScreenState(
     val sentimentForMonth: ImmutableMap<LocalDate, SentimentStatItem> = persistentMapOf(),
+    val frequencies: ImmutableList<SentimentStatItem> = persistentListOf(),
     val selectedMonth: MonthWithYear,
 )
 
@@ -43,32 +44,13 @@ sealed interface StatsScreenEvent {
 
 class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenModel {
     private val _state: MutableStateFlow<StatsScreenState> = MutableStateFlow(
-        StatsScreenState(persistentMapOf(), getCurrentMonth())
+        StatsScreenState(selectedMonth = getCurrentMonth())
     )
     val state: StateFlow<StatsScreenState>
         get() = _state
 
     init {
-        screenModelScope.launch {
-            val sentimentForPeriod = statsRepository.sentimentForPeriod(
-                LocalDate(_state.value.selectedMonth.year, _state.value.selectedMonth.month, 1),
-                LocalDate(
-                    _state.value.selectedMonth.year,
-                    _state.value.selectedMonth.month,
-                    getDaysInMonth(
-                        _state.value.selectedMonth.month,
-                        _state.value.selectedMonth.year
-                    ).size
-                )
-            )
-
-            _state.update { oldState ->
-                oldState.copy(
-                    sentimentForMonth = sentimentForPeriod.mapValues { it.value.toStable() }
-                        .toImmutableMap()
-                )
-            }
-        }
+        changeMonth(getCurrentMonth())
     }
 
     fun onEvent(event: StatsScreenEvent) {
@@ -82,6 +64,29 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
             it.copy(selectedMonth = month)
         }
 
+        updateSentiment(month)
+        updateFrequencies(month)
+    }
+
+    private fun updateFrequencies(month: MonthWithYear) {
+        screenModelScope.launch {
+            val frequencies = statsRepository.frequenciesForPeriod(
+                LocalDate(month.year, month.month, 1),
+                LocalDate(
+                    month.year, month.month,
+                    getDaysInMonth(month.month, month.year).size
+                )
+            )
+
+            _state.update { oldState ->
+                oldState.copy(
+                    frequencies = frequencies.map { it.toStable() }.toPersistentList()
+                )
+            }
+        }
+    }
+
+    private fun updateSentiment(month: MonthWithYear) {
         screenModelScope.launch {
             val sentimentForPeriod = statsRepository.sentimentForPeriod(
                 LocalDate(month.year, month.month, 1),
