@@ -27,8 +27,8 @@ data class HistogramItem(
     val barText: String? = null,
 )
 
-var barWidth = 0f
-var spacingPx = 0f
+private var barWidth = 0f
+private var spacingPx = 0f
 
 @Composable
 fun Histogram(

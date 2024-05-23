@@ -47,10 +47,17 @@ class HomeStatsScreen : Screen {
         val calendarDays by remember(state.sentimentForMonth) {
             derivedStateOf {
                 state.sentimentForMonth
-                    .mapValues {
-                        SentimentItem({
-                            Image(Emoji.Great, null, Modifier)
-                        }, SentimentColor.GREAT.value)
+                    .mapValues { entry ->
+                        SentimentItem(
+                            icon = {
+                                Image(
+                                    entry.value.category?.icon ?: Emoji.Unknown,
+                                    null,
+                                    Modifier
+                                )
+                            },
+                            color = entry.value.category?.color ?: SentimentColor.UNKNOWN.value
+                        )
                     }
                     .toPersistentMap()
             }
@@ -70,7 +77,7 @@ class HomeStatsScreen : Screen {
             if (windowSizeClass.isCompact()) {
                 ScreenCompact(
                     state = state,
-                    changeMonth = screenModel::changeMonth,
+                    changeMonth = screenModel::changeMonthExt,
                     onSelectDate = screenModel::onSelectDate,
                     calendarDays = calendarDays
                 )
@@ -78,7 +85,7 @@ class HomeStatsScreen : Screen {
                 ScreenExpanded(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     state = state,
-                    changeMonth = screenModel::changeMonth,
+                    changeMonth = screenModel::changeMonthExt,
                     onSelectDate = screenModel::onSelectDate,
                     calendarDays = calendarDays
                 )
@@ -88,7 +95,7 @@ class HomeStatsScreen : Screen {
     }
 }
 
-fun StatsScreenModel.changeMonth(monthWithYear: MonthWithYear) {
+fun StatsScreenModel.changeMonthExt(monthWithYear: MonthWithYear) {
     onEvent(StatsScreenEvent.ChangeMonth(monthWithYear))
 }
 

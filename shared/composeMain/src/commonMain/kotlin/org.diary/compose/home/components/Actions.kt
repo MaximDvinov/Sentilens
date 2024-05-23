@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import org.diary.composeui.bounceClick
 import org.diary.composeui.theme.defaultShape
+import org.diary.stats.components.SentimentVariability
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import sentilens.shared.composemain.generated.resources.Res
@@ -34,13 +35,25 @@ fun Actions(
     onMusicClick: (() -> Unit)? = null,
     onBreathClick: (() -> Unit)? = null,
     onStatsClick: (() -> Unit)? = null,
+    variability: Int?,
 ) {
 
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        onStatsClick?.let { Stats(it) }
+        if (onStatsClick != null){
+            SentimentVariability(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(defaultShape)
+                    .clickable(onClick = onStatsClick)
+                    .background(MaterialTheme.colors.secondary)
+                    .padding(10.dp),
+                variability = variability
+            )
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {

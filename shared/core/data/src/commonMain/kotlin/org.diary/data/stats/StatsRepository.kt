@@ -1,5 +1,6 @@
 package org.diary.data.stats
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 
@@ -15,6 +16,10 @@ interface StatsRepository {
     ): List<SentimentStatItemData>
 
     suspend fun averageSentimentByDayOfWeek(): Map<DayOfWeek, SentimentStatItemData>
+
+    suspend fun sentimentVariability(): Int
+
+    suspend fun sentimentVariabilityFlow(): Flow<Int>
 
 }
 

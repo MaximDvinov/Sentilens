@@ -14,6 +14,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -29,6 +32,7 @@ import org.diary.composeui.theme.defaultShape
 import org.diary.stats.components.AverageSentimentByDayOfWeek
 import org.diary.stats.components.FrequencyMoodHistogram
 import org.diary.stats.components.SentimentInMonth
+import org.diary.stats.components.SentimentVariability
 import org.diary.stats.screens.StatsScreenState
 import org.diary.stats.screens.width
 import kotlin.reflect.KFunction1
@@ -46,11 +50,15 @@ fun ScreenCompact(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
     ) {
-        item {
+        item(key = "calendar") {
+            val initialMonth by remember {
+                mutableStateOf(state.selectedMonth)
+            }
             SentimentCalendar(
                 modifier = Modifier
                     .heightIn(max = 1000.dp),
                 selectedPeriod = state.selectedMonth,
+                initialPeriod = initialMonth,
                 changeMonth = changeMonth,
                 onSelectDate = onSelectDate,
                 items = calendarDays,
@@ -67,6 +75,17 @@ fun ScreenCompact(
                     .padding(10.dp),
                 selectedPeriod = state.selectedMonth,
                 items = state.sentimentForMonth
+            )
+        }
+
+        item {
+            SentimentVariability(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(defaultShape)
+                    .background(MaterialTheme.colors.secondary)
+                    .padding(10.dp),
+                variability = state.sentimentVariability
             )
         }
 

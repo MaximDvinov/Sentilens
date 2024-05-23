@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
+
 private var _Unknown: ImageVector? = null
 
 public val Unknown: ImageVector
@@ -21,10 +22,10 @@ public val Unknown: ImageVector
 			}
 _Unknown = ImageVector.Builder(
                 name = "Unknown",
-                defaultWidth = 24.dp,
-                defaultHeight = 24.dp,
-                viewportWidth = 24f,
-                viewportHeight = 24f
+                defaultWidth = 32.dp,
+                defaultHeight = 32.dp,
+                viewportWidth = 32f,
+                viewportHeight = 32f
             ).apply {
 				path(
     				fill = Brush.radialGradient(
@@ -49,11 +50,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(5.41154f, 10.1361f)
-					curveTo(6.8182f, 9.0717f, 7.3173f, 7.3253f, 6.5263f, 6.2354f)
-					curveTo(5.7352f, 5.1454f, 3.9537f, 5.1247f, 2.547f, 6.1891f)
-					curveTo(1.1403f, 7.2534f, 0.6412f, 8.9998f, 1.4323f, 10.0898f)
-					curveTo(2.2233f, 11.1797f, 4.0049f, 11.2004f, 5.4115f, 10.1361f)
+					moveTo(7.21539f, 13.5147f)
+					curveTo(9.0909f, 12.0956f, 9.7564f, 9.7671f, 8.7017f, 8.3138f)
+					curveTo(7.647f, 6.8606f, 5.2716f, 6.8329f, 3.396f, 8.2521f)
+					curveTo(1.5204f, 9.6712f, 0.855f, 11.9998f, 1.9097f, 13.453f)
+					curveTo(2.9644f, 14.9063f, 5.3398f, 14.9339f, 7.2154f, 13.5147f)
 					close()
 }
 				path(
@@ -79,11 +80,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(23.7196f, 10.7549f)
-					curveTo(23.8744f, 9.2967f, 22.7979f, 7.9815f, 21.3151f, 7.8173f)
-					curveTo(19.8323f, 7.6531f, 18.5047f, 8.702f, 18.3498f, 10.1602f)
-					curveTo(18.1949f, 11.6183f, 19.2714f, 12.9335f, 20.7542f, 13.0977f)
-					curveTo(22.2371f, 13.262f, 23.5647f, 12.213f, 23.7196f, 10.7549f)
+					moveTo(31.6261f, 14.3398f)
+					curveTo(31.8326f, 12.3956f, 30.3973f, 10.642f, 28.4202f, 10.4231f)
+					curveTo(26.4431f, 10.2041f, 24.6729f, 11.6027f, 24.4664f, 13.5469f)
+					curveTo(24.2599f, 15.4911f, 25.6952f, 17.2447f, 27.6723f, 17.4637f)
+					curveTo(29.6494f, 17.6826f, 31.4196f, 16.284f, 31.6261f, 14.3398f)
 					close()
 }
 				path(
@@ -115,11 +116,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(19.7322f, 3.69328f)
-					curveTo(19.8816f, 2.2864f, 18.6084f, 0.9914f, 16.8883f, 0.801f)
-					curveTo(15.1683f, 0.6105f, 13.6527f, 1.5966f, 13.5033f, 3.0035f)
-					curveTo(13.3538f, 4.4104f, 14.6271f, 5.7053f, 16.3471f, 5.8958f)
-					curveTo(18.0672f, 6.0863f, 19.5827f, 5.1002f, 19.7322f, 3.6933f)
+					moveTo(26.3096f, 4.92437f)
+					curveTo(26.5088f, 3.0485f, 24.8112f, 1.3219f, 22.5178f, 1.0679f)
+					curveTo(20.2244f, 0.814f, 18.2036f, 2.1288f, 18.0044f, 4.0046f)
+					curveTo(17.8051f, 5.8805f, 19.5028f, 7.6071f, 21.7962f, 7.8611f)
+					curveTo(24.0896f, 8.115f, 26.1103f, 6.8002f, 26.3096f, 4.9244f)
 					close()
 }
 				path(
@@ -148,13 +149,13 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(21.1468f, 4.49396f)
-					curveTo(20.993f, 4.4515f, 20.831f, 4.4218f, 20.6648f, 4.4049f)
-					curveTo(19.1816f, 4.2394f, 17.8728f, 5.0921f, 17.744f, 6.3054f)
-					curveTo(17.6941f, 6.7848f, 17.8354f, 7.2472f, 18.1138f, 7.646f)
-					lineTo(19.4682f, 7.7351f)
-					curveTo(18.9904f, 6.56f, 19.1815f, 4.5746f, 21.1468f, 4.4982f)
-					verticalLineTo(4.49396f)
+					moveTo(28.1957f, 5.99194f)
+					curveTo(27.9907f, 5.9354f, 27.7747f, 5.8958f, 27.5531f, 5.8732f)
+					curveTo(25.5754f, 5.6525f, 23.8304f, 6.7895f, 23.6586f, 8.4072f)
+					curveTo(23.5922f, 9.0464f, 23.7805f, 9.663f, 24.1517f, 10.1947f)
+					lineTo(25.9576f, 10.3135f)
+					curveTo(25.3206f, 8.7466f, 25.5754f, 6.0994f, 28.1957f, 5.9976f)
+					verticalLineTo(5.99194f)
 					close()
 }
 				path(
@@ -175,11 +176,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(12.1807f, 23.7202f)
-					curveTo(18.2546f, 23.7202f, 23.1785f, 18.6926f, 23.1785f, 12.4907f)
-					curveTo(23.1785f, 6.2889f, 18.2546f, 1.2613f, 12.1807f, 1.2613f)
-					curveTo(6.1068f, 1.2613f, 1.183f, 6.2889f, 1.183f, 12.4907f)
-					curveTo(1.183f, 18.6926f, 6.1068f, 23.7202f, 12.1807f, 23.7202f)
+					moveTo(16.2409f, 31.6269f)
+					curveTo(24.3395f, 31.6269f, 30.9046f, 24.9235f, 30.9046f, 16.6543f)
+					curveTo(30.9046f, 8.3852f, 24.3395f, 1.6817f, 16.2409f, 1.6817f)
+					curveTo(8.1424f, 1.6817f, 1.5773f, 8.3852f, 1.5773f, 16.6543f)
+					curveTo(1.5773f, 24.9235f, 8.1424f, 31.6269f, 16.2409f, 31.6269f)
 					close()
 }
 				path(
@@ -200,11 +201,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(12.1807f, 23.7202f)
-					curveTo(18.2546f, 23.7202f, 23.1785f, 18.6926f, 23.1785f, 12.4907f)
-					curveTo(23.1785f, 6.2889f, 18.2546f, 1.2613f, 12.1807f, 1.2613f)
-					curveTo(6.1068f, 1.2613f, 1.183f, 6.2889f, 1.183f, 12.4907f)
-					curveTo(1.183f, 18.6926f, 6.1068f, 23.7202f, 12.1807f, 23.7202f)
+					moveTo(16.2409f, 31.6269f)
+					curveTo(24.3395f, 31.6269f, 30.9046f, 24.9235f, 30.9046f, 16.6543f)
+					curveTo(30.9046f, 8.3852f, 24.3395f, 1.6817f, 16.2409f, 1.6817f)
+					curveTo(8.1424f, 1.6817f, 1.5773f, 8.3852f, 1.5773f, 16.6543f)
+					curveTo(1.5773f, 24.9235f, 8.1424f, 31.6269f, 16.2409f, 31.6269f)
 					close()
 }
 				path(
@@ -225,17 +226,17 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(8.59098f, 12.9659f)
-					curveTo(9.1761f, 12.9659f, 9.6504f, 12.2346f, 9.6504f, 11.3326f)
-					curveTo(9.6504f, 10.4305f, 9.1761f, 9.6993f, 8.591f, 9.6993f)
-					curveTo(8.0059f, 9.6993f, 7.5315f, 10.4305f, 7.5315f, 11.3326f)
-					curveTo(7.5315f, 12.2346f, 8.0059f, 12.9659f, 8.591f, 12.9659f)
+					moveTo(11.4546f, 17.2879f)
+					curveTo(12.2348f, 17.2879f, 12.8673f, 16.3128f, 12.8673f, 15.1101f)
+					curveTo(12.8673f, 13.9074f, 12.2348f, 12.9324f, 11.4546f, 12.9324f)
+					curveTo(10.6745f, 12.9324f, 10.042f, 13.9074f, 10.042f, 15.1101f)
+					curveTo(10.042f, 16.3128f, 10.6745f, 17.2879f, 11.4546f, 17.2879f)
 					close()
 }
 				path(
     				fill = Brush.linearGradient(
-		start = Offset(8.59098f, 9.6908f),
-		end = Offset(8.59098f, 11.2138f),
+		start = Offset(11.4546f, 12.9211f),
+		end = Offset(11.4546f, 14.9517f),
 		colorStops = arrayOf(
 				0f to Color(0xFF3C2200),
 				1f to Color(0xFF512D00),
@@ -250,12 +251,12 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(8.59098f, 10.2508f)
-					curveTo(9.048f, 10.2508f, 9.4427f, 10.6538f, 9.6504f, 11.252f)
-					curveTo(9.638f, 10.3696f, 9.1685f, 9.6569f, 8.591f, 9.6569f)
-					curveTo(8.0135f, 9.6569f, 7.544f, 10.3653f, 7.5315f, 11.252f)
-					curveTo(7.7393f, 10.6538f, 8.134f, 10.2508f, 8.591f, 10.2508f)
-					verticalLineTo(10.2508f)
+					moveTo(11.4546f, 13.6677f)
+					curveTo(12.064f, 13.6677f, 12.5903f, 14.2051f, 12.8673f, 15.0026f)
+					curveTo(12.8506f, 13.8261f, 12.2247f, 12.8758f, 11.4546f, 12.8758f)
+					curveTo(10.6846f, 12.8758f, 10.0586f, 13.8204f, 10.042f, 15.0026f)
+					curveTo(10.319f, 14.2051f, 10.8453f, 13.6677f, 11.4546f, 13.6677f)
+					verticalLineTo(13.6677f)
 					close()
 }
 				path(
@@ -276,17 +277,17 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(15.7746f, 12.9659f)
-					curveTo(16.3597f, 12.9659f, 16.8341f, 12.2346f, 16.8341f, 11.3326f)
-					curveTo(16.8341f, 10.4305f, 16.3597f, 9.6993f, 15.7746f, 9.6993f)
-					curveTo(15.1895f, 9.6993f, 14.7151f, 10.4305f, 14.7151f, 11.3326f)
-					curveTo(14.7151f, 12.2346f, 15.1895f, 12.9659f, 15.7746f, 12.9659f)
+					moveTo(21.0328f, 17.2879f)
+					curveTo(21.813f, 17.2879f, 22.4454f, 16.3128f, 22.4454f, 15.1101f)
+					curveTo(22.4454f, 13.9074f, 21.813f, 12.9324f, 21.0328f, 12.9324f)
+					curveTo(20.2526f, 12.9324f, 19.6202f, 13.9074f, 19.6202f, 15.1101f)
+					curveTo(19.6202f, 16.3128f, 20.2526f, 17.2879f, 21.0328f, 17.2879f)
 					close()
 }
 				path(
     				fill = Brush.linearGradient(
-		start = Offset(15.7746f, 9.72899f),
-		end = Offset(15.7746f, 11.252f),
+		start = Offset(21.0328f, 12.972f),
+		end = Offset(21.0328f, 15.0026f),
 		colorStops = arrayOf(
 				0f to Color(0xFF3C2200),
 				1f to Color(0xFF512D00),
@@ -301,11 +302,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(15.7746f, 10.2932f)
-					curveTo(15.3176f, 10.2932f, 14.9229f, 10.6962f, 14.7151f, 11.2944f)
-					curveTo(14.7276f, 10.412f, 15.1971f, 9.6993f, 15.7746f, 9.6993f)
-					curveTo(16.3521f, 9.6993f, 16.8216f, 10.4078f, 16.8341f, 11.2944f)
-					curveTo(16.6263f, 10.6962f, 16.2316f, 10.2932f, 15.7746f, 10.2932f)
+					moveTo(21.0328f, 13.7243f)
+					curveTo(20.4234f, 13.7243f, 19.8972f, 14.2617f, 19.6202f, 15.0592f)
+					curveTo(19.6368f, 13.8827f, 20.2628f, 12.9324f, 21.0328f, 12.9324f)
+					curveTo(21.8028f, 12.9324f, 22.4288f, 13.877f, 22.4454f, 15.0592f)
+					curveTo(22.1685f, 14.2617f, 21.6422f, 13.7243f, 21.0328f, 13.7243f)
 					close()
 }
 				path(
@@ -331,11 +332,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(6.79798f, 21.8977f)
-					curveTo(8.0815f, 21.1174f, 8.3483f, 19.158f, 7.3939f, 17.5213f)
-					curveTo(6.4395f, 15.8846f, 4.6253f, 15.1904f, 3.3418f, 15.9707f)
-					curveTo(2.0583f, 16.751f, 1.7915f, 18.7104f, 2.7459f, 20.3471f)
-					curveTo(3.7003f, 21.9838f, 5.5145f, 22.678f, 6.798f, 21.8977f)
+					moveTo(9.06398f, 29.1969f)
+					curveTo(10.7753f, 28.1565f, 11.1311f, 25.544f, 9.8585f, 23.3618f)
+					curveTo(8.586f, 21.1795f, 6.1671f, 20.2539f, 4.4558f, 21.2943f)
+					curveTo(2.7444f, 22.3347f, 2.3886f, 24.9472f, 3.6612f, 27.1295f)
+					curveTo(4.9337f, 29.3117f, 7.3526f, 30.2374f, 9.064f, 29.1969f)
 					close()
 }
 				path(
@@ -361,12 +362,12 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(6.65187f, 21.5676f)
-					curveTo(4.8861f, 21.6864f, 3.0787f, 20.6003f, 2.2478f, 19.0392f)
-					curveTo(2.5012f, 20.2949f, 3.3654f, 21.4658f, 4.5246f, 21.9664f)
-					curveTo(5.5965f, 22.4288f, 6.6436f, 22.1912f, 7.2959f, 21.4615f)
-					curveTo(7.0923f, 21.5124f, 6.8804f, 21.5506f, 6.6519f, 21.5633f)
-					verticalLineTo(21.5676f)
+					moveTo(8.86916f, 28.7568f)
+					curveTo(6.5148f, 28.9152f, 4.105f, 27.4671f, 2.997f, 25.3855f)
+					curveTo(3.335f, 27.0599f, 4.4872f, 28.621f, 6.0328f, 29.2885f)
+					curveTo(7.462f, 29.905f, 8.8581f, 29.5883f, 9.7278f, 28.6154f)
+					curveTo(9.4564f, 28.6833f, 9.1738f, 28.7342f, 8.8692f, 28.7511f)
+					verticalLineTo(28.7568f)
 					close()
 }
 				path(
@@ -398,11 +399,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(18.4516f, 22.0372f)
-					curveTo(19.016f, 20.9532f, 18.3979f, 19.4904f, 17.0708f, 18.7699f)
-					curveTo(15.7438f, 18.0494f, 14.2104f, 18.3441f, 13.6459f, 19.4281f)
-					curveTo(13.0814f, 20.5122f, 13.6996f, 21.975f, 15.0266f, 22.6954f)
-					curveTo(16.3537f, 23.4159f, 17.8871f, 23.1212f, 18.4516f, 22.0372f)
+					moveTo(24.6021f, 29.383f)
+					curveTo(25.3547f, 27.9376f, 24.5305f, 25.9872f, 22.7611f, 25.0265f)
+					curveTo(20.9917f, 24.0659f, 18.9471f, 24.4588f, 18.1945f, 25.9042f)
+					curveTo(17.4419f, 27.3495f, 18.2661f, 29.3f, 20.0355f, 30.2606f)
+					curveTo(21.8049f, 31.2212f, 23.8494f, 30.8283f, 24.6021f, 29.383f)
 					close()
 }
 				path(
@@ -431,13 +432,13 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(16.8561f, 23.0651f)
-					curveTo(16.7065f, 23.0821f, 16.5527f, 23.0906f, 16.3949f, 23.0821f)
-					curveTo(14.9656f, 23.0185f, 13.6527f, 21.9112f, 13.4616f, 20.6088f)
-					curveTo(13.3868f, 20.0955f, 13.499f, 19.6288f, 13.7483f, 19.2555f)
-					lineTo(14.8202f, 19.947f)
-					curveTo(14.4213f, 21.1094f, 14.949f, 22.6664f, 16.8561f, 23.0651f)
-					verticalLineTo(23.0651f)
+					moveTo(22.4747f, 30.7535f)
+					curveTo(22.2753f, 30.7761f, 22.0703f, 30.7874f, 21.8598f, 30.7761f)
+					curveTo(19.9541f, 30.6913f, 18.2036f, 29.215f, 17.9488f, 27.4784f)
+					curveTo(17.849f, 26.794f, 17.9986f, 26.1718f, 18.331f, 25.674f)
+					lineTo(19.7603f, 26.596f)
+					curveTo(19.2284f, 28.1459f, 19.932f, 30.2218f, 22.4747f, 30.7535f)
+					verticalLineTo(30.7535f)
 					close()
 }
 				path(
@@ -463,11 +464,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(10.8233f, 20.7403f)
-					curveTo(12.4846f, 20.7403f, 13.8313f, 19.6387f, 13.8313f, 18.2798f)
-					curveTo(13.8313f, 16.9209f, 12.4846f, 15.8192f, 10.8233f, 15.8192f)
-					curveTo(9.162f, 15.8192f, 7.8152f, 16.9209f, 7.8152f, 18.2798f)
-					curveTo(7.8152f, 19.6387f, 9.162f, 20.7403f, 10.8233f, 20.7403f)
+					moveTo(14.431f, 27.6538f)
+					curveTo(16.6461f, 27.6538f, 18.4418f, 26.1849f, 18.4418f, 24.373f)
+					curveTo(18.4418f, 22.5611f, 16.6461f, 21.0923f, 14.431f, 21.0923f)
+					curveTo(12.2159f, 21.0923f, 10.4203f, 22.5611f, 10.4203f, 24.373f)
+					curveTo(10.4203f, 26.1849f, 12.2159f, 27.6538f, 14.431f, 27.6538f)
 					close()
 }
 				path(
@@ -499,11 +500,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(8.63196f, 22.9865f)
-					curveTo(10.1343f, 22.9418f, 11.3238f, 21.9107f, 11.2887f, 20.6835f)
-					curveTo(11.2537f, 19.4563f, 10.0074f, 18.4977f, 8.5051f, 18.5424f)
-					curveTo(7.0027f, 18.5871f, 5.8132f, 19.6182f, 5.8483f, 20.8454f)
-					curveTo(5.8833f, 22.0726f, 7.1296f, 23.0312f, 8.632f, 22.9865f)
+					moveTo(11.5093f, 30.6487f)
+					curveTo(13.5124f, 30.589f, 15.0984f, 29.2142f, 15.0517f, 27.578f)
+					curveTo(15.0049f, 25.9417f, 13.3432f, 24.6636f, 11.3401f, 24.7232f)
+					curveTo(9.337f, 24.7828f, 7.7509f, 26.1576f, 7.7977f, 27.7939f)
+					curveTo(7.8444f, 29.4302f, 9.5061f, 30.7083f, 11.5093f, 30.6487f)
 					close()
 }
 				path(
@@ -529,11 +530,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(19.2991f, 21.1434f)
-					curveTo(20.802f, 21.1434f, 22.0205f, 20.1481f, 22.0205f, 18.9204f)
-					curveTo(22.0205f, 17.6927f, 20.802f, 16.6974f, 19.2991f, 16.6974f)
-					curveTo(17.7961f, 16.6974f, 16.5777f, 17.6927f, 16.5777f, 18.9204f)
-					curveTo(16.5777f, 20.1481f, 17.7961f, 21.1434f, 19.2991f, 21.1434f)
+					moveTo(25.7321f, 28.1912f)
+					curveTo(27.7361f, 28.1912f, 29.3606f, 26.8641f, 29.3606f, 25.2272f)
+					curveTo(29.3606f, 23.5902f, 27.7361f, 22.2632f, 25.7321f, 22.2632f)
+					curveTo(23.7281f, 22.2632f, 22.1036f, 23.5902f, 22.1036f, 25.2272f)
+					curveTo(22.1036f, 26.8641f, 23.7281f, 28.1912f, 25.7321f, 28.1912f)
 					close()
 }
 				path(
@@ -562,13 +563,13 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(18.8088f, 21.1094f)
-					curveTo(18.9667f, 21.1349f, 19.1329f, 21.1476f, 19.2991f, 21.1476f)
-					curveTo(20.7989f, 21.1476f, 22.0205f, 20.1507f, 22.0205f, 18.9246f)
-					curveTo(22.0205f, 18.441f, 21.8293f, 17.9913f, 21.5094f, 17.6265f)
-					lineTo(20.1467f, 17.6901f)
-					curveTo(20.7491f, 18.8101f, 20.7699f, 20.8209f, 18.813f, 21.1137f)
-					lineTo(18.8088f, 21.1094f)
+					moveTo(25.0784f, 28.1459f)
+					curveTo(25.2889f, 28.1798f, 25.5105f, 28.1968f, 25.7321f, 28.1968f)
+					curveTo(27.7319f, 28.1968f, 29.3606f, 26.8675f, 29.3606f, 25.2328f)
+					curveTo(29.3606f, 24.588f, 29.1058f, 23.9884f, 28.6792f, 23.502f)
+					lineTo(26.8622f, 23.5868f)
+					curveTo(27.6655f, 25.0801f, 27.6931f, 27.7613f, 25.0839f, 28.1515f)
+					lineTo(25.0784f, 28.1459f)
 					close()
 }
 				path(
@@ -600,11 +601,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(15.3664f, 21.4305f)
-					curveTo(15.4624f, 20.162f, 14.2921f, 19.0352f, 12.7524f, 18.9137f)
-					curveTo(11.2127f, 18.7922f, 9.8867f, 19.722f, 9.7907f, 20.9904f)
-					curveTo(9.6947f, 22.2589f, 10.865f, 23.3857f, 12.4047f, 23.5072f)
-					curveTo(13.9444f, 23.6287f, 15.2704f, 22.6989f, 15.3664f, 21.4305f)
+					moveTo(20.4886f, 28.574f)
+					curveTo(20.6166f, 26.8827f, 19.0562f, 25.3803f, 17.0032f, 25.2183f)
+					curveTo(14.9503f, 25.0562f, 13.1823f, 26.2959f, 13.0543f, 27.9872f)
+					curveTo(12.9262f, 29.6785f, 14.4867f, 31.1809f, 16.5396f, 31.3429f)
+					curveTo(18.5925f, 31.5049f, 20.3605f, 30.2652f, 20.4886f, 28.574f)
 					close()
 }
 				path(
@@ -636,11 +637,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(14.3321f, 6.39935f)
-					curveTo(14.3571f, 5.1602f, 13.1165f, 4.1291f, 11.561f, 4.0964f)
-					curveTo(10.0056f, 4.0637f, 8.7244f, 5.0417f, 8.6994f, 6.2809f)
-					curveTo(8.6744f, 7.5201f, 9.9151f, 8.5511f, 11.4705f, 8.5838f)
-					curveTo(13.0259f, 8.6165f, 14.3071f, 7.6385f, 14.3321f, 6.3994f)
+					moveTo(19.1095f, 8.53248f)
+					curveTo(19.1428f, 6.8803f, 17.4886f, 5.5055f, 15.4147f, 5.4619f)
+					curveTo(13.3408f, 5.4182f, 11.6326f, 6.7223f, 11.5992f, 8.3745f)
+					curveTo(11.5659f, 10.0268f, 13.2201f, 11.4015f, 15.294f, 11.4451f)
+					curveTo(17.3679f, 11.4887f, 19.0762f, 10.1847f, 19.1095f, 8.5325f)
 					close()
 }
 				path(
@@ -672,11 +673,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(6.99636f, 6.80552f)
-					curveTo(7.0216f, 5.5523f, 5.7682f, 4.5096f, 4.1967f, 4.4765f)
-					curveTo(2.6252f, 4.4435f, 1.3308f, 5.4326f, 1.3055f, 6.6858f)
-					curveTo(1.2802f, 7.9391f, 2.5337f, 8.9818f, 4.1052f, 9.0149f)
-					curveTo(5.6766f, 9.0479f, 6.9711f, 8.0587f, 6.9964f, 6.8055f)
+					moveTo(9.32848f, 9.07403f)
+					curveTo(9.3622f, 7.4031f, 7.6909f, 6.0128f, 5.5956f, 5.9687f)
+					curveTo(3.5003f, 5.9246f, 1.7744f, 7.2435f, 1.7407f, 8.9144f)
+					curveTo(1.7069f, 10.5854f, 3.3782f, 11.9757f, 5.4735f, 12.0198f)
+					curveTo(7.5689f, 12.0639f, 9.2948f, 10.745f, 9.3285f, 9.074f)
 					close()
 }
 				path(
@@ -705,12 +706,12 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(3.8088f, 5.95332f)
-					curveTo(2.9072f, 5.8897f, 1.6026f, 7.0012f, 2.1469f, 8.3375f)
-					curveTo(1.4406f, 7.7733f, 1.1248f, 6.9291f, 1.4115f, 6.1103f)
-					curveTo(1.6441f, 5.4485f, 2.2258f, 4.9436f, 2.9529f, 4.6806f)
-					lineTo(3.8088f, 5.95332f)
-					verticalLineTo(5.95332f)
+					moveTo(5.07839f, 7.93776f)
+					curveTo(3.8763f, 7.8529f, 2.1368f, 9.3349f, 2.8625f, 11.1167f)
+					curveTo(1.9207f, 10.3644f, 1.4997f, 9.2387f, 1.882f, 8.1471f)
+					curveTo(2.1922f, 7.2646f, 2.9678f, 6.5915f, 3.9372f, 6.2408f)
+					lineTo(5.07839f, 7.93776f)
+					verticalLineTo(7.93776f)
 					close()
 }
 				path(
@@ -742,11 +743,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(22.3592f, 6.80792f)
-					curveTo(22.6442f, 5.5718f, 21.6441f, 4.2738f, 20.1253f, 3.9086f)
-					curveTo(18.6065f, 3.5434f, 17.1441f, 4.2495f, 16.8591f, 5.4855f)
-					curveTo(16.574f, 6.7216f, 17.5742f, 8.0197f, 19.093f, 8.3849f)
-					curveTo(20.6118f, 8.75f, 22.0741f, 8.044f, 22.3592f, 6.8079f)
+					moveTo(29.8122f, 9.07723f)
+					curveTo(30.1923f, 7.4291f, 28.8588f, 5.6984f, 26.8337f, 5.2115f)
+					curveTo(24.8086f, 4.7246f, 22.8588f, 5.6659f, 22.4788f, 7.314f)
+					curveTo(22.0987f, 8.9622f, 23.4322f, 10.6929f, 25.4573f, 11.1798f)
+					curveTo(27.4824f, 11.6667f, 29.4322f, 10.7253f, 29.8122f, 9.0772f)
 					close()
 }
 				path(
@@ -778,11 +779,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(9.38162f, 7.07388f)
-					curveTo(9.4029f, 6.0174f, 8.3471f, 5.1384f, 7.0234f, 5.1106f)
-					curveTo(5.6997f, 5.0827f, 4.6093f, 5.9166f, 4.588f, 6.9731f)
-					curveTo(4.5667f, 8.0295f, 5.6225f, 8.9085f, 6.9462f, 8.9364f)
-					curveTo(8.2699f, 8.9642f, 9.3603f, 8.1303f, 9.3816f, 7.0739f)
+					moveTo(12.5088f, 9.43185f)
+					curveTo(12.5372f, 8.0232f, 11.1295f, 6.8512f, 9.3645f, 6.8141f)
+					curveTo(7.5996f, 6.777f, 6.1457f, 7.8888f, 6.1173f, 9.2974f)
+					curveTo(6.0889f, 10.706f, 7.4967f, 11.878f, 9.2616f, 11.9152f)
+					curveTo(11.0266f, 11.9523f, 12.4804f, 10.8405f, 12.5088f, 9.4319f)
 					close()
 }
 				path(
@@ -808,11 +809,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(7.82928f, 4.06328f)
-					curveTo(7.8543f, 2.8241f, 6.6136f, 1.793f, 5.0582f, 1.7603f)
-					curveTo(3.5028f, 1.7276f, 2.2216f, 2.7056f, 2.1966f, 3.9448f)
-					curveTo(2.1716f, 5.184f, 3.4122f, 6.215f, 4.9677f, 6.2478f)
-					curveTo(6.5231f, 6.2805f, 7.8043f, 5.3025f, 7.8293f, 4.0633f)
+					moveTo(10.439f, 5.4177f)
+					curveTo(10.4724f, 3.7655f, 8.8181f, 2.3907f, 6.7443f, 2.3471f)
+					curveTo(4.6703f, 2.3035f, 2.9621f, 3.6075f, 2.9288f, 5.2598f)
+					curveTo(2.8954f, 6.912f, 4.5496f, 8.2867f, 6.6235f, 8.3303f)
+					curveTo(8.6975f, 8.374f, 10.4057f, 7.0699f, 10.439f, 5.4177f)
 					close()
 }
 				path(
@@ -838,11 +839,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(13.6456f, 4.61226f)
-					curveTo(13.666f, 3.5581f, 12.6094f, 2.682f, 11.2856f, 2.6553f)
-					curveTo(9.9619f, 2.6286f, 8.8723f, 3.4616f, 8.8519f, 4.5157f)
-					curveTo(8.8315f, 5.5698f, 9.8881f, 6.446f, 11.2119f, 6.4727f)
-					curveTo(12.5356f, 6.4993f, 13.6252f, 5.6664f, 13.6456f, 4.6123f)
+					moveTo(18.1941f, 6.14968f)
+					curveTo(18.2213f, 4.7442f, 16.8125f, 3.576f, 15.0475f, 3.5404f)
+					curveTo(13.2825f, 3.5049f, 11.8297f, 4.6154f, 11.8025f, 6.021f)
+					curveTo(11.7754f, 7.4265f, 13.1842f, 8.5947f, 14.9492f, 8.6302f)
+					curveTo(16.7142f, 8.6658f, 18.167f, 7.5552f, 18.1941f, 6.1497f)
 					close()
 }
 				path(
@@ -874,11 +875,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(17.0117f, 3.20378f)
-					curveTo(17.0368f, 1.9904f, 15.8242f, 0.9802f, 14.3032f, 0.9474f)
-					curveTo(12.7822f, 0.9145f, 11.5288f, 1.8716f, 11.5037f, 3.085f)
-					curveTo(11.4786f, 4.2984f, 12.6913f, 5.3086f, 14.2123f, 5.3414f)
-					curveTo(15.7333f, 5.3742f, 16.9866f, 4.4172f, 17.0117f, 3.2038f)
+					moveTo(22.6823f, 4.27172f)
+					curveTo(22.7158f, 2.6539f, 21.0989f, 1.3069f, 19.0709f, 1.2631f)
+					curveTo(17.0429f, 1.2194f, 15.3717f, 2.4955f, 15.3383f, 4.1133f)
+					curveTo(15.3048f, 5.7312f, 16.9217f, 7.0782f, 18.9497f, 7.1219f)
+					curveTo(20.9777f, 7.1656f, 22.6488f, 5.8896f, 22.6823f, 4.2717f)
 					close()
 }
 				path(
@@ -910,11 +911,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(20.9209f, 4.77147f)
-					curveTo(20.9493f, 3.3613f, 19.5385f, 2.188f, 17.7697f, 2.1508f)
-					curveTo(16.0009f, 2.1136f, 14.544f, 3.2266f, 14.5155f, 4.6368f)
-					curveTo(14.4871f, 6.0469f, 15.8979f, 7.2203f, 17.6667f, 7.2575f)
-					curveTo(19.4355f, 7.2947f, 20.8924f, 6.1817f, 20.9209f, 4.7715f)
+					moveTo(27.8945f, 6.36196f)
+					curveTo(27.9324f, 4.4817f, 26.0513f, 2.9173f, 23.6929f, 2.8677f)
+					curveTo(21.3345f, 2.8181f, 19.3919f, 4.3021f, 19.354f, 6.1823f)
+					curveTo(19.3161f, 8.0626f, 21.1972f, 9.627f, 23.5556f, 9.6766f)
+					curveTo(25.9139f, 9.7262f, 27.8565f, 8.2422f, 27.8945f, 6.362f)
 					close()
 }
 				path(
@@ -946,11 +947,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(14.0934f, 2.09565f)
-					curveTo(14.1103f, 0.9829f, 12.9839f, 0.0627f, 11.5775f, 0.0404f)
-					curveTo(10.171f, 0.0181f, 9.0172f, 0.9021f, 9.0002f, 2.0149f)
-					curveTo(8.9833f, 3.1276f, 10.1097f, 4.0478f, 11.5162f, 4.0701f)
-					curveTo(12.9226f, 4.0924f, 14.0765f, 3.2084f, 14.0934f, 2.0957f)
+					moveTo(18.7912f, 2.7942f)
+					curveTo(18.8138f, 1.3105f, 17.3119f, 0.0836f, 15.4366f, 0.0539f)
+					curveTo(13.5614f, 0.0241f, 12.0229f, 1.2028f, 12.0003f, 2.6865f)
+					curveTo(11.9778f, 4.1702f, 13.4796f, 5.3971f, 15.3549f, 5.4268f)
+					curveTo(17.2302f, 5.4566f, 18.7686f, 4.2779f, 18.7912f, 2.7942f)
 					close()
 }
 				path(
@@ -982,11 +983,11 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(20.1883f, 17.9639f)
-					curveTo(21.6913f, 17.9639f, 22.9097f, 16.9687f, 22.9097f, 15.741f)
-					curveTo(22.9097f, 14.5132f, 21.6913f, 13.518f, 20.1883f, 13.518f)
-					curveTo(18.6854f, 13.518f, 17.4669f, 14.5132f, 17.4669f, 15.741f)
-					curveTo(17.4669f, 16.9687f, 18.6854f, 17.9639f, 20.1883f, 17.9639f)
+					moveTo(26.9178f, 23.9519f)
+					curveTo(28.9218f, 23.9519f, 30.5463f, 22.6249f, 30.5463f, 20.9879f)
+					curveTo(30.5463f, 19.351f, 28.9218f, 18.024f, 26.9178f, 18.024f)
+					curveTo(24.9138f, 18.024f, 23.2893f, 19.351f, 23.2893f, 20.9879f)
+					curveTo(23.2893f, 22.6249f, 24.9138f, 23.9519f, 26.9178f, 23.9519f)
 					close()
 }
 				path(
@@ -1018,14 +1019,14 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(4.26167f, 6.16119f)
-					curveTo(3.4307f, 5.9703f, 2.7909f, 5.4994f, 2.4585f, 4.9139f)
-					curveTo(2.3255f, 4.9903f, 2.2009f, 5.0709f, 2.0887f, 5.1642f)
-					curveTo(2.4086f, 5.9109f, 3.169f, 6.526f, 4.191f, 6.7636f)
-					curveTo(4.3281f, 6.7933f, 4.4653f, 6.8145f, 4.6024f, 6.8315f)
-					curveTo(4.6273f, 6.6151f, 4.6938f, 6.42f, 4.7935f, 6.2375f)
-					curveTo(4.6148f, 6.2248f, 4.4362f, 6.1994f, 4.2575f, 6.1569f)
-					lineTo(4.26167f, 6.16119f)
+					moveTo(5.68223f, 8.21492f)
+					curveTo(4.5743f, 7.9604f, 3.7212f, 7.3325f, 3.278f, 6.5519f)
+					curveTo(3.1007f, 6.6537f, 2.9345f, 6.7612f, 2.785f, 6.8857f)
+					curveTo(3.2115f, 7.8812f, 4.2253f, 8.7014f, 5.5881f, 9.0181f)
+					curveTo(5.7709f, 9.0577f, 5.9537f, 9.086f, 6.1365f, 9.1086f)
+					curveTo(6.1697f, 8.8202f, 6.2584f, 8.56f, 6.3913f, 8.3167f)
+					curveTo(6.1531f, 8.2998f, 5.9149f, 8.2658f, 5.6767f, 8.2093f)
+					lineTo(5.68223f, 8.21492f)
 					close()
 }
 				path(
@@ -1057,16 +1058,16 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(7.49411f, 6.263f)
-					curveTo(7.1243f, 6.1994f, 6.7836f, 6.0891f, 6.4803f, 5.9363f)
-					curveTo(5.9859f, 6.1697f, 5.4001f, 6.2842f, 4.8018f, 6.2418f)
-					curveTo(4.7312f, 6.3733f, 4.6688f, 6.5091f, 4.6356f, 6.6533f)
-					curveTo(5.2921f, 6.7297f, 5.9402f, 6.6194f, 6.4803f, 6.3648f)
-					curveTo(6.7836f, 6.5175f, 7.1243f, 6.6278f, 7.4941f, 6.6915f)
-					curveTo(8.1298f, 6.7975f, 8.7572f, 6.7424f, 9.3097f, 6.5642f)
-					curveTo(9.2682f, 6.4327f, 9.2017f, 6.3054f, 9.1269f, 6.1866f)
-					curveTo(8.6201f, 6.3224f, 8.0592f, 6.3563f, 7.4941f, 6.263f)
-					verticalLineTo(6.263f)
+					moveTo(9.99214f, 8.35066f)
+					curveTo(9.4991f, 8.2658f, 9.0448f, 8.1188f, 8.6404f, 7.9151f)
+					curveTo(7.9812f, 8.2262f, 7.2001f, 8.3789f, 6.4024f, 8.3224f)
+					curveTo(6.3082f, 8.4977f, 6.2251f, 8.6787f, 6.1808f, 8.8711f)
+					curveTo(7.0561f, 8.9729f, 7.9203f, 8.8258f, 8.6404f, 8.4864f)
+					curveTo(9.0448f, 8.69f, 9.4991f, 8.8371f, 9.9921f, 8.922f)
+					curveTo(10.8397f, 9.0634f, 11.6762f, 8.9898f, 12.413f, 8.7523f)
+					curveTo(12.3576f, 8.5769f, 12.269f, 8.4072f, 12.1692f, 8.2488f)
+					curveTo(11.4934f, 8.4299f, 10.7455f, 8.4751f, 9.9921f, 8.3507f)
+					verticalLineTo(8.35066f)
 					close()
 }
 				path(
@@ -1098,12 +1099,12 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(12.5505f, 7.1539f)
-					curveTo(12.5505f, 7.1539f, 12.5463f, 7.1624f, 12.5422f, 7.1709f)
-					curveTo(12.3926f, 7.5994f, 12.43f, 8.0321f, 12.6128f, 8.4181f)
-					curveTo(12.7458f, 8.3757f, 12.8746f, 8.3248f, 12.9992f, 8.2654f)
-					curveTo(12.7291f, 7.9387f, 12.5713f, 7.5527f, 12.5505f, 7.1539f)
-					verticalLineTo(7.1539f)
+					moveTo(16.734f, 9.53853f)
+					curveTo(16.734f, 9.5385f, 16.7284f, 9.5498f, 16.7229f, 9.5611f)
+					curveTo(16.5235f, 10.1325f, 16.5733f, 10.7094f, 16.8171f, 11.2241f)
+					curveTo(16.9943f, 11.1676f, 17.1661f, 11.0997f, 17.3323f, 11.0205f)
+					curveTo(16.9722f, 10.585f, 16.7617f, 10.0702f, 16.734f, 9.5385f)
+					verticalLineTo(9.53853f)
 					close()
 }
 				path(
@@ -1135,17 +1136,17 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(10.5853f, 6.403f)
-					curveTo(10.2321f, 6.3224f, 9.9205f, 6.1782f, 9.6629f, 5.9957f)
-					curveTo(9.4967f, 6.0721f, 9.3181f, 6.1315f, 9.1352f, 6.1824f)
-					curveTo(9.2682f, 6.3945f, 9.3471f, 6.6236f, 9.3762f, 6.8654f)
-					curveTo(9.5175f, 6.823f, 9.6588f, 6.7763f, 9.7876f, 6.7212f)
-					curveTo(10.0285f, 6.8909f, 10.3152f, 7.0181f, 10.6393f, 7.0945f)
-					curveTo(11.3331f, 7.2557f, 12.0353f, 7.1284f, 12.5713f, 6.8103f)
-					curveTo(12.5879f, 6.7f, 12.6128f, 6.5897f, 12.6502f, 6.4794f)
-					curveTo(12.7291f, 6.2503f, 12.8579f, 6.0424f, 13.0158f, 5.8557f)
-					curveTo(12.4258f, 6.3733f, 11.4952f, 6.6109f, 10.5853f, 6.403f)
-					verticalLineTo(6.403f)
+					moveTo(14.1137f, 8.53734f)
+					curveTo(13.6428f, 8.4299f, 13.2273f, 8.2376f, 12.8839f, 7.9943f)
+					curveTo(12.6623f, 8.0961f, 12.4241f, 8.1753f, 12.1803f, 8.2432f)
+					curveTo(12.3576f, 8.526f, 12.4628f, 8.8315f, 12.5016f, 9.1539f)
+					curveTo(12.69f, 9.0973f, 12.8784f, 9.0351f, 13.0501f, 8.9616f)
+					curveTo(13.3714f, 9.1878f, 13.7536f, 9.3575f, 14.1857f, 9.4593f)
+					curveTo(15.1109f, 9.6743f, 16.0471f, 9.5046f, 16.7617f, 9.0804f)
+					curveTo(16.7838f, 8.9333f, 16.8171f, 8.7862f, 16.8669f, 8.6392f)
+					curveTo(16.9722f, 8.3337f, 17.1439f, 8.0565f, 17.3544f, 7.8077f)
+					curveTo(16.5678f, 8.4977f, 15.3269f, 8.8145f, 14.1137f, 8.5373f)
+					verticalLineTo(8.53734f)
 					close()
 }
 				path(
@@ -1177,13 +1178,13 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(9.38454f, 7.05208f)
-					curveTo(9.3845f, 7.1072f, 9.3845f, 7.1581f, 9.3845f, 7.2133f)
-					curveTo(9.3679f, 7.366f, 9.3264f, 7.5103f, 9.2682f, 7.6502f)
-					curveTo(9.3472f, 7.7351f, 9.4344f, 7.8157f, 9.5258f, 7.8878f)
-					curveTo(9.5258f, 7.8751f, 9.5299f, 7.8581f, 9.5341f, 7.8454f)
-					curveTo(9.5673f, 7.5654f, 9.5092f, 7.2981f, 9.3887f, 7.0521f)
-					horizontalLineTo(9.38454f)
+					moveTo(12.5127f, 9.40277f)
+					curveTo(12.5127f, 9.4763f, 12.5127f, 9.5442f, 12.5127f, 9.6177f)
+					curveTo(12.4906f, 9.8214f, 12.4352f, 10.0137f, 12.3576f, 10.2003f)
+					curveTo(12.4629f, 10.3135f, 12.5792f, 10.4209f, 12.7011f, 10.5171f)
+					curveTo(12.7011f, 10.5001f, 12.7066f, 10.4775f, 12.7121f, 10.4605f)
+					curveTo(12.7565f, 10.0872f, 12.6789f, 9.7308f, 12.5183f, 9.4028f)
+					horizontalLineTo(12.5127f)
 					close()
 }
 				path(
@@ -1215,14 +1216,14 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(15.812f, 4.96909f)
-					curveTo(15.222f, 5.2873f, 14.4783f, 5.423f, 13.7221f, 5.3f)
-					curveTo(13.5352f, 5.4018f, 13.3607f, 5.5248f, 13.2069f, 5.6606f)
-					curveTo(13.4022f, 5.7327f, 13.6058f, 5.7921f, 13.8218f, 5.826f)
-					curveTo(14.8273f, 5.9957f, 15.812f, 5.703f, 16.4394f, 5.1345f)
-					curveTo(16.3023f, 5.0836f, 16.161f, 5.037f, 16.0114f, 5.003f)
-					curveTo(15.945f, 4.986f, 15.8785f, 4.9818f, 15.812f, 4.9691f)
-					verticalLineTo(4.96909f)
+					moveTo(21.0827f, 6.62544f)
+					curveTo(20.296f, 7.0497f, 19.3044f, 7.2307f, 18.2962f, 7.0666f)
+					curveTo(18.0469f, 7.2024f, 17.8142f, 7.3664f, 17.6093f, 7.5474f)
+					curveTo(17.8696f, 7.6436f, 18.1411f, 7.7228f, 18.4291f, 7.768f)
+					curveTo(19.7697f, 7.9943f, 21.0826f, 7.604f, 21.9191f, 6.846f)
+					curveTo(21.7363f, 6.7782f, 21.548f, 6.716f, 21.3486f, 6.6707f)
+					curveTo(21.2599f, 6.6481f, 21.1713f, 6.6424f, 21.0827f, 6.6254f)
+					verticalLineTo(6.62544f)
 					close()
 }
 				path(
@@ -1254,14 +1255,14 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(20.5568f, 5.92361f)
-					curveTo(20.0416f, 6.6915f, 19.0694f, 7.1878f, 17.9933f, 7.2515f)
-					curveTo(17.9808f, 7.3999f, 17.9517f, 7.5484f, 17.8977f, 7.7012f)
-					curveTo(17.6692f, 8.3502f, 17.0959f, 8.8423f, 16.3812f, 9.0884f)
-					curveTo(16.7219f, 10.1405f, 17.8437f, 10.9635f, 19.2605f, 11.078f)
-					curveTo(21.072f, 11.2223f, 22.6716f, 10.1617f, 22.8378f, 8.7066f)
-					curveTo(22.9832f, 7.4424f, 21.9985f, 6.3012f, 20.5568f, 5.9236f)
-					verticalLineTo(5.92361f)
+					moveTo(27.4091f, 7.89815f)
+					curveTo(26.7221f, 8.922f, 25.4258f, 9.5838f, 23.991f, 9.6686f)
+					curveTo(23.9744f, 9.8666f, 23.9356f, 10.0646f, 23.8636f, 10.2682f)
+					curveTo(23.5589f, 11.1336f, 22.7945f, 11.7898f, 21.8416f, 12.1179f)
+					curveTo(22.2959f, 13.5207f, 23.7916f, 14.618f, 25.6807f, 14.7707f)
+					curveTo(28.096f, 14.963f, 30.2288f, 13.5489f, 30.4504f, 11.6088f)
+					curveTo(30.6442f, 9.9231f, 29.3313f, 8.4016f, 27.4091f, 7.8982f)
+					verticalLineTo(7.89815f)
 					close()
 }
 				path(
@@ -1293,16 +1294,16 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(20.8559f, 6.0127f)
-					curveTo(20.7604f, 5.9788f, 20.6607f, 5.9491f, 20.5568f, 5.9194f)
-					curveTo(20.0416f, 6.6872f, 19.0694f, 7.1836f, 17.9933f, 7.2472f)
-					curveTo(17.9808f, 7.3957f, 17.9517f, 7.5442f, 17.8977f, 7.6969f)
-					curveTo(17.6692f, 8.346f, 17.0959f, 8.8381f, 16.3812f, 9.0841f)
-					curveTo(16.4685f, 9.3557f, 16.6097f, 9.6102f, 16.7925f, 9.8393f)
-					curveTo(17.5321f, 9.5296f, 18.1013f, 8.9654f, 18.2758f, 8.2654f)
-					curveTo(18.3132f, 8.1127f, 18.3298f, 7.9599f, 18.3298f, 7.8114f)
-					curveTo(19.489f, 7.629f, 20.4778f, 6.946f, 20.8601f, 6.0127f)
-					horizontalLineTo(20.8559f)
+					moveTo(27.8079f, 8.01694f)
+					curveTo(27.6805f, 7.9717f, 27.5475f, 7.9321f, 27.4091f, 7.8925f)
+					curveTo(26.7221f, 8.9163f, 25.4258f, 9.5781f, 23.991f, 9.663f)
+					curveTo(23.9744f, 9.8609f, 23.9356f, 10.0589f, 23.8636f, 10.2626f)
+					curveTo(23.5589f, 11.128f, 22.7945f, 11.7841f, 21.8416f, 12.1122f)
+					curveTo(21.958f, 12.4742f, 22.1463f, 12.8136f, 22.3901f, 13.1191f)
+					curveTo(23.3761f, 12.7061f, 24.1351f, 11.9538f, 24.3677f, 11.0205f)
+					curveTo(24.4176f, 10.8169f, 24.4398f, 10.6133f, 24.4398f, 10.4153f)
+					curveTo(25.9853f, 10.172f, 27.3038f, 9.2614f, 27.8134f, 8.0169f)
+					horizontalLineTo(27.8079f)
 					close()
 }
 				path(
@@ -1334,14 +1335,14 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(22.8502f, 8.52417f)
-					curveTo(22.8502f, 8.5836f, 22.8502f, 8.643f, 22.8378f, 8.7023f)
-					curveTo(22.817f, 8.889f, 22.7713f, 9.0672f, 22.709f, 9.2369f)
-					curveTo(22.8087f, 9.5763f, 22.8959f, 9.9241f, 22.9666f, 10.2805f)
-					curveTo(23.1411f, 10.0005f, 23.2574f, 9.6866f, 23.2948f, 9.3557f)
-					curveTo(23.3072f, 9.2581f, 23.3073f, 9.1605f, 23.3073f, 9.063f)
-					curveTo(23.1826f, 8.8678f, 23.0247f, 8.6854f, 22.8544f, 8.5284f)
-					lineTo(22.8502f, 8.52417f)
+					moveTo(30.467f, 11.3656f)
+					curveTo(30.467f, 11.4447f, 30.467f, 11.5239f, 30.4504f, 11.6031f)
+					curveTo(30.4227f, 11.852f, 30.3617f, 12.0896f, 30.2786f, 12.3158f)
+					curveTo(30.4116f, 12.7684f, 30.5279f, 13.2322f, 30.6221f, 13.7073f)
+					curveTo(30.8548f, 13.334f, 31.0099f, 12.9154f, 31.0597f, 12.4742f)
+					curveTo(31.0763f, 12.3441f, 31.0763f, 12.214f, 31.0763f, 12.0839f)
+					curveTo(30.9102f, 11.8237f, 30.6996f, 11.5805f, 30.4725f, 11.3712f)
+					lineTo(30.467f, 11.3656f)
 					close()
 }
 				path(
@@ -1367,13 +1368,13 @@ _Unknown = ImageVector.Builder(
     				strokeLineMiter = 1.0f,
     				pathFillType = PathFillType.NonZero
 				) {
-					moveTo(14.1709f, 17.8658f)
-					curveTo(14.1085f, 17.7937f, 14.0545f, 17.7173f, 14.0047f, 17.6367f)
-					curveTo(14.0047f, 17.6918f, 14.0047f, 17.7427f, 14.0088f, 17.7979f)
-					curveTo(14.013f, 17.8573f, 14.0296f, 17.9124f, 14.0421f, 17.9676f)
-					curveTo(14.0504f, 17.9633f, 14.0587f, 17.9549f, 14.067f, 17.9506f)
-					curveTo(14.1044f, 17.9209f, 14.1376f, 17.8912f, 14.1709f, 17.8615f)
-					verticalLineTo(17.8658f)
+					moveTo(18.8945f, 23.821f)
+					curveTo(18.8114f, 23.7249f, 18.7394f, 23.6231f, 18.6729f, 23.5156f)
+					curveTo(18.6729f, 23.5891f, 18.6729f, 23.657f, 18.6784f, 23.7305f)
+					curveTo(18.684f, 23.8097f, 18.7062f, 23.8832f, 18.7228f, 23.9568f)
+					curveTo(18.7338f, 23.9511f, 18.7449f, 23.9398f, 18.756f, 23.9342f)
+					curveTo(18.8059f, 23.8946f, 18.8502f, 23.855f, 18.8945f, 23.8154f)
+					verticalLineTo(23.821f)
 					close()
 }
 }.build()

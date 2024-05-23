@@ -1,11 +1,14 @@
 package org.diary.data.stats
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.diary.data.diary.SentimentCategoryData
 import org.diary.data.models.toSentiment
 import org.diary.database.FakeLocalNotesDataSource
 import org.diary.database.LocalNotesDataSource
+import kotlin.math.sqrt
 
 class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource) :
     StatsRepository {
@@ -28,7 +31,7 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
 
                 return@mapValues SentimentStatItemData(
                     value = average,
-                    category = if (average > 0.4) SentimentCategoryData.AWESOME else SentimentCategoryData.TERRIBLE
+                    category = average.getCategory()
                 )
             }
     }
@@ -81,7 +84,7 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
                 val average = entry.value.mapNotNull { it.sentiment?.value }.average()
                 return@mapValues SentimentStatItemData(
                     value = average,
-                    category = if (average > 0.4) SentimentCategoryData.AWESOME else SentimentCategoryData.TERRIBLE
+                    category = average.getCategory()
                 )
             }
             .toMutableMap()
@@ -98,4 +101,42 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
 
         return result
     }
+
+    override suspend fun sentimentVariability(): Int {
+        val diaries = localNotesDataSource.getNotesSync()
+        val sentiments = diaries.mapNotNull { it.sentiment?.value }
+        val variability = calculateSentimentVariability(sentiments)
+        return calculateStabilityScore(variability, 1.0)
+    }
+
+    override suspend fun sentimentVariabilityFlow(): Flow<Int> {
+        return localNotesDataSource.getNotes().map { diaries ->
+            val sentiments = diaries.mapNotNull { it.sentiment?.value }
+            val variability = calculateSentimentVariability(sentiments)
+            calculateStabilityScore(variability, 1.0)
+        }
+    }
+
+    private fun calculateSentimentVariability(sentiments: List<Float>): Double {
+        val mean = sentiments.average()
+        val variance = sentiments.map { (it - mean) * (it - mean) }.average()
+        return sqrt(variance)
+    }
+
+    private fun calculateStabilityScore(variability: Double, maxVariability: Double): Int {
+        val normalizedVariability = variability / maxVariability
+        return ((1 - normalizedVariability) * 100).toInt()
+    }
+
+    private fun Double.getCategory(): SentimentCategoryData? {
+        return when (this) {
+            in 0.0..0.20 -> SentimentCategoryData.TERRIBLE
+            in 0.20..0.4 -> SentimentCategoryData.BAD
+            in 0.4..0.6 -> SentimentCategoryData.NEUTRAL
+            in 0.6..0.8 -> SentimentCategoryData.GOOD
+            in 0.8..1.0 -> SentimentCategoryData.AWESOME
+            else -> null
+        }
+    }
+
 }

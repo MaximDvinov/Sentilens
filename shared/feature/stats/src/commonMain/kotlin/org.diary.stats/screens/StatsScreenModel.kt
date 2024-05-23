@@ -37,6 +37,7 @@ data class StatsScreenState(
     val sentimentForMonth: ImmutableMap<LocalDate, SentimentStatItem> = persistentMapOf(),
     val averageSentimentByDayOfWeek: ImmutableMap<DayOfWeek, SentimentStatItem> = persistentMapOf(),
     val frequencies: ImmutableList<SentimentStatItem> = persistentListOf(),
+    val sentimentVariability: Int? = null,
     val selectedMonth: MonthWithYear,
 )
 
@@ -53,6 +54,17 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
 
     init {
         changeMonth(getCurrentMonth())
+
+        screenModelScope.launch {
+            statsRepository.sentimentVariabilityFlow().collect { sentimentVariability ->
+                _state.update { oldState ->
+                    oldState.copy(
+                        sentimentVariability = sentimentVariability
+                    )
+                }
+            }
+        }
+
     }
 
     fun onEvent(event: StatsScreenEvent) {
@@ -119,6 +131,7 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
             }
         }
     }
+
 
     private fun getBasePeriod(): Pair<LocalDate, LocalDate> {
         val instant = Clock.System.now()

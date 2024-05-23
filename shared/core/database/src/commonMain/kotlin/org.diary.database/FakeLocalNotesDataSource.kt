@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.uuid.UUID
 import org.diary.database.models.NoteDBO
+import org.diary.database.models.getValue
 
 class FakeLocalNotesDataSource : LocalNotesDataSource {
     private val flow = MutableStateFlow<List<NoteDBO>>(listOf())
@@ -50,7 +51,8 @@ class FakeLocalNotesDataSource : LocalNotesDataSource {
     }
 
     override fun getNotesSync(): List<NoteDBO> {
-        return flow.value.sortedByDescending { it.updatedAt }
+        return flow.value.map { it.copy(sentiment = it.sentiment?.copy(value = it.sentiment.getValue())) }
+            .sortedByDescending { it.updatedAt }
     }
 
     override suspend fun upsertNote(note: NoteDBO): NoteDBO? {

@@ -9,23 +9,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import kotlinx.collections.immutable.persistentMapOf
 import org.diary.compose.home.components.Actions
 import org.diary.compose.home.components.actualDiaries
 import org.diary.compose.home.components.navigateToDiary
 import org.diary.composeui.components.HomeTopBarExpanded
-import org.diary.composeui.components.calendar.MonthWithYear
-import org.diary.composeui.components.calendar.SentimentCalendar
-import org.diary.diary.Note
 import org.diary.navigation.DiaryScreenProvider
 import org.diary.navigation.InitialDiaryScreenState.*
 
@@ -67,7 +60,8 @@ fun ExpandHomeContent(
                     contentPadding = PaddingValues(top = 16.dp),
                 ) {
                     item {
-                        Actions(onRecommendationClick = {},
+                        Actions(
+                            onRecommendationClick = {},
                             onMusicClick = {
                                 navigator.push(playerScreen)
                             },
@@ -76,7 +70,9 @@ fun ExpandHomeContent(
                             },
                             onStatsClick = {
                                 navigator.push(statsScreen)
-                            })
+                            },
+                            variability = state.variability
+                        )
                     }
                 }
             }

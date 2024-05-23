@@ -112,7 +112,7 @@ fun SentimentInMonth(
             if (selectedDay != null) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = selectedDay!!.dateMonthFormat(),
+                    text = "${selectedDay!!.dateMonthFormat()} - ${items[selectedDay]?.category?.value ?: "Неизвестно"}",
                     style = MaterialTheme.typography.subtitle1.copy(
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colors.onSecondary

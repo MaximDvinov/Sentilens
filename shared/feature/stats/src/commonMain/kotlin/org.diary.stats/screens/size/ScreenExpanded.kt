@@ -26,6 +26,7 @@ import org.diary.composeui.theme.defaultShape
 import org.diary.stats.components.AverageSentimentByDayOfWeek
 import org.diary.stats.components.FrequencyMoodHistogram
 import org.diary.stats.components.SentimentInMonth
+import org.diary.stats.components.SentimentVariability
 import org.diary.stats.screens.StatsScreenState
 
 @Composable
@@ -37,17 +38,30 @@ fun ScreenExpanded(
     calendarDays: ImmutableMap<LocalDate, SentimentItem>,
 ) {
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        SentimentCalendar(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .width(360.dp)
-                .heightIn(max = 1000.dp),
-            selectedPeriod = state.selectedMonth,
-            changeMonth = changeMonth,
-            onSelectDate = onSelectDate,
-            items = calendarDays,
-            isExpand = true
-        )
+        Column {
+            SentimentCalendar(
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .width(360.dp)
+                    .heightIn(max = 1000.dp),
+                selectedPeriod = state.selectedMonth,
+                changeMonth = changeMonth,
+                onSelectDate = onSelectDate,
+                items = calendarDays,
+                isExpand = true
+            )
+
+            SentimentVariability(
+                modifier = Modifier
+                    .width(360.dp)
+                    .clip(defaultShape)
+                    .background(MaterialTheme.colors.secondary)
+                    .padding(10.dp),
+                variability = state.sentimentVariability
+            )
+
+
+        }
 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(420.dp),
@@ -59,7 +73,7 @@ fun ScreenExpanded(
             item {
                 SentimentInMonth(
                     modifier = Modifier
-                        .height(300.dp)
+                        .height(400.dp)
                         .clip(defaultShape)
                         .background(MaterialTheme.colors.secondary)
                         .padding(10.dp),
@@ -72,7 +86,7 @@ fun ScreenExpanded(
                 FrequencyMoodHistogram(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp)
+                        .height(400.dp)
                         .clip(defaultShape)
                         .background(MaterialTheme.colors.secondary)
                         .padding(10.dp),
@@ -84,7 +98,7 @@ fun ScreenExpanded(
                 AverageSentimentByDayOfWeek(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp)
+                        .height(400.dp)
                         .clip(defaultShape)
                         .background(MaterialTheme.colors.secondary)
                         .padding(10.dp),

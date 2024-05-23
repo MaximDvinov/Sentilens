@@ -12,7 +12,7 @@ data class NoteDBO(
     val updatedAt: LocalDateTime? = null,
     val uuid: UUID? = null,
     val isNew: Boolean = false,
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
 )
 
 data class SentimentDBO(
@@ -20,6 +20,11 @@ data class SentimentDBO(
     val value: Float? = null,
     val advice: String? = null,
 )
+
+fun SentimentDBO.getValue(): Float? {
+    val tmp = (category?.ordinal?.div(4f))
+    return if (tmp == 0f) 0.1f else tmp
+}
 
 enum class SentimentCategoryDBO(value: String) {
     terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер")
