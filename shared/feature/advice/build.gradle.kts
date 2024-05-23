@@ -62,7 +62,7 @@ kotlin {
         val desktopMain by getting {
             dependsOn(commonMain)
             dependencies {
-
+                implementation(libs.kotlinx.coroutines.swing)
             }
         }
 
