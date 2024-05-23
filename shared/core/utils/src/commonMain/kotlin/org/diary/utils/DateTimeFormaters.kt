@@ -1,5 +1,6 @@
 package org.diary.utils
 
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -48,7 +49,7 @@ fun Month.monthFormatFull(): String {
     }
 }
 
-fun Month.monthFormatWithDigit():String{
+fun Month.monthFormatWithDigit(): String {
     return when (this.ordinal) {
         0 -> "января"
         1 -> "февраля"
@@ -62,6 +63,19 @@ fun Month.monthFormatWithDigit():String{
         9 -> "октября"
         10 -> "ноября"
         11 -> "декабря"
+        else -> ""
+    }
+}
+
+fun DayOfWeek.shortFormat(): String {
+    return when (this) {
+        DayOfWeek.MONDAY -> "Пн"
+        DayOfWeek.TUESDAY -> "Вт"
+        DayOfWeek.WEDNESDAY -> "Ср"
+        DayOfWeek.THURSDAY -> "Чт"
+        DayOfWeek.FRIDAY -> "Пт"
+        DayOfWeek.SATURDAY -> "Сб"
+        DayOfWeek.SUNDAY -> "Вс"
         else -> ""
     }
 }

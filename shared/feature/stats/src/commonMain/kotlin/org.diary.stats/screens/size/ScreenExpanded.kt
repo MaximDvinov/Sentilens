@@ -23,6 +23,7 @@ import org.diary.composeui.components.calendar.MonthWithYear
 import org.diary.composeui.components.calendar.SentimentCalendar
 import org.diary.composeui.components.calendar.SentimentItem
 import org.diary.composeui.theme.defaultShape
+import org.diary.stats.components.AverageSentimentByDayOfWeek
 import org.diary.stats.components.FrequencyMoodHistogram
 import org.diary.stats.components.SentimentInMonth
 import org.diary.stats.screens.StatsScreenState
@@ -76,6 +77,18 @@ fun ScreenExpanded(
                         .background(MaterialTheme.colors.secondary)
                         .padding(10.dp),
                     frequencies = state.frequencies,
+                )
+            }
+
+            item {
+                AverageSentimentByDayOfWeek(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .clip(defaultShape)
+                        .background(MaterialTheme.colors.secondary)
+                        .padding(10.dp),
+                    items = state.averageSentimentByDayOfWeek,
                 )
             }
         }

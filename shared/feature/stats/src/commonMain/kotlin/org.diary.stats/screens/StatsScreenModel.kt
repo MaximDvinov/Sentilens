@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
@@ -34,6 +35,7 @@ import org.diary.utils.toDateTime
 @Stable
 data class StatsScreenState(
     val sentimentForMonth: ImmutableMap<LocalDate, SentimentStatItem> = persistentMapOf(),
+    val averageSentimentByDayOfWeek: ImmutableMap<DayOfWeek, SentimentStatItem> = persistentMapOf(),
     val frequencies: ImmutableList<SentimentStatItem> = persistentListOf(),
     val selectedMonth: MonthWithYear,
 )
@@ -66,6 +68,7 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
 
         updateSentiment(month)
         updateFrequencies(month)
+        updateAverageSentimentByDayOfWeek()
     }
 
     private fun updateFrequencies(month: MonthWithYear) {
@@ -99,6 +102,18 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
             _state.update { oldState ->
                 oldState.copy(
                     sentimentForMonth = sentimentForPeriod.mapValues { it.value.toStable() }
+                        .toImmutableMap()
+                )
+            }
+        }
+    }
+
+    private fun updateAverageSentimentByDayOfWeek() {
+        screenModelScope.launch {
+            val averageSentiment = statsRepository.averageSentimentByDayOfWeek()
+            _state.update { oldState ->
+                oldState.copy(
+                    averageSentimentByDayOfWeek = averageSentiment.mapValues { it.value.toStable() }
                         .toImmutableMap()
                 )
             }

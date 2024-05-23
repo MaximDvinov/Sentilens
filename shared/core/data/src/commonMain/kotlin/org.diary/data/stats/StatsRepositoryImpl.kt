@@ -1,11 +1,13 @@
 package org.diary.data.stats
 
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.diary.data.diary.SentimentCategoryData
 import org.diary.data.models.toSentiment
 import org.diary.database.FakeLocalNotesDataSource
+import org.diary.database.LocalNotesDataSource
 
-class StatsRepositoryImpl(private val localNotesDataSource: FakeLocalNotesDataSource) :
+class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource) :
     StatsRepository {
     override suspend fun sentimentForPeriod(
         startDate: LocalDate,
@@ -54,7 +56,7 @@ class StatsRepositoryImpl(private val localNotesDataSource: FakeLocalNotesDataSo
                     category = it.key
                 )
             }
-            .let {list ->
+            .let { list ->
                 val missingCategories = mutableListOf<SentimentStatItemData>()
                 SentimentCategoryData.entries.forEach { category ->
                     if (!list.any { category == it.category }) {
@@ -66,5 +68,34 @@ class StatsRepositoryImpl(private val localNotesDataSource: FakeLocalNotesDataSo
             }
             .sortedBy { it.category }
 
+    }
+
+    override suspend fun averageSentimentByDayOfWeek(): Map<DayOfWeek, SentimentStatItemData> {
+        val diaries = localNotesDataSource.getNotesSync()
+
+        val result = diaries
+            .groupBy { it.createdAt?.date?.dayOfWeek }
+            .filterNot { it.key == null }
+            .mapKeys { it.key!! }
+            .mapValues { entry ->
+                val average = entry.value.mapNotNull { it.sentiment?.value }.average()
+                return@mapValues SentimentStatItemData(
+                    value = average,
+                    category = if (average > 0.4) SentimentCategoryData.AWESOME else SentimentCategoryData.TERRIBLE
+                )
+            }
+            .toMutableMap()
+            .apply {
+                DayOfWeek.entries.forEach {
+                    if (!containsKey(it)) {
+                        this[it] = SentimentStatItemData(0.0, null)
+                    }
+                }
+            }
+            .toList()
+            .sortedBy { it.first }
+            .toMap()
+
+        return result
     }
 }
