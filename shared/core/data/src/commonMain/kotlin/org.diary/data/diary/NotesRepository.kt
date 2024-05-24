@@ -13,7 +13,7 @@ import org.diary.data.models.toNote
 import org.diary.data.models.toNoteDBO
 import org.diary.data.models.toNoteDTO
 import org.diary.data.toApiResult
-import org.diary.database.LocalNotesDataSource
+import org.diary.database.datasources.LocalNotesDataSource
 import org.diary.nerwork.NetworkNotesDataSource
 import org.diary.nerwork.models.NoteDTO
 import org.diary.nerwork.models.NoteWrite

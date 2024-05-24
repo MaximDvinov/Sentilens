@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS user(
+    id INTEGER PRIMARY KEY NOT NULL,
+    createdAt TEXT,
+    email TEXT DEFAULT NULL,
+    username TEXT DEFAULT NULL
+);
+
+getUser:
+SELECT * FROM user;
+
+insertUser:
+INSERT OR REPLACE INTO user(id, createdAt, email, username)
+VALUES ?;

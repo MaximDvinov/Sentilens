@@ -1,4 +1,4 @@
-package org.diary.database
+package org.diary.database.datasources
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.uuid.UUID

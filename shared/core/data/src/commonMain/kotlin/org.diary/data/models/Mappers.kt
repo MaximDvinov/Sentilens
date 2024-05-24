@@ -1,5 +1,12 @@
 package org.diary.data.models
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.uuid.UUID
+import kotlinx.uuid.generateUUID
+import kotlinx.uuid.randomUUID
 import org.diary.data.auth.CreatedUserData
 import org.diary.data.auth.LoginData
 import org.diary.data.auth.RegisterData
@@ -14,10 +21,11 @@ import org.diary.database.models.SentimentDBO
 import org.diary.database.models.UserDataDBO
 import org.diary.nerwork.models.SentimentCategoryDTO
 import org.diary.nerwork.models.SentimentDTO
-import org.senti.lens.models.CreatedUserDTO
-import org.senti.lens.models.LoginDataDTO
-import org.senti.lens.models.RegisterDataDTO
-import org.senti.lens.models.TokenDataDTO
+import org.senti.web.models.CreatedUserDTO
+import org.senti.web.models.LoginDataDTO
+import org.senti.web.models.RegisterDataDTO
+import org.senti.web.models.TokenDataDTO
+import kotlin.random.Random
 
 fun NoteDBO.toNote() = NoteData(
     content = content,
@@ -38,7 +46,7 @@ fun NoteDTO.toNote(): NoteData {
         sentiment = sentiment?.toSentiment(),
         title = title,
         updatedAt = updatedAt,
-        uuid = uuid,
+        uuid = uuid ?: UUID.generateUUID(),
         isNew = isNew,
         isDeleted = isDeleted
     )
@@ -120,24 +128,28 @@ private fun SentimentCategoryDBO.toData(): SentimentCategoryData {
     }
 }
 
+fun currentTime(): LocalDateTime {
+    return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+}
+
 fun NoteData.toNoteDBO() = NoteDBO(
-    content = content,
-    createdAt = createdAt,
+    content = content ?: "",
+    createdAt = createdAt ?: currentTime(),
     sentiment = sentiment?.toSentimentDBO(),
     title = title,
-    updatedAt = updatedAt,
+    updatedAt = updatedAt ?: currentTime(),
     uuid = uuid,
     isNew = isNew,
     isDeleted = isDeleted
 )
 
 fun NoteDTO.toNoteDBO() = NoteDBO(
-    content = content,
-    createdAt = createdAt,
+    content = content ?: "",
+    createdAt = createdAt ?: currentTime(),
     sentiment = sentiment?.toSentimentDBO(),
     title = title,
-    updatedAt = updatedAt,
-    uuid = uuid,
+    updatedAt = updatedAt ?: currentTime(),
+    uuid = uuid ?: UUID.generateUUID(),
     isNew = isNew,
     isDeleted = isDeleted
 )

@@ -69,7 +69,12 @@ class SettingScreenModel(
     }
 
     private suspend fun getUserData(oldState: UiState): UiState {
-        val result = authRepository.userData()
+        val result = authRepository.userData() ?: return oldState.copy(
+            loadState = LoadState.Error(
+                message = "Error"
+            )
+        )
+
         return oldState.copy(
             login = result.username,
             email = result.email,

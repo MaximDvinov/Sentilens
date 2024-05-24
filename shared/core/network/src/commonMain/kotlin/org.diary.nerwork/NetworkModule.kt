@@ -22,7 +22,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.senti.lens.models.TokenDataDTO
+import org.senti.web.models.TokenDataDTO
 
 const val BASE_HOST = "217.28.221.132"
 const val BASE_URL = "http://$BASE_HOST"

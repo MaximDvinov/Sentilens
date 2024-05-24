@@ -1,17 +1,16 @@
 package org.diary.nerwork
 
 import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import org.senti.lens.models.CreatedUserDTO
-import org.senti.lens.models.LoginDataDTO
-import org.senti.lens.models.RegisterDataDTO
-import org.senti.lens.models.TokenDataDTO
+import org.senti.web.models.CreatedUserDTO
+import org.senti.web.models.LoginDataDTO
+import org.senti.web.models.RegisterDataDTO
+import org.senti.web.models.TokenDataDTO
 
 class AuthDataSource(private val client: HttpClient, private val settings: ObservableSettings) {
     suspend fun register(value: RegisterDataDTO): Result<CreatedUserDTO> = runCatchingForApi {

@@ -1,6 +1,5 @@
-package org.senti.lens.models
+package org.senti.web.models
 
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 import kotlinx.serialization.SerialName

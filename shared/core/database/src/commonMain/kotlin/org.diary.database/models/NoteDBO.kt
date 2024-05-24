@@ -5,12 +5,13 @@ import kotlinx.uuid.UUID
 
 
 data class NoteDBO(
-    val content: String? = null,
-    val createdAt: LocalDateTime? = null,
-    val sentiment: SentimentDBO? = null,
+    val uuid: UUID,
+    val content: String,
     val title: String = "",
-    val updatedAt: LocalDateTime? = null,
-    val uuid: UUID? = null,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
+    val sentiment: SentimentDBO? = null,
+
     val isNew: Boolean = false,
     val isDeleted: Boolean = false,
 )
@@ -23,6 +24,11 @@ data class SentimentDBO(
 
 fun SentimentDBO.getValue(): Float? {
     val tmp = (category?.ordinal?.div(4f))
+    return if (tmp == 0f) 0.1f else tmp
+}
+
+fun SentimentCategoryDBO.getValue(): Float {
+    val tmp = (ordinal.div(4f))
     return if (tmp == 0f) 0.1f else tmp
 }
 

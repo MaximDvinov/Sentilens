@@ -2,7 +2,7 @@ package org.diary.data.diary
 
 import io.github.aakira.napier.Napier
 import org.diary.data.ApiResult
-import org.diary.database.LocalNotesDataSource
+import org.diary.database.datasources.LocalNotesDataSource
 import org.diary.nerwork.NetworkNotesDataSource
 import org.diary.data.models.toNote
 import org.diary.data.models.toNoteDBO

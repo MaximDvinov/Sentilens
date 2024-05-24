@@ -1,0 +1,47 @@
+import kotlin.Boolean;
+import kotlinx.uuid.UUID;
+import org.diary.database.models.SentimentCategoryDBO;
+
+CREATE TABLE IF NOT EXISTS diary(
+    uuid TEXT AS UUID PRIMARY KEY NOT NULL,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    createdAt INTEGER AS kotlinx.datetime.LocalDateTime NOT NULL,
+    updatedAt INTEGER AS kotlinx.datetime.LocalDateTime NOT NULL,
+
+    category TEXT AS SentimentCategoryDBO DEFAULT NULL,
+    advice TEXT DEFAULT NULL,
+
+    isNew INTEGER AS Boolean NOT NULL DEFAULT 1,
+    isDeleted INTEGER AS Boolean NOT NULL DEFAULT 0
+);
+
+selectAll:
+SELECT *
+FROM diary ORDER BY updatedAt DESC;
+
+insert:
+INSERT INTO diary(uuid, title, content, createdAt, updatedAt, category, advice, isNew, isDeleted)
+VALUES ?;
+
+deleteById:
+DELETE FROM diary WHERE uuid = ?;
+
+getById:
+SELECT * FROM diary WHERE uuid = ?;
+
+updateById:
+UPDATE diary
+SET
+title = :title,
+content = :content,
+createdAt = :createdAt,
+updatedAt = :updatedAt,
+category = :category,
+advice = :advice,
+isNew = :isNew,
+isDeleted = :isDeleted WHERE uuid = :uuid;
+
+upsert:
+INSERT OR REPLACE INTO diary(uuid, title, content, createdAt, updatedAt, category, advice, isNew, isDeleted)
+VALUES ?;

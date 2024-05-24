@@ -1,4 +1,4 @@
-package org.senti.lens
+package org.senti.web
 
 /*
  * Copyright (C) 2022 The Android Open Source Project

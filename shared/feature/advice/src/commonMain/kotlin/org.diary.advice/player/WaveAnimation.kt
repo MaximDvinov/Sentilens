@@ -1,4 +1,4 @@
-package org.senti.lens.screens.player
+package org.senti.web.screens.player
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState

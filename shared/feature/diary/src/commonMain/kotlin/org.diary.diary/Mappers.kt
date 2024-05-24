@@ -1,5 +1,7 @@
 package org.diary.diary
 
+import kotlinx.uuid.UUID
+import kotlinx.uuid.generateUUID
 import org.diary.data.diary.NoteData
 import org.diary.data.diary.SentimentCategoryData
 import org.diary.data.diary.SentimentData
@@ -39,7 +41,7 @@ fun Note.toNoteData() = NoteData(
     sentiment = sentiment?.toSentimentData(),
     title = title,
     updatedAt = updatedAt,
-    uuid = uuid,
+    uuid = uuid ?: UUID.generateUUID(),
     isNew = isNew,
     isDeleted = isDeleted
 )

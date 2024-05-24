@@ -11,7 +11,7 @@ import org.diary.diary.list.DiaryScreen
 import org.diary.compose.home.HomeScreen
 import org.diary.compose.setting.SettingScreen
 import org.diary.stats.screens.HomeStatsScreen
-import org.senti.lens.screens.player.PlayerScreen
+import org.senti.web.screens.player.PlayerScreen
 
 val navigationModule = screenModule {
     register<DiaryScreenProvider.LoginScreen> {

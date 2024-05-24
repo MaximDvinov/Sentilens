@@ -16,7 +16,7 @@ import org.diary.compose.platformModule
 import org.diary.compose.screenRegistry
 import org.diary.composeui.theme.AppTheme
 import org.jetbrains.skiko.wasm.onWasmReady
-import org.senti.lens.StartScreenContent
+import org.senti.web.StartScreenContent
 import org.w3c.dom.MediaQueryListEvent
 
 private lateinit var settingsListener: SettingsListener

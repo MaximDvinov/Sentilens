@@ -6,8 +6,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import org.diary.data.diary.SentimentCategoryData
 import org.diary.data.models.toSentiment
-import org.diary.database.FakeLocalNotesDataSource
-import org.diary.database.LocalNotesDataSource
+import org.diary.database.datasources.LocalNotesDataSource
 import kotlin.math.sqrt
 
 class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource) :

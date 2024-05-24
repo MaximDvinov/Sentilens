@@ -8,7 +8,7 @@ import org.diary.data.models.toDBO
 import org.diary.data.models.toDTO
 import org.diary.data.models.toData
 import org.diary.data.toApiResult
-import org.diary.database.LocalUserDataSource
+import org.diary.database.datasources.LocalUserDataSource
 import org.diary.nerwork.ACCESS
 import org.diary.nerwork.AuthDataSource
 
@@ -20,7 +20,7 @@ interface AuthRepository {
     suspend fun changeEmail(email: String): ApiResult<CreatedUserData>
     suspend fun changeLogin(login: String): ApiResult<CreatedUserData>
     suspend fun deleteUser(): ApiResult<Unit>
-    suspend fun userData(): CreatedUserData
+    suspend fun userData(): CreatedUserData?
 }
 
 class AuthRepositoryImpl(
@@ -48,14 +48,14 @@ class AuthRepositoryImpl(
     override suspend fun deleteUser(): ApiResult<Unit> =
         authDataSource.deleteUser().toApiResult()
 
-    override suspend fun userData(): CreatedUserData {
+    override suspend fun userData(): CreatedUserData? {
         val result = authDataSource.userData().toApiResult().map { it.toData() }
 
         if (result is ApiResult.Success) {
             userDataSource.upsertUserData(result.data.toDBO())
         }
 
-        return userDataSource.getUserData().toData()
+        return userDataSource.getUserData()?.toData()
     }
 
 

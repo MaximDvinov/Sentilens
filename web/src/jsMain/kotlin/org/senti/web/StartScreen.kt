@@ -1,4 +1,4 @@
-package org.senti.lens
+package org.senti.web
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -10,7 +10,7 @@ data class NoteData(
     val createdAt: LocalDateTime? = null,
     val updatedAt: LocalDateTime? = null,
     val sentiment: SentimentData? = null,
-    val uuid: UUID? = UUID.generateUUID(),
+    val uuid: UUID = UUID.generateUUID(),
 
     val isNew: Boolean = false,
     val isDeleted: Boolean = false,

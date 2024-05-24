@@ -1,10 +1,5 @@
-package org.diary.database
+package org.diary.database.datasources
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.uuid.UUID
-import org.diary.database.models.NoteDBO
 import org.diary.database.models.UserDataDBO
 
 class FakeLocalUserDataSource : LocalUserDataSource {
