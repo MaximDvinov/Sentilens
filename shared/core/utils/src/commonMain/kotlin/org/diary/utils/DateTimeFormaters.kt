@@ -117,9 +117,11 @@ fun LocalDateTime?.dateFormatWithEnter(): String {
 
 //"HH:mm"
 @OptIn(FormatStringsInDatetimeFormats::class)
-fun LocalDateTime?.timeFormat(): String = this?.format(LocalDateTime.Format {
-    byUnicodePattern("HH:mm")
-}) ?: ""
+fun LocalDateTime?.timeFormat(): String =
+    this?.toInstant(TimeZone.UTC)?.toLocalDateTime(TimeZone.currentSystemDefault())
+        ?.format(LocalDateTime.Format {
+            byUnicodePattern("HH:mm")
+        }) ?: ""
 
 
 //"d MMM yyy в HH:mm"

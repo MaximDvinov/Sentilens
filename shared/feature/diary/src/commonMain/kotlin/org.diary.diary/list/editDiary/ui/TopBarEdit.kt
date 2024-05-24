@@ -124,7 +124,7 @@ fun TopBarEdit(
 private fun StatusNote(note: Note?, modifier: Modifier) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         if (note != null) {
-            if (note.isNew == true) {
+            if (note.isNew) {
                 Icon(
                     FeatherIcons.CloudOff,
                     "",

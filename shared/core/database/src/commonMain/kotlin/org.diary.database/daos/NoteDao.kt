@@ -98,8 +98,8 @@ private fun Diary.toDBO(): NoteDBO = NoteDBO(
         advice = advice,
         value = category?.getValue()
     ),
-    isDeleted = isDeleted ?: false,
-    isNew = isNew ?: true,
+    isDeleted = isDeleted,
+    isNew = isNew,
 )
 
 private fun NoteDBO.toEntity(): Diary = Diary(

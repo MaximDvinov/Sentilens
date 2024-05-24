@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS diary(
     category TEXT AS SentimentCategoryDBO DEFAULT NULL,
     advice TEXT DEFAULT NULL,
 
-    isNew INTEGER AS Boolean NOT NULL DEFAULT 1,
+    isNew INTEGER AS Boolean NOT NULL DEFAULT 0,
     isDeleted INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 

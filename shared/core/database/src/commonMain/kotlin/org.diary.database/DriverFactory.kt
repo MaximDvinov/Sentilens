@@ -19,7 +19,6 @@ fun createDatabase(driverFactory: DriverFactory): SentilensDB {
             updatedAtAdapter = dateTimeAdapter,
             categoryAdapter = EnumColumnAdapter()
         )
-
     )
     return database
 }
