@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,7 @@ fun LazyListScope.actualDiaries(
     items(notes) {
         NoteItem(modifier = Modifier.bounceClick(),
             note = it,
-            onItemClick = { onClickNote(it) }
+            onItemClick = remember(it.uuid) { { onClickNote(it) } }
         )
     }
 

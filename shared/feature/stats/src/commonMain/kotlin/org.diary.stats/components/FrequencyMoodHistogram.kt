@@ -27,14 +27,17 @@ import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.Month
+import org.diary.composeui.components.calendar.MonthWithYear
 import org.diary.composeui.icons.Emoji
 import org.diary.composeui.theme.SentimentColor
 import org.diary.stats.models.SentimentStatItem
+import org.diary.utils.monthFormatFull
 import org.diary.utils.monthFormatWithDigit
 
 @Composable
 fun FrequencyMoodHistogram(
     modifier: Modifier = Modifier,
+    selectedPeriod: MonthWithYear,
     frequencies: ImmutableList<SentimentStatItem>,
 ) {
     val total by remember(frequencies) {
@@ -59,7 +62,11 @@ fun FrequencyMoodHistogram(
     Column(modifier) {
         Text(
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-            text = "Частота настроений за март",
+            text = "Частота настроений за ${
+                remember(selectedPeriod) {
+                    Month(selectedPeriod.month).monthFormatFull().lowercase()
+                }
+            }",
             style = MaterialTheme.typography.h2.copy(fontSize = 18.sp)
         )
 

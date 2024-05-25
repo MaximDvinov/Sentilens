@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -45,6 +47,7 @@ import kotlin.math.min
 fun NotesListContent(
     modifier: Modifier = Modifier,
     state: DiaryScreenModel.NoteList,
+    scrollState: LazyListState = rememberLazyListState(),
     onIntent: (Intent) -> Unit,
 ) {
     val navigator = LocalNavigator.current
@@ -115,6 +118,7 @@ fun NotesListContent(
                     onItemClick = {
                         onIntent(DiaryScreenModel.EditNoteIntent.SelectNote(it.uuid))
                     },
+                    scrollState = scrollState,
                     notes = state.filteredNotes,
                     currentNote = null,
                     onDeleteClick = {

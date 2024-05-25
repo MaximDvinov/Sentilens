@@ -78,7 +78,6 @@ class HomeStatsScreen : Screen {
                 ScreenCompact(
                     state = state,
                     changeMonth = screenModel::changeMonthExt,
-                    onSelectDate = screenModel::onSelectDate,
                     calendarDays = calendarDays
                 )
             } else {
@@ -86,7 +85,6 @@ class HomeStatsScreen : Screen {
                     modifier = Modifier.padding(horizontal = 16.dp),
                     state = state,
                     changeMonth = screenModel::changeMonthExt,
-                    onSelectDate = screenModel::onSelectDate,
                     calendarDays = calendarDays
                 )
             }
@@ -97,10 +95,6 @@ class HomeStatsScreen : Screen {
 
 fun StatsScreenModel.changeMonthExt(monthWithYear: MonthWithYear) {
     onEvent(StatsScreenEvent.ChangeMonth(monthWithYear))
-}
-
-fun StatsScreenModel.onSelectDate(date: LocalDate) {
-
 }
 
 fun Modifier.width(isMax: Boolean, value: Dp) = if (isMax) fillMaxWidth() else widthIn(max = value)

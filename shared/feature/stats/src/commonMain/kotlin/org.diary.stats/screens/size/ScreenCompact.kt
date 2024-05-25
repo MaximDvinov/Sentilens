@@ -1,5 +1,6 @@
 package org.diary.stats.screens.size
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -26,6 +28,7 @@ import org.diary.composeui.LazyOrientedLayout
 import org.diary.composeui.components.calendar.MonthWithYear
 import org.diary.composeui.components.calendar.SentimentCalendar
 import org.diary.composeui.components.calendar.SentimentItem
+import org.diary.composeui.components.calendar.pageCount
 import org.diary.composeui.isCompact
 import org.diary.composeui.isMedium
 import org.diary.composeui.theme.defaultShape
@@ -37,31 +40,40 @@ import org.diary.stats.screens.StatsScreenState
 import org.diary.stats.screens.width
 import kotlin.reflect.KFunction1
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScreenCompact(
     modifier: Modifier = Modifier,
     state: StatsScreenState,
     changeMonth: (MonthWithYear) -> Unit,
-    onSelectDate: (LocalDate) -> Unit,
     calendarDays: ImmutableMap<LocalDate, SentimentItem>,
 ) {
+    val pagerState = rememberPagerState(initialPage = pageCount / 2) { pageCount }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
     ) {
+        item {
+            SentimentVariability(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(defaultShape)
+                    .background(MaterialTheme.colors.secondary)
+                    .padding(10.dp),
+                variability = state.sentimentVariability
+            )
+        }
+
         item(key = "calendar") {
-            val initialMonth by remember {
-                mutableStateOf(state.selectedMonth)
-            }
             SentimentCalendar(
                 modifier = Modifier
                     .heightIn(max = 1000.dp),
                 selectedPeriod = state.selectedMonth,
-                initialPeriod = initialMonth,
                 changeMonth = changeMonth,
-                onSelectDate = onSelectDate,
                 items = calendarDays,
+                pagerState = pagerState,
                 isExpand = false
             )
         }
@@ -79,17 +91,6 @@ fun ScreenCompact(
         }
 
         item {
-            SentimentVariability(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(defaultShape)
-                    .background(MaterialTheme.colors.secondary)
-                    .padding(10.dp),
-                variability = state.sentimentVariability
-            )
-        }
-
-        item {
             FrequencyMoodHistogram(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,6 +98,7 @@ fun ScreenCompact(
                     .clip(defaultShape)
                     .background(MaterialTheme.colors.secondary)
                     .padding(10.dp),
+                selectedPeriod = state.selectedMonth,
                 frequencies = state.frequencies,
             )
         }

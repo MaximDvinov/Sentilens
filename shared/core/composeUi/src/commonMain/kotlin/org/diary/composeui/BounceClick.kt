@@ -34,7 +34,7 @@ class NoRippleInteractionSource : MutableInteractionSource {
 fun Modifier.bounceClick(
     minScale: Float = 0.97f,
     animationSpec: AnimationSpec<Float> = spring(stiffness = Spring.StiffnessMedium)
-): Modifier = composed {
+): Modifier = this.composed {
     var buttonState by remember { mutableStateOf(ButtonState.Idle) }
     val scale by animateFloatAsState(
         if (buttonState == ButtonState.Pressed) minScale else 1f,

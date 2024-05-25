@@ -4,6 +4,8 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,6 +35,8 @@ fun OnePane(
         mutableStateOf<Note?>(null)
     }
 
+    var scrollState = rememberLazyListState()
+
     LaunchedEffect(editState) {
         launch {
             if (editState == null) {
@@ -52,6 +56,7 @@ fun OnePane(
                 modifier = Modifier.padding(top = 8.dp).fillMaxSize(),
                 state = state,
                 onIntent = onIntent,
+                scrollState = scrollState
             )
         } else {
             EditNoteContent(

@@ -1,5 +1,6 @@
 package org.diary.stats.screens.size
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,6 +24,7 @@ import kotlinx.datetime.LocalDate
 import org.diary.composeui.components.calendar.MonthWithYear
 import org.diary.composeui.components.calendar.SentimentCalendar
 import org.diary.composeui.components.calendar.SentimentItem
+import org.diary.composeui.components.calendar.pageCount
 import org.diary.composeui.theme.defaultShape
 import org.diary.stats.components.AverageSentimentByDayOfWeek
 import org.diary.stats.components.FrequencyMoodHistogram
@@ -29,16 +32,27 @@ import org.diary.stats.components.SentimentInMonth
 import org.diary.stats.components.SentimentVariability
 import org.diary.stats.screens.StatsScreenState
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScreenExpanded(
     modifier: Modifier = Modifier,
     state: StatsScreenState,
     changeMonth: (MonthWithYear) -> Unit,
-    onSelectDate: (LocalDate) -> Unit,
     calendarDays: ImmutableMap<LocalDate, SentimentItem>,
 ) {
+    val pagerState = rememberPagerState(initialPage = pageCount / 2) { pageCount }
+
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         Column {
+            SentimentVariability(
+                modifier = Modifier
+                    .width(360.dp)
+                    .padding(top = 16.dp)
+                    .clip(defaultShape)
+                    .background(MaterialTheme.colors.secondary)
+                    .padding(10.dp),
+                variability = state.sentimentVariability
+            )
             SentimentCalendar(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
@@ -46,21 +60,10 @@ fun ScreenExpanded(
                     .heightIn(max = 1000.dp),
                 selectedPeriod = state.selectedMonth,
                 changeMonth = changeMonth,
-                onSelectDate = onSelectDate,
                 items = calendarDays,
+                pagerState = pagerState,
                 isExpand = true
             )
-
-            SentimentVariability(
-                modifier = Modifier
-                    .width(360.dp)
-                    .clip(defaultShape)
-                    .background(MaterialTheme.colors.secondary)
-                    .padding(10.dp),
-                variability = state.sentimentVariability
-            )
-
-
         }
 
         LazyVerticalGrid(
@@ -90,6 +93,7 @@ fun ScreenExpanded(
                         .clip(defaultShape)
                         .background(MaterialTheme.colors.secondary)
                         .padding(10.dp),
+                    selectedPeriod = state.selectedMonth,
                     frequencies = state.frequencies,
                 )
             }

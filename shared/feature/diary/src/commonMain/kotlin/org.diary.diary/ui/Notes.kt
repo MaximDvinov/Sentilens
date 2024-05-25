@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -62,6 +63,7 @@ import org.diary.utils.timeFormat
 @Composable
 fun NotesList(
     modifier: Modifier = Modifier,
+    scrollState: LazyListState = rememberLazyListState(),
     onItemClick: (Note) -> Unit,
     notes: ImmutableList<Note>,
     onDeleteClick: (Note) -> Unit,
@@ -69,6 +71,7 @@ fun NotesList(
     contentPadding: PaddingValues,
 ) {
     val state = rememberLazyListState()
+    val colorSecondary = MaterialTheme.colors.secondary
 
     LaunchedEffect(key1 = currentNote) {
         if (currentNote != null) {
@@ -87,39 +90,30 @@ fun NotesList(
             length1 = 40f,
             horizontal = false
         ),
-        state = state,
+        state = scrollState,
         verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = contentPadding
     ) {
         items(notes) {
             key(it.uuid) {
-                val color by animateColorAsState(if (currentNote?.uuid == it.uuid) it.sentiment?.category.getSentimentColor() else MaterialTheme.colors.secondary)
+                val color by animateColorAsState(remember(it.uuid == it.uuid) {
+                    if (currentNote?.uuid == it.uuid) it.sentiment?.category.getSentimentColor() else colorSecondary
+                })
                 val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 0.5.dp else 0.dp)
 
-                NoteItem(
-                    modifier = Modifier.bounceClick().border(
-                        width = width,
-                        color = color,
-                        shape = smallShape
-                    ),
+                NoteItem(modifier = Modifier
+                    .bounceClick()
+                    .border(width = width, color = color, shape = smallShape),
                     note = it,
-                    onDeleteItemClick = remember {
-                        { onDeleteClick(it) }
-                    }
-                ) {
-                    onItemClick(it)
-                }
+                    onDeleteItemClick = remember(it.uuid) { { onDeleteClick(it) } },
+                    onItemClick = remember(it.uuid) { { onItemClick(it) } })
             }
-
         }
 
         item {
             Spacer(modifier = Modifier.height(1.dp))
         }
     }
-//
-//        VerticalScrollBar(state)
-//    }
 }
 
 
@@ -135,19 +129,24 @@ fun NoteItem(
         mutableStateOf(false)
     }
 
-    val color by animateColorAsState(note.sentiment?.category.getSentimentColor())
+    val time by remember(note.uuid) {
+        mutableStateOf(note.updatedAt.timeFormat())
+    }
+
+    val date by remember(note.uuid) {
+        mutableStateOf(note.updatedAt.dateFormatWithEnter())
+    }
+
+    val color by animateColorAsState(remember(note.uuid) {
+        note.sentiment?.category.getSentimentColor()
+    })
 
     Box {
         Row(
-            modifier = modifier
-                .height(IntrinsicSize.Min)
-                .clip(smallShape)
-                .combinedClickable(
-                    onClick = onItemClick,
-                    onLongClick = {
-                        expanded = true
-                    })
-                .background(MaterialTheme.colors.secondary).padding(8.dp),
+            modifier = modifier.height(IntrinsicSize.Min).clip(smallShape)
+                .combinedClickable(onClick = onItemClick, onLongClick = {
+                    expanded = true
+                }).background(MaterialTheme.colors.secondary).padding(8.dp),
         ) {
             Column(
                 modifier = Modifier.width(70.dp).fillMaxHeight(),
@@ -155,24 +154,20 @@ fun NoteItem(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    note.updatedAt.timeFormat(),
+                    text = time,
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onSecondary
                 )
                 Text(
-                    note.updatedAt.dateFormatWithEnter(),
+                    text = date,
                     style = MaterialTheme.typography.caption.copy(textAlign = TextAlign.Center),
                     color = MaterialTheme.colors.onSecondary.copy(alpha = 0.6f)
                 )
             }
 
             Spacer(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50))
-                    .background(color)
-                    .width(2.5.dp)
+                modifier = Modifier.clip(RoundedCornerShape(50)).background(color).width(2.5.dp)
                     .fillMaxHeight()
-
             )
 
             Column(
@@ -181,9 +176,7 @@ fun NoteItem(
             ) {
                 Text(
                     note.title,
-                    style = MaterialTheme.typography.subtitle1.copy(
-                        fontSize = 18.sp
-                    ),
+                    style = MaterialTheme.typography.subtitle1.copy(fontSize = 18.sp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colors.onSecondary
@@ -193,9 +186,7 @@ fun NoteItem(
                     modifier = Modifier,
                     text = note.content ?: "",
                     style = MaterialTheme.typography.body1.copy(
-                        color = MaterialTheme.colors.onSecondary.copy(
-                            alpha = 0.7f
-                        )
+                        color = MaterialTheme.colors.onSecondary.copy(alpha = 0.7f)
                     ),
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
@@ -224,7 +215,6 @@ fun NoteItem(
             }
         }
     }
-
 }
 
 fun SentimentCategory?.getSentimentColor(): Color = when (this) {

@@ -1,9 +1,11 @@
 package org.diary.composeui.components.calendar
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -35,7 +38,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.ArrowLeft
 import compose.icons.feathericons.ArrowRight
@@ -48,6 +50,7 @@ import kotlinx.datetime.Month
 import org.diary.composeui.components.SecondaryIconButton
 import org.diary.composeui.theme.defaultShape
 import org.diary.composeui.theme.primary
+import org.diary.composeui.theme.sixDpShape
 import org.diary.composeui.theme.smallShape
 import org.diary.utils.monthFormatFull
 
@@ -59,21 +62,22 @@ data class SentimentItem(
 )
 
 @Stable
-private val pageCount = 2400
+val pageCount = 2400
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SentimentCalendar(
     modifier: Modifier,
     selectedPeriod: MonthWithYear,
+    pagerState: PagerState = rememberPagerState(initialPage = pageCount / 2) { pageCount },
     initialPeriod: MonthWithYear = MonthWithYear.current(),
     changeMonth: (MonthWithYear) -> Unit,
-    onSelectDate: (LocalDate) -> Unit,
+    onSelectDate: ((LocalDate) -> Unit)? = null,
+    selectedDate: LocalDate? = null,
     isExpand: Boolean = false,
     items: ImmutableMap<LocalDate, SentimentItem>,
 ) {
     val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(initialPage = pageCount / 2) { pageCount }
     var expandable by remember(isExpand) { mutableStateOf(isExpand) }
 
     Column(
@@ -137,18 +141,18 @@ fun SentimentCalendar(
                 contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
                 key = { it }
             ) {
-                val selected = remember(it) {
-                    initialPeriod.plus(it - pageCount / 2)
-                }
-                val days by remember(selected) {
-                    derivedStateOf {
-                        CalendarUtils.getDaysInMonth(
-                            selected.month, selected.year
-                        ).toImmutableList()
-                    }
+                val days = remember(it) {
+                    val selected = initialPeriod.plus(it - pageCount / 2)
+                    CalendarUtils.getDaysInMonth(
+                        selected.month, selected.year
+                    ).map { date ->
+                        DateItem(
+                            date, sentiment = items[date]
+                        )
+                    }.toImmutableList()
                 }
 
-                CalendarGrid(days, items)
+                CalendarGrid(days, selectedDate, onSelectDate)
             }
         }
     }
@@ -156,12 +160,13 @@ fun SentimentCalendar(
 
 @Composable
 private fun CalendarGrid(
-    days: ImmutableList<LocalDate>,
-    items: ImmutableMap<LocalDate, SentimentItem>,
+    days: ImmutableList<DateItem>,
+    selectedDate: LocalDate? = null,
+    onSelectDate: ((LocalDate) -> Unit)? = null
 ) {
     val startDayOfWeek by remember(days) {
         derivedStateOf {
-            days.firstOrNull()?.dayOfWeek?.ordinal ?: 0
+            days.firstOrNull()?.date?.dayOfWeek?.ordinal ?: 0
         }
     }
 
@@ -172,11 +177,30 @@ private fun CalendarGrid(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         items(startDayOfWeek) {
-            Column { }
+            Column {}
         }
 
-        items(days) { date ->
-            DateItem(modifier = Modifier, data = date to items[date])
+        items(days) { item ->
+            val isSelected by remember(item) {
+                derivedStateOf {
+                    selectedDate == item.date
+                }
+            }
+
+            val borderWidth by animateDpAsState(if (isSelected) 1.dp else 0.dp)
+            val selectedColor by animateColorAsState(if (isSelected) MaterialTheme.colors.onSecondary else Color.Transparent)
+
+            DateItem(
+                modifier = Modifier.border(
+                    width = borderWidth,
+                    color = selectedColor,
+                    shape = sixDpShape
+                ).clickable(
+                    onClick = remember(item) { { onSelectDate?.invoke(item.date) } },
+                    enabled = onSelectDate != null
+                ),
+                data = item
+            )
         }
     }
 }
