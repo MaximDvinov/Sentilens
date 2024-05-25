@@ -7,106 +7,107 @@ import kotlinx.datetime.LocalDate
 import org.diary.data.diary.SentimentCategoryData
 import org.diary.data.models.toSentiment
 import org.diary.database.datasources.LocalNotesDataSource
+import org.diary.database.models.NoteDBO
 import kotlin.math.sqrt
 
 class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource) :
     StatsRepository {
-    override suspend fun sentimentForPeriod(
+    private fun sentimentForPeriod(
+        diaries: List<NoteDBO>,
+    ) = diaries
+        .mapNotNull { diary ->
+            if (diary.sentiment == null) return@mapNotNull null
+
+            diary.createdAt to diary.sentiment!!.toSentiment()
+        }
+        .groupBy { it.first.date }
+        .mapValues {
+            val average = it.value.mapNotNull { it.second.value }.average()
+
+            return@mapValues SentimentStatItemData(
+                value = average,
+                category = average.getCategory()
+            )
+        }
+
+    override suspend fun sentimentForPeriodFlow(
         startDate: LocalDate,
         endDate: LocalDate,
-    ): Map<LocalDate, SentimentStatItemData> {
-        val diaries = localNotesDataSource.getNotesSync()
+    ): Flow<StatsByPeriod> {
+        return localNotesDataSource.getNotes().map { diaries ->
+            val filtered =
+                diaries.filter { diary -> diary.createdAt.let { it.date in startDate..endDate } == true }
 
-        return diaries
-            .filter { diary -> diary.createdAt?.let { it.date in startDate..endDate } == true }
-            .mapNotNull { diary ->
-                if (diary.sentiment == null || diary.createdAt == null) return@mapNotNull null
-
-                diary.createdAt!! to diary.sentiment!!.toSentiment()
-            }
-            .groupBy { it.first.date }
-            .mapValues {
-                val average = it.value.mapNotNull { it.second.value }.average()
-
-                return@mapValues SentimentStatItemData(
-                    value = average,
-                    category = average.getCategory()
-                )
-            }
+            StatsByPeriod(
+                sentimentForMonth = sentimentForPeriod(filtered),
+                frequencies = frequenciesForPeriod(filtered)
+            )
+        }
     }
 
-    override suspend fun frequenciesForPeriod(
-        startDate: LocalDate,
-        endDate: LocalDate,
-    ): List<SentimentStatItemData> {
-        val diaries = localNotesDataSource.getNotesSync()
+    override suspend fun statsForAllDays(): Flow<AllDayStats> {
+        return localNotesDataSource.getNotes().map { diaries ->
+            val sentiments = diaries.mapNotNull { it.sentiment?.value }
+            val variability = calculateSentimentVariability(sentiments)
 
-        return diaries
-            .filter { diary -> diary.createdAt?.let { it.date in startDate..endDate } == true }
-            .mapNotNull { diary ->
-                if (diary.sentiment == null || diary.createdAt == null) return@mapNotNull null
-
-                diary.sentiment!!.toSentiment()
-            }
-            .groupingBy {
-                it.category
-            }
-            .eachCount()
-            .map {
-                SentimentStatItemData(
-                    value = it.value.toDouble(),
-                    category = it.key
-                )
-            }
-            .let { list ->
-                val missingCategories = mutableListOf<SentimentStatItemData>()
-                SentimentCategoryData.entries.forEach { category ->
-                    if (!list.any { category == it.category }) {
-                        missingCategories.add(SentimentStatItemData(0.0, category = category))
-                    }
-                }
-
-                list.plus(missingCategories)
-            }
-            .sortedBy { it.category }
-
+            AllDayStats(
+                variability = calculateStabilityScore(variability, 1.0),
+                averageSentimentByDayOfWeek = averageSentimentByDayOfWeek(diaries)
+            )
+        }
     }
 
-    override suspend fun averageSentimentByDayOfWeek(): Map<DayOfWeek, SentimentStatItemData> {
-        val diaries = localNotesDataSource.getNotesSync()
+    private fun frequenciesForPeriod(
+        diaries: List<NoteDBO>,
+    ) = diaries
+        .mapNotNull { diary ->
+            if (diary.sentiment == null) return@mapNotNull null
 
-        val result = diaries
-            .groupBy { it.createdAt?.date?.dayOfWeek }
-            .filterNot { it.key == null }
-            .mapKeys { it.key!! }
-            .mapValues { entry ->
-                val average = entry.value.mapNotNull { it.sentiment?.value }.average()
-                return@mapValues SentimentStatItemData(
-                    value = average,
-                    category = average.getCategory()
-                )
-            }
-            .toMutableMap()
-            .apply {
-                DayOfWeek.entries.forEach {
-                    if (!containsKey(it)) {
-                        this[it] = SentimentStatItemData(0.0, null)
-                    }
+            diary.sentiment!!.toSentiment()
+        }
+        .groupingBy {
+            it.category
+        }
+        .eachCount()
+        .map {
+            SentimentStatItemData(
+                value = it.value.toDouble(),
+                category = it.key
+            )
+        }
+        .let { list ->
+            val missingCategories = mutableListOf<SentimentStatItemData>()
+            SentimentCategoryData.entries.forEach { category ->
+                if (!list.any { category == it.category }) {
+                    missingCategories.add(SentimentStatItemData(0.0, category = category))
                 }
             }
-            .toList()
-            .sortedBy { it.first }
-            .toMap()
 
-        return result
-    }
+            list.plus(missingCategories)
+        }
+        .sortedBy { it.category }
 
-    override suspend fun sentimentVariability(): Int {
-        val diaries = localNotesDataSource.getNotesSync()
-        val sentiments = diaries.mapNotNull { it.sentiment?.value }
-        val variability = calculateSentimentVariability(sentiments)
-        return calculateStabilityScore(variability, 1.0)
-    }
+    private fun averageSentimentByDayOfWeek(diaries: List<NoteDBO>) = diaries
+        .groupBy { it.createdAt.date.dayOfWeek }
+        .mapKeys { it.key }
+        .mapValues { entry ->
+            val average = entry.value.mapNotNull { it.sentiment?.value }.average()
+            return@mapValues SentimentStatItemData(
+                value = average,
+                category = average.getCategory()
+            )
+        }
+        .toMutableMap()
+        .apply {
+            DayOfWeek.entries.forEach {
+                if (!containsKey(it)) {
+                    this[it] = SentimentStatItemData(0.0, null)
+                }
+            }
+        }
+        .toList()
+        .sortedBy { it.first }
+        .toMap()
 
     override suspend fun sentimentVariabilityFlow(): Flow<Int> {
         return localNotesDataSource.getNotes().map { diaries ->
@@ -117,6 +118,7 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
     }
 
     private fun calculateSentimentVariability(sentiments: List<Float>): Double {
+        if (sentiments.isEmpty()) return 0.0
         val mean = sentiments.average()
         val variance = sentiments.map { (it - mean) * (it - mean) }.average()
         return sqrt(variance)
@@ -137,5 +139,4 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
             else -> null
         }
     }
-
 }

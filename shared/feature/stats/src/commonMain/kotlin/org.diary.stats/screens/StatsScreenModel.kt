@@ -9,6 +9,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -39,7 +40,7 @@ data class StatsScreenState(
     val sentimentForMonth: ImmutableMap<LocalDate, SentimentStatItem> = persistentMapOf(),
     val averageSentimentByDayOfWeek: ImmutableMap<DayOfWeek, SentimentStatItem> = persistentMapOf(),
     val frequencies: ImmutableList<SentimentStatItem> = persistentListOf(),
-    val sentimentVariability: Int? = null,
+    val sentimentVariability: Int = 0,
     val selectedMonth: MonthWithYear,
 )
 
@@ -58,10 +59,12 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
         changeMonth(getCurrentMonth())
 
         screenModelScope.launch {
-            statsRepository.sentimentVariabilityFlow().collect { sentimentVariability ->
+            statsRepository.statsForAllDays().collect { allStats ->
                 _state.update { oldState ->
                     oldState.copy(
-                        sentimentVariability = sentimentVariability
+                        sentimentVariability = allStats.variability,
+                        averageSentimentByDayOfWeek = allStats.averageSentimentByDayOfWeek.mapValues { it.value.toStable() }
+                            .toImmutableMap()
                     )
                 }
             }
@@ -75,67 +78,36 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
         }
     }
 
+    private var job: Job? = null
+
     private fun changeMonth(month: MonthWithYear) {
         _state.update {
             it.copy(selectedMonth = month)
         }
 
-        updateSentiment(month)
-        updateFrequencies(month)
-        updateAverageSentimentByDayOfWeek()
-    }
+        val startPeriod = month.minus(2)
+        val endPeriod = month.plus(2)
 
-    private fun updateFrequencies(month: MonthWithYear) {
-        screenModelScope.launch {
-            val frequencies = statsRepository.frequenciesForPeriod(
-                LocalDate(month.year, month.month, 1),
-                LocalDate(
-                    month.year, month.month,
-                    getDaysInMonth(month.month, month.year).size
-                )
-            )
+        job?.cancel()
 
-            _state.update { oldState ->
-                oldState.copy(
-                    frequencies = frequencies.map { it.toStable() }.toPersistentList()
-                )
-            }
-        }
-    }
-
-    private fun updateSentiment(month: MonthWithYear) {
-        screenModelScope.launch {
-            val startPeriod = month.minus(2)
-            val endPeriod = month.plus(2)
-            val sentimentForPeriod = statsRepository.sentimentForPeriod(
+        job = screenModelScope.launch {
+            statsRepository.sentimentForPeriodFlow(
                 LocalDate(startPeriod.year, startPeriod.month, 1),
                 LocalDate(
                     endPeriod.year, endPeriod.month,
                     getDaysInMonth(endPeriod.month, endPeriod.year).size
                 )
-            )
-
-            _state.update { oldState ->
-                oldState.copy(
-                    sentimentForMonth = sentimentForPeriod.mapValues { it.value.toStable() }
-                        .toImmutableMap()
-                )
+            ).collect {
+                _state.update { oldState ->
+                    oldState.copy(
+                        sentimentForMonth = it.sentimentForMonth.mapValues { it.value.toStable() }
+                            .toImmutableMap(),
+                        frequencies = it.frequencies.map { it.toStable() }.toPersistentList()
+                    )
+                }
             }
         }
     }
-
-    private fun updateAverageSentimentByDayOfWeek() {
-        screenModelScope.launch {
-            val averageSentiment = statsRepository.averageSentimentByDayOfWeek()
-            _state.update { oldState ->
-                oldState.copy(
-                    averageSentimentByDayOfWeek = averageSentiment.mapValues { it.value.toStable() }
-                        .toImmutableMap()
-                )
-            }
-        }
-    }
-
 
     private fun getBasePeriod(): Pair<LocalDate, LocalDate> {
         val instant = Clock.System.now()

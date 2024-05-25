@@ -5,21 +5,10 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 
 interface StatsRepository {
-    suspend fun sentimentForPeriod(
-        startDate: LocalDate,
-        endDate: LocalDate,
-    ): Map<LocalDate, SentimentStatItemData>
-
-    suspend fun frequenciesForPeriod(
-        startDate: LocalDate,
-        endDate: LocalDate,
-    ): List<SentimentStatItemData>
-
-    suspend fun averageSentimentByDayOfWeek(): Map<DayOfWeek, SentimentStatItemData>
-
-    suspend fun sentimentVariability(): Int
-
     suspend fun sentimentVariabilityFlow(): Flow<Int>
 
+    suspend fun sentimentForPeriodFlow(startDate: LocalDate, endDate: LocalDate): Flow<StatsByPeriod>
+
+    suspend fun statsForAllDays(): Flow<AllDayStats>
 }
 

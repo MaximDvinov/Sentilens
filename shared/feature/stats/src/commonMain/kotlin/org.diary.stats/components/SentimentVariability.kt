@@ -84,14 +84,14 @@ private fun VariabilityPie(
         )
 
         val textLayoutResult =
-            textMeasurer.measure(variability.toString(), style = textStyle)
+            textMeasurer.measure("$variability", style = textStyle)
 
         drawText(
             textMeasurer = textMeasurer,
             text = "$variability",
             topLeft = Offset(
                 x = canvasWidth / 2 - textLayoutResult.size.width / 2,
-                y = canvasHeight / 2 - textLayoutResult.size.width / 2
+                y = canvasHeight / 2 - textLayoutResult.size.height / 2
             ),
             style = textStyle,
         )
