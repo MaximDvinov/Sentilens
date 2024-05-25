@@ -30,7 +30,7 @@ import org.diary.composeui.theme.defaultShape
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AuthTextField(
+fun SingleLineTextField(
     modifier: Modifier = Modifier,
     text: String,
     placeholder: String,
@@ -65,7 +65,6 @@ fun AuthTextField(
         keyboardActions = KeyboardActions(onDone = {
             nextFocus()
         })
-
     )
 }
 

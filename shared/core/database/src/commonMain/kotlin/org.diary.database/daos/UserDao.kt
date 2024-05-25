@@ -8,6 +8,8 @@ interface UserDao {
     suspend fun getUserData(): UserDataDBO?
 
     suspend fun upsertUserData(userData: UserDataDBO): UserDataDBO
+
+    suspend fun deleteUserData()
 }
 
 class UserDaoImpl(private val db: SentilensDB) : UserDao {
@@ -35,4 +37,10 @@ class UserDaoImpl(private val db: SentilensDB) : UserDao {
         return userData
 
     }
+
+    override suspend fun deleteUserData() {
+        db.userQueries.delete()
+    }
+
+
 }

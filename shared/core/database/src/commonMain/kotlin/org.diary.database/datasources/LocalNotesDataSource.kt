@@ -13,5 +13,6 @@ interface LocalNotesDataSource {
     fun getNotesSync(): List<NoteDBO>
     suspend fun upsertNote(note: NoteDBO): NoteDBO?
     suspend fun finallyDeleteNote(note: NoteDBO)
+    suspend fun deleteAll()
 }
 

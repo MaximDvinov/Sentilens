@@ -7,6 +7,7 @@ interface LocalUserDataSource {
     suspend fun getUserData(): UserDataDBO?
 
     suspend fun upsertUserData(userData: UserDataDBO): UserDataDBO
+    suspend fun deleteUserData()
 }
 
 class LocalUserDataSourceImpl(private val dao: UserDao) : LocalUserDataSource {
@@ -16,6 +17,10 @@ class LocalUserDataSourceImpl(private val dao: UserDao) : LocalUserDataSource {
 
     override suspend fun upsertUserData(userData: UserDataDBO): UserDataDBO {
         return dao.upsertUserData(userData)
+    }
+
+    override suspend fun deleteUserData() {
+        dao.deleteUserData()
     }
 
 }

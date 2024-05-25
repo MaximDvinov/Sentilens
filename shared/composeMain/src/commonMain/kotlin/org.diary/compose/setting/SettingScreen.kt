@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -45,13 +46,17 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Moon
 import compose.icons.feathericons.Sun
 import compose.icons.feathericons.Tablet
+import org.diary.compose.setting.DialogState.*
+import org.diary.composeui.LoadState
 import org.diary.composeui.bounceClick
+import org.diary.composeui.components.ErrorSnackbar
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.diary.composeui.components.SecondaryIconButton
 import org.diary.composeui.components.TitleIconButton
 import org.diary.composeui.icons.LeftArrow
 import org.diary.composeui.theme.defaultShape
+import org.diary.diary.list.DiaryScreenModel
 import org.diary.navigation.DiaryScreenProvider
 
 class SettingScreen : Screen, KoinComponent {
@@ -83,23 +88,110 @@ class SettingScreen : Screen, KoinComponent {
             }
         }
 
-        SettingScreenContent(
-            isDarkTheme = isDarkTheme,
-            state = state,
-            onChangeTheme = {
-                isDarkTheme = it
-                if (it == null) {
-                    settings.remove("theme")
-                } else {
-                    settings.putBoolean("theme", it)
-                }
+        Box {
+            SettingScreenContent(
+                isDarkTheme = isDarkTheme,
+                state = state,
+                onChangeTheme = {
+                    isDarkTheme = it
+                    if (it == null) {
+                        settings.remove("theme")
+                    } else {
+                        settings.putBoolean("theme", it)
+                    }
 
-            },
-            onBackClick = { navigator.pop() },
-            onIntent = screenModel::processIntent
-        )
+                },
+                onBackClick = { navigator.pop() },
+                onIntent = screenModel::processIntent
+            )
 
+            if (state.loadState is LoadState.Error) {
+                ErrorSnackbar(error = (state.loadState as? LoadState.Error)?.message ?: "",
+                    onDismiss = {
+                        screenModel.processIntent(SettingScreenModel.Intent.CloseError)
+                    })
+            }
+        }
+
+
+        when (state.dialogState) {
+            is ChangeEmail -> {
+                SingleFieldChangeDialog(
+                    modifier = Modifier.widthIn(max = 600.dp),
+                    title = "Изменить эл. почту",
+                    text = state.email ?: "",
+                    onDismiss = screenModel::closeDialog,
+                    onConfirm = {
+                        screenModel.processIntent(
+                            SettingScreenModel.Intent.ChangeEmail(it)
+                        )
+                    }
+                )
+            }
+
+            is ChangeLogin -> {
+                SingleFieldChangeDialog(
+                    modifier = Modifier.widthIn(max = 600.dp),
+                    title = "Изменить логин",
+                    text = state.login ?: "",
+                    onDismiss = screenModel::closeDialog,
+                    onConfirm = {
+                        screenModel.processIntent(
+                            SettingScreenModel.Intent.ChangeLogin(it)
+                        )
+                    }
+                )
+            }
+
+            ChangePassword -> {
+                PasswordChangeDialog(
+                    modifier = Modifier.widthIn(max = 600.dp),
+                    onDismiss = screenModel::closeDialog,
+                    onConfirm = { oldPassword, newPassword ->
+                        screenModel.processIntent(
+                            SettingScreenModel.Intent.ChangePassword(
+                                oldPassword = oldPassword,
+                                password = newPassword
+                            )
+                        )
+                    }
+                )
+            }
+
+            Closed -> {}
+            ConfirmDeleteUser -> {
+                ConfirmDialog(
+                    modifier = Modifier.widthIn(max = 600.dp),
+                    onDismiss = screenModel::closeDialog,
+                    title = "Удаление аккаунта",
+                    subtitle = "Вы уверены, что хотите удалить аккаунт? Данное действие нельзя будет отменить, все данные будут потеряны.",
+                    onConfirm = {
+                        screenModel.processIntent(
+                            SettingScreenModel.Intent.DeleteUser
+                        )
+                    }
+                )
+            }
+
+            ConfirmLogout -> {
+                ConfirmDialog(
+                    modifier = Modifier.widthIn(max = 600.dp),
+                    onDismiss = screenModel::closeDialog,
+                    title = "Выход из приложения",
+                    subtitle = "Вы уверены, что хотите выйти из приложения? Записи, которые не были синхронизированы, будут потеряны.",
+                    onConfirm = {
+                        screenModel.processIntent(
+                            SettingScreenModel.Intent.Logout
+                        )
+                    }
+                )
+            }
+        }
     }
+}
+
+fun SettingScreenModel.closeDialog() {
+    processIntent(SettingScreenModel.Intent.OpenDialog(DialogState.Closed))
 }
 
 @Composable
@@ -140,19 +232,23 @@ fun SettingScreenContent(
                 title = "Логин",
                 text = state.login,
                 onClick = {
-
+                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ChangeLogin))
                 }
             )
 
             ProfileItem(
                 title = "Эл. почта",
                 text = state.email,
-                onClick = {}
+                onClick = {
+                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ChangeEmail))
+                }
             )
 
             TitleIconButton(
                 modifier = Modifier.height(48.dp).fillMaxWidth(),
-                onClick = { },
+                onClick = {
+                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ChangePassword))
+                },
                 title = "Изменить пароль",
                 icon = LeftArrow
             )
@@ -169,7 +265,7 @@ fun SettingScreenContent(
             TitleIconButton(
                 modifier = Modifier.height(48.dp).fillMaxWidth(),
                 onClick = {
-                    onIntent(SettingScreenModel.Intent.Logout)
+                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ConfirmLogout))
                 },
                 title = "Выйти из приложения",
                 icon = LeftArrow
@@ -177,7 +273,9 @@ fun SettingScreenContent(
 
             TitleIconButton(
                 modifier = Modifier.height(48.dp).fillMaxWidth(),
-                onClick = {},
+                onClick = {
+                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ConfirmDeleteUser))
+                },
                 title = "Удалить аккаунт",
                 icon = LeftArrow,
                 color = MaterialTheme.colors.error

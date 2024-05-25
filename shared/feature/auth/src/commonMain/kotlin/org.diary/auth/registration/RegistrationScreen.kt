@@ -38,7 +38,7 @@ import org.diary.composeui.LoadState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.diary.auth.login.LoginScreen
-import org.diary.composeui.components.AuthTextField
+import org.diary.composeui.components.SingleLineTextField
 import org.diary.composeui.components.PasswordTextField
 import org.diary.composeui.components.PrimaryButton
 import org.diary.composeui.components.SecondaryButton
@@ -133,7 +133,7 @@ fun RegScreenContent(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            AuthTextField(
+            SingleLineTextField(
                 modifier = Modifier.fillMaxWidth().widthIn(max = 240.dp),
                 text = email ?: "",
                 onTextChange = {
@@ -147,7 +147,7 @@ fun RegScreenContent(
                 }
             )
 
-            AuthTextField(
+            SingleLineTextField(
                 modifier = Modifier.fillMaxWidth().widthIn(max = 240.dp),
                 text = username ?: "",
                 placeholder = "Логин",

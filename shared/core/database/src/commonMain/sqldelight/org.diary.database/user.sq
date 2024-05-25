@@ -11,3 +11,6 @@ SELECT * FROM user;
 insertUser:
 INSERT OR REPLACE INTO user(id, createdAt, email, username)
 VALUES ?;
+
+delete:
+DELETE FROM user;

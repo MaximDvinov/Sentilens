@@ -45,3 +45,6 @@ isDeleted = :isDeleted WHERE uuid = :uuid;
 upsert:
 INSERT OR REPLACE INTO diary(uuid, title, content, createdAt, updatedAt, category, advice, isNew, isDeleted)
 VALUES ?;
+
+deleteAll:
+DELETE FROM diary;

@@ -20,4 +20,5 @@ class LocalDiaryDataSource(private val dao: NoteDao) : LocalNotesDataSource {
     override suspend fun upsertNote(note: NoteDBO): NoteDBO? = dao.upsertNote(note)
 
     override suspend fun finallyDeleteNote(note: NoteDBO) = dao.finallyDeleteNote(note)
+    override suspend fun deleteAll() = dao.deleteAll()
 }

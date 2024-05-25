@@ -13,6 +13,15 @@ import org.diary.composeui.LoadState
 import org.diary.data.ApiResult
 import org.diary.data.auth.AuthRepository
 
+@Stable
+sealed class DialogState() {
+    data object Closed : DialogState()
+    data object ChangeLogin : DialogState()
+    data object ChangeEmail : DialogState()
+    data object ChangePassword : DialogState()
+    data object ConfirmDeleteUser : DialogState()
+    data object ConfirmLogout : DialogState()
+}
 
 class SettingScreenModel(
     private val settings: ObservableSettings,
@@ -24,6 +33,7 @@ class SettingScreenModel(
         val login: String? = null,
         val email: String? = null,
         val loadState: LoadState = LoadState.Idle,
+        val dialogState: DialogState = DialogState.Closed,
     )
 
     sealed class Intent {
@@ -33,6 +43,9 @@ class SettingScreenModel(
         data class ChangeEmail(val email: String) : Intent()
         data object DeleteUser : Intent()
         data object GetUserData : Intent()
+        data object CloseError : Intent()
+
+        data class OpenDialog(val dialogState: DialogState) : Intent()
     }
 
     sealed class SingleEvent {
@@ -65,7 +78,16 @@ class SettingScreenModel(
             is Intent.ChangePassword -> intent.changePassword(oldState)
             Intent.DeleteUser -> deleteUser(oldState)
             Intent.GetUserData -> getUserData(oldState)
+            is Intent.OpenDialog -> openDialog(oldState, intent.dialogState)
+            Intent.CloseError -> oldState.copy(loadState = LoadState.Idle)
         }
+    }
+
+    private fun openDialog(
+        oldState: UiState,
+        dialogState: DialogState
+    ): UiState {
+        return oldState.copy(dialogState = dialogState)
     }
 
     private suspend fun getUserData(oldState: UiState): UiState {
@@ -88,15 +110,15 @@ class SettingScreenModel(
             is ApiResult.ServerError -> oldState.copy(loadState = LoadState.Error(message = result.message))
             is ApiResult.Success -> {
                 _singleEvent.send(SingleEvent.Logout)
-                oldState.copy(loadState = LoadState.Success)
+                oldState.copy(loadState = LoadState.Success, dialogState = DialogState.Closed)
             }
         }
     }
 
     private suspend fun Intent.Logout.logout(oldState: UiState): UiState {
-        settings.clear()
+        authRepository.logout()
         _singleEvent.send(SingleEvent.Logout)
-        return oldState
+        return oldState.copy(dialogState = DialogState.Closed)
     }
 
     private suspend fun Intent.ChangeLogin.changeLogin(oldState: UiState): UiState {
@@ -105,7 +127,8 @@ class SettingScreenModel(
             is ApiResult.ServerError -> oldState.copy(loadState = LoadState.Error(message = result.message))
             is ApiResult.Success -> oldState.copy(
                 login = result.data.username,
-                loadState = LoadState.Success
+                loadState = LoadState.Success,
+                dialogState = DialogState.Closed
             )
         }
     }
@@ -114,17 +137,18 @@ class SettingScreenModel(
         return when (val result = authRepository.changePassword(oldPassword, password)) {
             is ApiResult.Failure -> oldState.copy(loadState = LoadState.Error(message = result.message))
             is ApiResult.ServerError -> oldState.copy(loadState = LoadState.Error(message = result.message))
-            is ApiResult.Success -> oldState.copy(loadState = LoadState.Success)
+            is ApiResult.Success -> oldState.copy(loadState = LoadState.Success, dialogState = DialogState.Closed)
         }
     }
 
     private suspend fun Intent.ChangeEmail.changeEmail(oldState: UiState): UiState {
-        return when (val result = authRepository.changeLogin(email)) {
+        return when (val result = authRepository.changeEmail(email)) {
             is ApiResult.Failure -> oldState.copy(loadState = LoadState.Error(message = result.message))
             is ApiResult.ServerError -> oldState.copy(loadState = LoadState.Error(message = result.message))
             is ApiResult.Success -> oldState.copy(
                 login = result.data.email,
-                loadState = LoadState.Success
+                loadState = LoadState.Success,
+                dialogState = DialogState.Closed
             )
         }
     }

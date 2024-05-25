@@ -19,6 +19,7 @@ interface NoteDao {
     fun getAllNotesSync(): List<NoteDBO>
     suspend fun upsertNote(note: NoteDBO): NoteDBO?
     suspend fun finallyDeleteNote(note: NoteDBO)
+    suspend fun deleteAll()
 }
 
 class NoteDaoImpl(private val db: SentilensDB) : NoteDao {
@@ -83,6 +84,10 @@ class NoteDaoImpl(private val db: SentilensDB) : NoteDao {
 
     override suspend fun finallyDeleteNote(note: NoteDBO) {
         db.diaryQueries.deleteById(note.uuid)
+    }
+
+    override suspend fun deleteAll() {
+        db.diaryQueries.deleteAll()
     }
 
 }
