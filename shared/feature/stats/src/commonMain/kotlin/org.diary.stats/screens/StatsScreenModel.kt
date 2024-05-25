@@ -23,6 +23,8 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.number
 import org.diary.composeui.components.calendar.CalendarUtils.getDaysInMonth
 import org.diary.composeui.components.calendar.MonthWithYear
+import org.diary.composeui.components.calendar.minus
+import org.diary.composeui.components.calendar.plus
 import org.diary.data.stats.SentimentStatItemData
 import org.diary.data.stats.StatsRepository
 import org.diary.stats.models.SentimentStatItem
@@ -103,11 +105,13 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
 
     private fun updateSentiment(month: MonthWithYear) {
         screenModelScope.launch {
+            val startPeriod = month.minus(2)
+            val endPeriod = month.plus(2)
             val sentimentForPeriod = statsRepository.sentimentForPeriod(
-                LocalDate(month.year, month.month, 1),
+                LocalDate(startPeriod.year, startPeriod.month, 1),
                 LocalDate(
-                    month.year, month.month,
-                    getDaysInMonth(month.month, month.year).size
+                    endPeriod.year, endPeriod.month,
+                    getDaysInMonth(endPeriod.month, endPeriod.year).size
                 )
             )
 
