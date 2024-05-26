@@ -15,14 +15,3 @@ data class Note(
     val isNew: Boolean = false,
     val isDeleted: Boolean = false,
 )
-
-@Stable
-data class Sentiment(
-    val category: SentimentCategory? = null,
-    val value: Float? = null,
-    val advice: String? = null,
-)
-
-enum class SentimentCategory(val value: String) {
-    terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер")
-}

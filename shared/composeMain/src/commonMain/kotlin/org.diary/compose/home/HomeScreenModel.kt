@@ -12,7 +12,6 @@ import org.diary.data.ApiResult
 import org.diary.data.diary.NotesRepository
 import org.diary.data.diary.SyncRepository
 import org.diary.data.stats.StatsRepository
-import org.diary.data.stats.StatsRepositoryImpl
 import org.diary.diary.Note
 import org.diary.diary.toUiNote
 

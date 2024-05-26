@@ -13,6 +13,7 @@ import org.diary.database.datasources.LocalNotesDataSource
 import org.diary.database.datasources.LocalUserDataSource
 import org.diary.nerwork.ACCESS
 import org.diary.nerwork.AuthDataSource
+import org.diary.nerwork.REFRESH
 
 interface AuthRepository {
     suspend fun register(value: RegisterData): ApiResult<CreatedUserData>
@@ -54,6 +55,7 @@ class AuthRepositoryImpl(
 
         if (result is ApiResult.Success) {
             setting.remove(ACCESS)
+            setting.remove(REFRESH)
             userDataSource.deleteUserData()
             diaryDataSource.deleteAll()
         }
@@ -74,6 +76,7 @@ class AuthRepositoryImpl(
 
     override suspend fun logout() {
         setting.remove(ACCESS)
+        setting.remove(REFRESH)
         userDataSource.deleteUserData()
         diaryDataSource.deleteAll()
     }

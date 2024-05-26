@@ -47,13 +47,11 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
-import org.diary.composeui.VerticalScrollBar
 import org.diary.composeui.bounceClick
 import org.diary.composeui.components.fadingEdge
 import org.diary.composeui.theme.SentimentColor
 import org.diary.utils.dateFormatWithEnter
 import org.diary.composeui.theme.defaultShape
-import org.diary.composeui.theme.onError
 import org.diary.composeui.theme.smallShape
 import org.diary.diary.Note
 import org.diary.diary.SentimentCategory
@@ -92,11 +90,11 @@ fun NotesList(
         ),
         state = scrollState,
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     ) {
-        items(notes) {
+        items(items = notes, contentType = { it }) {
             key(it.uuid) {
-                val color by animateColorAsState(remember(it.uuid == it.uuid) {
+                val color by animateColorAsState(remember(currentNote?.uuid) {
                     if (currentNote?.uuid == it.uuid) it.sentiment?.category.getSentimentColor() else colorSecondary
                 })
                 val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 0.5.dp else 0.dp)
