@@ -46,6 +46,7 @@ kotlin {
             dependencies {
                 implementation(libs.sqlDelight.driver.js)
                 implementation(npm("sql.js", "1.6.2"))
+                implementation(npm("@cashapp/sqldelight-sqljs-worker", "2.0.2"))
                 implementation(devNpm("copy-webpack-plugin", "9.1.0"))
             }
         }
@@ -56,6 +57,7 @@ sqldelight {
     databases {
         create("SentilensDB") {
             packageName.set("org.diary.database")
+            generateAsync.set(true)
         }
     }
 }
