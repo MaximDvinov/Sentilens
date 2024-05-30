@@ -4,17 +4,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-//
-//val copyJsResources = tasks.create("copyJsResourcesWorkaround", Copy::class.java) {
-//    from(project(":shared:core:composeUi").file("src/commonMain/composeResources"))
-//    into("build/processedResources/js/main")
-//}
-//
-//afterEvaluate {
-//    project.tasks.getByName("jsProcessResources").finalizedBy(copyJsResources)
-//}
-
-
 kotlin {
     js {
         browser { }
@@ -34,7 +23,7 @@ kotlin {
 
                 implementation(libs.composeIcons.fontAwesome)
 
-                implementation(libs.koin.core)
+                implementation(libs.koin.core.js)
                 implementation(libs.napier)
                 implementation(libs.window.size)
                 implementation(libs.multiplatformSettings)
@@ -42,15 +31,10 @@ kotlin {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
 
-
                 implementation(project(":shared:composeMain"))
                 implementation(project(":shared:core:composeUi"))
                 implementation(project(":shared:core:utils"))
             }
         }
     }
-}
-
-compose.experimental {
-    web.application {}
 }

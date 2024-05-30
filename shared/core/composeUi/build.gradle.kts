@@ -33,6 +33,7 @@ kotlin {
             implementation(libs.window.size)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.koin.core)
 
             implementation(project(":shared:core:utils"))
         }
@@ -40,7 +41,13 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.activityCompose)
             implementation(libs.androidx.core)
+            implementation(libs.koin.android)
+        }
 
+        val jsMain by getting {
+            dependencies {
+                implementation(libs.koin.core.js)
+            }
         }
     }
 }
