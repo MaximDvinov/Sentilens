@@ -46,6 +46,7 @@ import compose.icons.FeatherIcons
 import compose.icons.feathericons.Moon
 import compose.icons.feathericons.Sun
 import compose.icons.feathericons.Tablet
+import org.diary.auth.pincode.PinCodeIntent
 import org.diary.compose.setting.DialogState.*
 import org.diary.composeui.LoadState
 import org.diary.composeui.bounceClick
@@ -105,7 +106,7 @@ class SettingScreen : Screen, KoinComponent {
                 onIntent = screenModel::processIntent
             )
 
-            if (state.loadState is LoadState.Error) {
+            if (state.loadState is LoadState.Error && state.dialogState == Closed) {
                 ErrorSnackbar(error = (state.loadState as? LoadState.Error)?.message ?: "",
                     onDismiss = {
                         screenModel.processIntent(SettingScreenModel.Intent.CloseError)
@@ -120,6 +121,7 @@ class SettingScreen : Screen, KoinComponent {
                     modifier = Modifier.widthIn(max = 600.dp),
                     title = "Изменить эл. почту",
                     text = state.email ?: "",
+                    error = (state.loadState as? LoadState.Error)?.message ?: "",
                     onDismiss = screenModel::closeDialog,
                     onConfirm = {
                         screenModel.processIntent(
@@ -134,6 +136,7 @@ class SettingScreen : Screen, KoinComponent {
                     modifier = Modifier.widthIn(max = 600.dp),
                     title = "Изменить логин",
                     text = state.login ?: "",
+                    error = (state.loadState as? LoadState.Error)?.message ?: "",
                     onDismiss = screenModel::closeDialog,
                     onConfirm = {
                         screenModel.processIntent(
@@ -147,6 +150,7 @@ class SettingScreen : Screen, KoinComponent {
                 PasswordChangeDialog(
                     modifier = Modifier.widthIn(max = 600.dp),
                     onDismiss = screenModel::closeDialog,
+                    error = (state.loadState as? LoadState.Error)?.message ?: "",
                     onConfirm = { oldPassword, newPassword ->
                         screenModel.processIntent(
                             SettingScreenModel.Intent.ChangePassword(
@@ -186,12 +190,29 @@ class SettingScreen : Screen, KoinComponent {
                     }
                 )
             }
+
+            ChangePinCode -> {
+                ChangePinCodeDialog(
+                    modifier = Modifier.widthIn(max = 600.dp),
+                    state.isPinCodeSet,
+                    error = (state.loadState as? LoadState.Error)?.message ?: "",
+                    onDismiss = screenModel::closeDialog,
+                    onConfirm = { oldPinCode, newPinCode ->
+                        screenModel.processIntent(
+                            SettingScreenModel.Intent.ChangePinCode(
+                                oldPinCode = oldPinCode,
+                                newPinCode = newPinCode
+                            )
+                        )
+                    }
+                )
+            }
         }
     }
 }
 
 fun SettingScreenModel.closeDialog() {
-    processIntent(SettingScreenModel.Intent.OpenDialog(DialogState.Closed))
+    processIntent(SettingScreenModel.Intent.OpenDialog(Closed))
 }
 
 @Composable
@@ -232,7 +253,7 @@ fun SettingScreenContent(
                 title = "Логин",
                 text = state.login,
                 onClick = {
-                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ChangeLogin))
+                    onIntent(SettingScreenModel.Intent.OpenDialog(ChangeLogin))
                 }
             )
 
@@ -240,18 +261,28 @@ fun SettingScreenContent(
                 title = "Эл. почта",
                 text = state.email,
                 onClick = {
-                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ChangeEmail))
+                    onIntent(SettingScreenModel.Intent.OpenDialog(ChangeEmail))
                 }
             )
 
             TitleIconButton(
                 modifier = Modifier.height(48.dp).fillMaxWidth(),
                 onClick = {
-                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ChangePassword))
+                    onIntent(SettingScreenModel.Intent.OpenDialog(ChangePassword))
                 },
                 title = "Изменить пароль",
                 icon = LeftArrow
             )
+
+            TitleIconButton(
+                modifier = Modifier.height(48.dp).fillMaxWidth(),
+                onClick = {
+                    onIntent(SettingScreenModel.Intent.OpenDialog(ChangePinCode))
+                },
+                title = if (state.isPinCodeSet) "Изменить пин-код" else "Установить пин-код",
+                icon = LeftArrow
+            )
+
 
             ThemePicker(
                 modifier = Modifier.fillMaxWidth(),
@@ -265,7 +296,7 @@ fun SettingScreenContent(
             TitleIconButton(
                 modifier = Modifier.height(48.dp).fillMaxWidth(),
                 onClick = {
-                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ConfirmLogout))
+                    onIntent(SettingScreenModel.Intent.OpenDialog(ConfirmLogout))
                 },
                 title = "Выйти из приложения",
                 icon = LeftArrow
@@ -274,7 +305,7 @@ fun SettingScreenContent(
             TitleIconButton(
                 modifier = Modifier.height(48.dp).fillMaxWidth(),
                 onClick = {
-                    onIntent(SettingScreenModel.Intent.OpenDialog(DialogState.ConfirmDeleteUser))
+                    onIntent(SettingScreenModel.Intent.OpenDialog(ConfirmDeleteUser))
                 },
                 title = "Удалить аккаунт",
                 icon = LeftArrow,

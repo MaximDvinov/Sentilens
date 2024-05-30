@@ -3,6 +3,7 @@ package org.diary.auth
 import org.diary.auth.login.LoginScreenModel
 import org.diary.auth.registration.RegistrationScreenModel
 import org.diary.auth.splash.SplashScreenModel
+import org.diary.auth.pincode.PinCodeScreenModel
 import org.diary.data.dataModule
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -13,4 +14,5 @@ val authModule = module {
     factoryOf(::LoginScreenModel)
     factoryOf(::RegistrationScreenModel)
     factoryOf(::SplashScreenModel)
+    factoryOf(::PinCodeScreenModel)
 }

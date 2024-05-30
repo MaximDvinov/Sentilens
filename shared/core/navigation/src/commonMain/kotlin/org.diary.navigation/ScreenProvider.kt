@@ -19,6 +19,7 @@ sealed class DiaryScreenProvider : ScreenProvider {
 
     data object SplashScreen : DiaryScreenProvider()
     data object HomeStatsScreen : DiaryScreenProvider()
+    data object PinCodeScreen: DiaryScreenProvider()
 }
 
 sealed class InitialDiaryScreenState() {

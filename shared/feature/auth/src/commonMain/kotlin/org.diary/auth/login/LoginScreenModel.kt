@@ -6,11 +6,11 @@ import com.russhwolf.settings.ObservableSettings
 import kotlinx.coroutines.launch
 import org.diary.composeui.LoadState
 import org.diary.data.ApiResult
-import org.diary.data.auth.AuthRepository
+import org.diary.data.auth.UserRepository
 import org.diary.data.auth.LoginData
 
 class LoginScreenModel(
-    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
     private val settings: ObservableSettings,
 ) : StateScreenModel<LoginScreenModel.UiState>(UiState()) {
     data class UiState(
@@ -44,7 +44,7 @@ class LoginScreenModel(
     }
 
     private suspend fun onLoginClick(state: UiState) =
-        when (val result = authRepository.login(state.loginData)) {
+        when (val result = userRepository.login(state.loginData)) {
             is ApiResult.ServerError -> state.copy(
                 loadState = LoadState.Error(message = "Ошибка авторизации: ${result.status}")
             )

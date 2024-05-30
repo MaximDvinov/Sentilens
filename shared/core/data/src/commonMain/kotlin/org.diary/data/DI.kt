@@ -1,7 +1,7 @@
 package org.diary.data
 
-import org.diary.data.auth.AuthRepository
-import org.diary.data.auth.AuthRepositoryImpl
+import org.diary.data.auth.UserRepository
+import org.diary.data.auth.UserRepositoryImpl
 import org.diary.data.diary.NotesRepository
 import org.diary.data.diary.NotesRepositoryImpl
 import org.diary.data.diary.SyncRepository
@@ -18,7 +18,7 @@ val dataModule = module {
     includes(databaseModule, networkModule)
     singleOf(::NotesRepositoryImpl) bind NotesRepository::class
     singleOf(::SyncRepositoryImpl) bind SyncRepository::class
-    singleOf(::AuthRepositoryImpl) bind AuthRepository::class
-    singleOf(::AuthRepositoryImpl) bind AuthRepository::class
+    singleOf(::UserRepositoryImpl) bind UserRepository::class
+    singleOf(::UserRepositoryImpl) bind UserRepository::class
     singleOf(::StatsRepositoryImpl) bind StatsRepository::class
 }

@@ -2,20 +2,20 @@ package org.diary.data.auth
 
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.get
+import com.russhwolf.settings.set
 import org.diary.data.ApiResult
 import org.diary.data.map
 import org.diary.data.models.toDBO
 import org.diary.data.models.toDTO
 import org.diary.data.models.toData
 import org.diary.data.toApiResult
-import org.diary.database.datasources.LocalDiaryDataSource
 import org.diary.database.datasources.LocalNotesDataSource
 import org.diary.database.datasources.LocalUserDataSource
 import org.diary.nerwork.ACCESS
 import org.diary.nerwork.AuthDataSource
 import org.diary.nerwork.REFRESH
 
-interface AuthRepository {
+interface UserRepository {
     suspend fun register(value: RegisterData): ApiResult<CreatedUserData>
     suspend fun login(value: LoginData): ApiResult<TokenData>
     suspend fun isAuthenticated(): Boolean
@@ -24,15 +24,17 @@ interface AuthRepository {
     suspend fun changeLogin(login: String): ApiResult<CreatedUserData>
     suspend fun deleteUser(): ApiResult<Unit>
     suspend fun userData(): CreatedUserData?
+    suspend fun setPinCode(pin: String)
+    suspend fun getPinCode(): String?
     suspend fun logout()
 }
 
-class AuthRepositoryImpl(
+class UserRepositoryImpl(
     private val authDataSource: AuthDataSource,
     private val userDataSource: LocalUserDataSource,
     private val diaryDataSource: LocalNotesDataSource,
     private val setting: ObservableSettings,
-) : AuthRepository {
+) : UserRepository {
     override suspend fun register(value: RegisterData) =
         authDataSource.register(value.toDTO()).toApiResult().map { it.toData() }
 
@@ -54,10 +56,7 @@ class AuthRepositoryImpl(
         val result = authDataSource.deleteUser().toApiResult()
 
         if (result is ApiResult.Success) {
-            setting.remove(ACCESS)
-            setting.remove(REFRESH)
-            userDataSource.deleteUserData()
-            diaryDataSource.deleteAll()
+            clearUserData()
         }
 
         return result
@@ -74,9 +73,22 @@ class AuthRepositoryImpl(
         return userDataSource.getUserData()?.toData()
     }
 
+    override suspend fun setPinCode(pin: String) {
+        setting["PIN"] = pin
+    }
+
+    override suspend fun getPinCode(): String? {
+        return setting["PIN"]
+    }
+
     override suspend fun logout() {
+       clearUserData()
+    }
+
+    private suspend fun clearUserData(){
         setting.remove(ACCESS)
         setting.remove(REFRESH)
+        setting.remove("PIN")
         userDataSource.deleteUserData()
         diaryDataSource.deleteAll()
     }

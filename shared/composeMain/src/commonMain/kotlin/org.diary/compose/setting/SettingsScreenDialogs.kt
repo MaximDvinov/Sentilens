@@ -29,12 +29,13 @@ fun SingleFieldChangeDialog(
     modifier: Modifier = Modifier,
     text: String,
     title: String,
+    error: String = "",
     placeholder: String = "",
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val (textState, onTextChange) = remember { mutableStateOf(text) }
-    var errorState by remember { mutableStateOf("") }
+    var errorState by remember(error) { mutableStateOf(error) }
     DefaultDialogContainer(
         modifier = modifier,
         onDismiss = onDismiss
@@ -76,7 +77,10 @@ fun SingleFieldChangeDialog(
                     modifier = Modifier.weight(1f),
                     onClick = onDismiss
                 ) {
-                    Text("Отмена", style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary))
+                    Text(
+                        "Отмена",
+                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
+                    )
                 }
 
                 PrimaryButton(modifier = Modifier.weight(1f), onClick = {
@@ -97,11 +101,12 @@ fun SingleFieldChangeDialog(
 fun PasswordChangeDialog(
     modifier: Modifier = Modifier,
     onConfirm: (String, String) -> Unit,
+    error: String = "",
     onDismiss: () -> Unit,
 ) {
     val (oldPassword, onChangeOldPassword) = remember { mutableStateOf("") }
     val (newPassword, onChangeNewPassword) = remember { mutableStateOf("") }
-    var errorState by remember { mutableStateOf("") }
+    var errorState by remember(error) { mutableStateOf(error) }
     DefaultDialogContainer(
         modifier = modifier,
         onDismiss = onDismiss
@@ -150,7 +155,10 @@ fun PasswordChangeDialog(
                     modifier = Modifier.weight(1f),
                     onClick = onDismiss
                 ) {
-                    Text("Отмена", style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary))
+                    Text(
+                        "Отмена",
+                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
+                    )
                 }
 
                 PrimaryButton(modifier = Modifier.weight(1f), onClick = {
@@ -166,6 +174,90 @@ fun PasswordChangeDialog(
         }
     }
 }
+
+@Composable
+fun ChangePinCodeDialog(
+    modifier: Modifier = Modifier,
+    isPinCode: Boolean,
+    error: String = "",
+    onConfirm: (String, String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val (oldPassword, onChangeOldPassword) = remember { mutableStateOf("") }
+    val (newPassword, onChangeNewPassword) = remember { mutableStateOf("") }
+    var errorState by remember(error) { mutableStateOf(error) }
+    DefaultDialogContainer(
+        modifier = modifier,
+        onDismiss = onDismiss
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp).fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            Text(
+                if (isPinCode) "Изменить пин-код" else "Установить пин-код",
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.h2.copy(color = MaterialTheme.colors.onBackground),
+                textAlign = TextAlign.Center
+            )
+
+            if (isPinCode) {
+                PasswordTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = oldPassword,
+                    placeholder = "Введите старый пин-код",
+                    onTextChange = onChangeOldPassword,
+                    nextFocus = { },
+                    keyboardType = KeyboardType.NumberPassword
+                )
+
+            }
+
+            PasswordTextField(
+                modifier = Modifier.fillMaxWidth(),
+                text = newPassword,
+                placeholder = "Введите новый пин-код",
+                onTextChange = onChangeNewPassword,
+                nextFocus = { },
+                keyboardType = KeyboardType.NumberPassword
+            )
+
+            Text(
+                text = errorState,
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onError),
+                textAlign = TextAlign.Center,
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                SecondaryButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = onDismiss
+                ) {
+                    Text(
+                        "Отмена",
+                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
+                    )
+                }
+
+                PrimaryButton(modifier = Modifier.weight(1f), onClick = {
+                    if ((!isPinCode || oldPassword.isNotEmpty()) && newPassword.isNotEmpty()) {
+                        onConfirm(oldPassword, newPassword)
+                    } else {
+                        errorState = "Поля не должны быть пустым"
+                    }
+                }) {
+                    Text("Сохранить", style = MaterialTheme.typography.body1)
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun ConfirmDialog(
@@ -206,7 +298,10 @@ fun ConfirmDialog(
                     modifier = Modifier.weight(1f),
                     onClick = onDismiss
                 ) {
-                    Text("Отмена", style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary))
+                    Text(
+                        "Отмена",
+                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
+                    )
                 }
 
                 PrimaryButton(modifier = Modifier.weight(1f), onClick = onConfirm) {

@@ -21,6 +21,7 @@ import io.github.alexzhirkevich.compottie.LottieAnimation
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import org.diary.auth.loadAnimation
+import org.diary.auth.pincode.PinCodeScreen
 import org.diary.navigation.DiaryScreenProvider
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -33,12 +34,14 @@ class SplashScreen : Screen, KoinComponent {
         val event by screenModel.event.collectAsState(null)
         val loginScreen = rememberScreen(DiaryScreenProvider.LoginScreen())
         val homeScreen = rememberScreen(DiaryScreenProvider.HomeScreen)
+        val pinCodeScreen = rememberScreen(DiaryScreenProvider.PinCodeScreen)
 
         LaunchedEffect(event) {
             event?.let {
                 when (it) {
                     is SplashEvent.Authenticated -> navigator.replace(homeScreen)
                     is SplashEvent.Unauthenticated -> navigator.replace(loginScreen)
+                    SplashEvent.OpenPinCode -> navigator.replace(pinCodeScreen)
                 }
             }
         }

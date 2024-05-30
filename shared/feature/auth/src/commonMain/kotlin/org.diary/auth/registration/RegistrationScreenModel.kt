@@ -5,11 +5,11 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.launch
 import org.diary.composeui.LoadState
 import org.diary.data.ApiResult
-import org.diary.data.auth.AuthRepository
+import org.diary.data.auth.UserRepository
 import org.diary.data.auth.CreatedUserData
 import org.diary.data.auth.RegisterData
 
-class RegistrationScreenModel(private val authRepository: AuthRepository) :
+class RegistrationScreenModel(private val userRepository: UserRepository) :
     StateScreenModel<RegistrationScreenModel.UiState>(UiState()) {
     data class UiState(
         val loginData: RegisterData = RegisterData(),
@@ -36,7 +36,7 @@ class RegistrationScreenModel(private val authRepository: AuthRepository) :
     private suspend fun reduce(intent: Intent, state: UiState): UiState {
         return when (intent) {
             Intent.OnRegistrationClicked -> {
-                when (val result = authRepository.register(state.loginData)) {
+                when (val result = userRepository.register(state.loginData)) {
                     is ApiResult.ServerError -> state.copy(loadState = LoadState.Error(message = "Ошибка регистрации: ${result.status}"))
                     is ApiResult.Success -> state.copy(
                         createdUserData = result.data,

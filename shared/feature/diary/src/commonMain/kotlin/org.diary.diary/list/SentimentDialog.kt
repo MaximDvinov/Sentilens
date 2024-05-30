@@ -26,6 +26,7 @@ import org.diary.diary.Sentiment
 import org.diary.composeui.components.PrimaryButton
 import org.diary.composeui.components.SecondaryIconButton
 import org.diary.composeui.icons.Emoji
+import org.diary.composeui.theme.SentimentColor
 import org.diary.composeui.theme.defaultShape
 import org.diary.diary.ui.getSentimentColor
 
@@ -36,15 +37,16 @@ fun SentimentDialog(
     onActionClick: () -> Unit,
     sentiment: Sentiment,
 ) {
-
+    val color = (sentiment.category?.color ?: SentimentColor.UNKNOWN.value)
     Box(
         modifier = modifier
             .widthIn(max = 400.dp)
             .clip(defaultShape)
+            .background(MaterialTheme.colors.secondary)
             .background(
                 Brush.verticalGradient(
-                    0f to sentiment.category.getSentimentColor(),
-                    0.7f to MaterialTheme.colors.secondary
+                    0f to color,
+                    0.50f to color.copy(0f)
                 )
             )
     ) {
@@ -55,7 +57,6 @@ fun SentimentDialog(
         ) {
             Icon(FeatherIcons.X, null, tint = MaterialTheme.colors.onBackground)
         }
-
 
         Column(
             Modifier.padding(top = 50.dp, start = 20.dp, end = 14.dp, bottom = 20.dp),
@@ -69,11 +70,11 @@ fun SentimentDialog(
             ) {
                 Image(
                     modifier = Modifier.size(100.dp),
-                    imageVector = Emoji.Great,
+                    imageVector = sentiment.category?.icon ?: Emoji.Unknown,
                     contentDescription = ""
                 )
                 Text(
-                    text = sentiment.value.toString() ?: "",
+                    text = sentiment.category?.value.toString(),
                     style = MaterialTheme.typography.h2,
                     textAlign = TextAlign.Center
                 )
