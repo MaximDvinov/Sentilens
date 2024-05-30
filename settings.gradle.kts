@@ -29,6 +29,7 @@ include(":shared:feature:auth")
 include(":shared:feature:diary")
 include(":shared:feature:advice")
 include(":shared:feature:stats")
+include(":shared:feature:player")
 
 include(":shared:composeMain")
 

@@ -72,7 +72,11 @@ dependencies {
     implementation(libs.napier)
     implementation(libs.multiplatformSettings)
 
+    implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.media3.exoplayer)
+
     implementation(project(":shared:composeMain"))
     implementation(project(":shared:core:composeUi"))
+    implementation(project(":shared:feature:player"))
 
 }

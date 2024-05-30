@@ -63,7 +63,6 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
                 }
             }
         }
-
     }
 
     fun onEvent(event: StatsScreenEvent) {

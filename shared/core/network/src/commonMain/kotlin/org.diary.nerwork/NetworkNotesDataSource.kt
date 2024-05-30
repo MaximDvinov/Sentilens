@@ -28,27 +28,27 @@ interface NetworkNotesDataSource {
 
 class NetworkNotesDataSourceImpl(private val client: HttpClient) : NetworkNotesDataSource {
     override suspend fun getNotes(): Result<List<NoteDTO>> = runCatchingForApi {
-        client.get("/notes/").body()
+        client.get("/api/notes/").body()
     }
 
 
     override suspend fun createNote(value: NoteWrite): Result<NoteDTO> = runCatchingForApi {
-        client.post("/notes/") { setBody(value) }.body()
+        client.post("/api/notes/") { setBody(value) }.body()
     }
 
     override suspend fun deleteNote(id: String): Result<Unit> = runCatchingForApi {
-        client.delete("/notes/$id").body()
+        client.delete("/api/notes/$id").body()
     }
 
     override suspend fun updateNote(value: NoteDTO): Result<NoteDTO> = runCatchingForApi {
-        client.put("/notes/${value.uuid.toString()}") { setBody(value) }.body()
+        client.put("/api/notes/${value.uuid.toString()}") { setBody(value) }.body()
     }
 
     override suspend fun analyzeNote(id: String): Result<SentimentDTO> = runCatchingForApi {
-        client.get("/analyze/$id").body()
+        client.get("/api/analyze/$id").body()
     }
 
     override suspend fun analyzeByText(text: AnalyzeText): Result<SentimentDTO> = runCatchingForApi {
-        client.post("/analyze/") { setBody(text) }.body()
+        client.post("/api/analyze/") { setBody(text) }.body()
     }
 }

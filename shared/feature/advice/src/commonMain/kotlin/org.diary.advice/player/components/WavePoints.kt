@@ -1,17 +1,19 @@
-package org.senti.web.screens.player
+package org.diary.advice.player.components
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import org.diary.utils.TypeDevice
+import org.diary.utils.getTypeDevice
 import kotlin.math.sin
 
 
 fun DrawScope.wavePoints(wavePoints: List<Offset>, color: Color, strokeWidth: Float = 2f) {
     drawPoints(
         wavePoints,
-        pointMode = PointMode.Lines,
+        pointMode = PointMode.Polygon,
         color = color,
         strokeWidth = strokeWidth,
         StrokeCap.Round

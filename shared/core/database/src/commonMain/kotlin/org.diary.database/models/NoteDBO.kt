@@ -24,12 +24,12 @@ data class SentimentDBO(
 
 fun SentimentDBO.getValue(): Float? {
     val tmp = (category?.ordinal?.div(4f))
-    return if (tmp == 0f) 0.1f else tmp
+    return tmp
 }
 
 fun SentimentCategoryDBO.getValue(): Float {
     val tmp = (ordinal.div(4f))
-    return if (tmp == 0f) 0.1f else tmp
+    return tmp
 }
 
 enum class SentimentCategoryDBO(value: String) {

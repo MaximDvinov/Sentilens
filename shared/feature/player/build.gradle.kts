@@ -5,10 +5,16 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-android.namespace = "org.diary.advice"
+android.namespace = "org.diary.player"
 
 kotlin {
-    androidTarget()
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
     jvm("desktop")
     js {
         browser { }
@@ -39,16 +45,13 @@ kotlin {
                 implementation(libs.kotlinx.uuid.core)
                 implementation(libs.kotlinx.collections.immutable)
 
-                implementation(libs.compottie)
-
                 implementation(libs.koin.core)
                 implementation(libs.napier)
 
                 implementation(project(":shared:core:data"))
+                implementation(project(":shared:core:navigation"))
                 implementation(project(":shared:core:composeUi"))
                 implementation(project(":shared:core:utils"))
-                implementation(project(":shared:feature:player"))
-
             }
         }
 
@@ -57,6 +60,8 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.kotlinx.coroutines.android)
+                implementation (libs.androidx.media3.exoplayer)
+                implementation (libs.androidx.media3.session)
             }
         }
 
@@ -64,6 +69,7 @@ kotlin {
             dependsOn(commonMain)
             dependencies {
                 implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.vlcj)
             }
         }
 

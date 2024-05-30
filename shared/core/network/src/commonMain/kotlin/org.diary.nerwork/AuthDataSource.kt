@@ -15,14 +15,14 @@ import org.senti.web.models.TokenDataDTO
 class AuthDataSource(private val client: HttpClient, private val settings: ObservableSettings) {
     suspend fun register(value: RegisterDataDTO): Result<CreatedUserDTO> = runCatchingForApi {
         val result = client
-            .post("/user/register") { setBody(value) }
+            .post("/api/user/register") { setBody(value) }
             .body<CreatedUserDTO>()
 
         result
     }
 
     suspend fun login(value: LoginDataDTO): Result<TokenDataDTO> = runCatchingForApi {
-        val result = client.post("/user/login") {
+        val result = client.post("/api/user/login") {
             setBody(value)
         }.body<TokenDataDTO>()
 
@@ -33,11 +33,11 @@ class AuthDataSource(private val client: HttpClient, private val settings: Obser
     }
 
     suspend fun updateToken(): Result<TokenDataDTO> = runCatchingForApi {
-        client.post("/user/update_token").body()
+        client.post("/api/user/update_token").body()
     }
 
     suspend fun deleteUser(): Result<Unit> = runCatchingForApi {
-        client.post("/user/delete").body()
+        client.post("/api/user/delete").body()
     }
 
     suspend fun changePassword(
@@ -47,7 +47,7 @@ class AuthDataSource(private val client: HttpClient, private val settings: Obser
         val body = mutableMapOf<String, String>()
         body["old_password"] = oldPassword
         body["new_password"] = newPassword
-        client.put("/user/password") {
+        client.put("/api/user/password") {
             setBody(body)
         }.body()
     }
@@ -60,13 +60,13 @@ class AuthDataSource(private val client: HttpClient, private val settings: Obser
         login?.let { body["username"] = it }
         email?.let { body["email"] = it }
 
-        client.put("/user/profile") {
+        client.put("/api/user/profile") {
             setBody(body)
         }.body()
     }
 
     suspend fun userData(): Result<CreatedUserDTO> = runCatchingForApi {
-        client.get("/user/profile").body()
+        client.get("/api/user/profile").body()
     }
 
 }

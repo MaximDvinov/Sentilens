@@ -1,5 +1,6 @@
 package org.diary.compose
 
+import org.diary.advice.adviceModule
 import org.diary.auth.authModule
 import org.diary.data.dataModule
 import org.diary.diary.diaryModule
@@ -14,7 +15,7 @@ expect val platformModule: Module
 
 val commonModule = module {
     includes(
-        dataModule, diaryModule, authModule, statsModule
+        dataModule, diaryModule, authModule, statsModule, adviceModule
     )
     factoryOf(::HomeScreenModel)
     factoryOf(::SettingScreenModel)

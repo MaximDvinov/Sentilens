@@ -1,4 +1,4 @@
-package org.senti.web.screens.player
+package org.diary.advice.player.components
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -26,6 +26,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import kotlinx.coroutines.delay
+import org.diary.utils.TypeDevice
+import org.diary.utils.getTypeDevice
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -81,8 +83,8 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
             while (isPlaying || !isPlayingLocalState) {
                 wavePoints = generateWavePoints(
                     numPoints,
-                    0.15f,
-                    70f * animatedAmplitude,
+                    0.14f,
+                    60f * animatedAmplitude,
                     a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * cos((x * sin(10f)) / del)
@@ -90,8 +92,8 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
                 }
                 wavePoints2 = generateWavePoints(
                     numPoints,
-                    0.24f,
-                    50f * animatedAmplitude,
+                    0.17f,
+                    40f * animatedAmplitude,
                     a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * sin(x / del)
@@ -105,7 +107,7 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
                     cos(x * waveLength + a) * cos(x / del)
                 }
                 delay(16)
-                a += if (isPlaying) 0.05f else animatedAmplitude
+                a += if (isPlaying) 0.03f else animatedAmplitude / 10
             }
         }
 

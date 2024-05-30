@@ -2,7 +2,7 @@ package org.diary.compose
 
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.core.registry.screenModule
-import org.diary.advice.BreathScreen
+import org.diary.advice.breath.BreathScreen
 import org.diary.auth.login.LoginScreen
 import org.diary.auth.pincode.PinCodeScreen
 import org.diary.auth.registration.RegistrationScreen
@@ -12,7 +12,7 @@ import org.diary.diary.list.DiaryScreen
 import org.diary.compose.home.HomeScreen
 import org.diary.compose.setting.SettingScreen
 import org.diary.stats.screens.HomeStatsScreen
-import org.senti.web.screens.player.PlayerScreen
+import org.diary.advice.player.PlayerScreen
 
 val navigationModule = screenModule {
     register<DiaryScreenProvider.LoginScreen> {

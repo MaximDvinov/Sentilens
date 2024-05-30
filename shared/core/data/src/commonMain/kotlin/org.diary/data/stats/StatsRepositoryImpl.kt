@@ -53,11 +53,12 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
         .mapNotNull { diary ->
             if (diary.sentiment == null) return@mapNotNull null
 
-            diary.createdAt to diary.sentiment!!.toSentiment()
+            diary.createdAt to diary.sentiment?.toSentiment()
+                ?.copy(value = if (diary.sentiment?.value != 0f) diary.sentiment?.value else 0.1f)
         }
         .groupBy { it.first.date }
         .mapValues {
-            val average = it.value.mapNotNull { it.second.value }.average()
+            val average = it.value.mapNotNull { it.second?.value }.average()
 
             return@mapValues SentimentStatItemData(
                 value = average,
@@ -72,6 +73,7 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
             if (diary.sentiment == null) return@mapNotNull null
 
             diary.sentiment!!.toSentiment()
+                .copy(value = if (diary.sentiment?.value != 0f) diary.sentiment?.value else 0.1f)
         }
         .groupingBy {
             it.category
@@ -99,7 +101,9 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
         .groupBy { it.createdAt.date.dayOfWeek }
         .mapKeys { it.key }
         .mapValues { entry ->
-            val average = entry.value.mapNotNull { it.sentiment?.value }.average()
+            val average =
+                entry.value.mapNotNull { if (it.sentiment?.value != 0f) it.sentiment?.value else 0.1f }
+                    .average()
             return@mapValues SentimentStatItemData(
                 value = average,
                 category = average.getCategory()

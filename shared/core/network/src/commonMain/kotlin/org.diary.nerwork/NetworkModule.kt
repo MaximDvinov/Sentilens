@@ -63,7 +63,7 @@ val networkModule = module {
                                     "Bearer ${setting.getStringOrNull(REFRESH)}"
                                 )
                             }
-                            url("/user/update_token")
+                            url("/api/user/update_token")
                             markAsRefreshTokenRequest()
                         }.body<TokenDataDTO>()
                         setting.putString(ACCESS, token.accessToken ?: "")

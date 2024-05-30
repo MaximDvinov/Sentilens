@@ -9,7 +9,9 @@ androidx-activityCompose = "1.9.0"
 kotlinxCollectionsImmutable = "0.3.7"
 kotlinxUuidCore = "0.0.25"
 material3WindowSizeClassMultiplatform = "0.5.0"
+media3Exoplayer = "1.3.1"
 napier = "2.7.1"
+vlcj = "4.8.2"
 voyager = "1.1.0-beta01"
 kotlinx-coroutines = "1.8.1"
 buildConfig = "4.1.2"
@@ -28,6 +30,8 @@ multiplatform-appdirs = "1.1.1"
 
 [libraries]
 
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
+androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3Exoplayer" }
 chart = { module = "io.github.thechance101:chart", version.ref = "chart" }
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 
@@ -35,6 +39,7 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kotlinx-uuid-core = { module = "app.softwork:kotlinx-uuid-core", version.ref = "kotlinxUuidCore" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+vlcj = { module = "uk.co.caprica:vlcj", version.ref = "vlcj" }
 window-size = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "material3WindowSizeClassMultiplatform" }
 
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }

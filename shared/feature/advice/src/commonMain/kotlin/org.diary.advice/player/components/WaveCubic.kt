@@ -1,4 +1,4 @@
-package org.senti.web.screens.player
+package org.diary.advice.player.components
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect

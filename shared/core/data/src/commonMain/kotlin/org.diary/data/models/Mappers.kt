@@ -71,18 +71,16 @@ private fun SentimentCategoryDTO.toDTO(): SentimentCategoryData {
     }
 }
 
-fun NoteData.toNoteDTO(): NoteDTO = this.let {
-    NoteDTO(
-        content = content,
-        createdAt = createdAt,
-        sentiment = sentiment?.toSentimentDTO(),
-        title = title,
-        updatedAt = updatedAt,
-        uuid = uuid,
-        isNew = isNew,
-        isDeleted = isDeleted
-    )
-}
+fun NoteData.toNoteDTO(): NoteDTO = NoteDTO(
+    content = content,
+    createdAt = createdAt,
+    sentiment = sentiment?.toSentimentDTO(),
+    title = title,
+    updatedAt = updatedAt,
+    uuid = uuid,
+    isNew = isNew,
+    isDeleted = isDeleted
+)
 
 private fun SentimentData.toSentimentDTO(): SentimentDTO {
     return SentimentDTO(

@@ -2,25 +2,47 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:name=".AndroidApp"
-        android:icon="@mipmap/ic_launcher"
-        android:label="Sentilens"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-        android:enableOnBackInvokedCallback="true"
-        android:usesCleartextTraffic="true">
+            android:name=".AndroidApp"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Sentilens"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:enableOnBackInvokedCallback="true"
+            android:usesCleartextTraffic="true">
         <activity
-            android:name=".AppActivity"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
-            android:exported="true"
-            android:launchMode="singleInstance"
-            android:windowSoftInputMode="adjustResize">
+                android:name=".AppActivity"
+                android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+                android:exported="true"
+                android:launchMode="singleInstance"
+                android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+                android:name="org.diary.player.PlaybackService"
+                android:foregroundServiceType="mediaPlayback"
+                android:exported="true"
+                android:permission="android.permission.POST_NOTIFICATIONS">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+            </intent-filter>
+        </service>
+
+        <receiver
+                android:name="androidx.media3.session.MediaButtonReceiver"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

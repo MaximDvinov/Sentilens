@@ -1,4 +1,4 @@
-package org.diary.advice
+package org.diary.advice.breath
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
