@@ -55,6 +55,16 @@ class PinCodeScreen : Screen {
         val homeScreen = rememberScreen(DiaryScreenProvider.HomeScreen)
         var pin by remember { mutableStateOf("") }
 
+        if (biometricAvailable()) {
+            BiometricAuthenticate(
+                onError = {
+                },
+                onAuthenticated = {
+                    navigator.replace(homeScreen)
+                }
+            )
+        }
+
         val shake = remember { Animatable(0f) }
 
         LaunchedEffect(Unit) {

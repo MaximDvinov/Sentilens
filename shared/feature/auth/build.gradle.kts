@@ -59,6 +59,7 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.kotlinx.coroutines.android)
+                implementation(libs.androidx.biometric)
             }
         }
 

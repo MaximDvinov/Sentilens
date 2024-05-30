@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.fragment.app.FragmentActivity
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SettingsListener
 import io.github.aakira.napier.DebugAntilog
@@ -49,7 +50,7 @@ class AndroidApp : Application() {
     }
 }
 
-class AppActivity : ComponentActivity() {
+class AppActivity : FragmentActivity() {
     private lateinit var settingsListener: SettingsListener
     private lateinit var tokenListener: SettingsListener
 
