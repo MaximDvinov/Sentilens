@@ -2,8 +2,11 @@ package org.diary.data.stats
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import org.diary.data.diary.SentimentCategoryData
 import org.diary.data.models.toSentiment
 import org.diary.database.datasources.LocalNotesDataSource
@@ -12,6 +15,38 @@ import kotlin.math.sqrt
 
 class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource) :
     StatsRepository {
+
+    override suspend fun sentimentForPeriodFlow(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): Flow<StatsByPeriod> {
+        return localNotesDataSource.getNotes().map { diaries ->
+            val startPeriodTmp = startDate.minus(DatePeriod(months = 2))
+            val endPeriodTmp = endDate.plus(DatePeriod(months = 2))
+            val filtered =
+                diaries.filter { diary -> diary.createdAt.date in startPeriodTmp..endPeriodTmp }
+
+            StatsByPeriod(
+                sentimentForMonth = sentimentForPeriod(filtered),
+                frequencies = frequenciesForPeriod(filtered.filter { diary ->
+                    diary.createdAt.date in startDate..endDate
+                })
+            )
+        }
+    }
+
+    override suspend fun statsForAllDays(): Flow<AllDayStats> {
+        return localNotesDataSource.getNotes().map { diaries ->
+            val sentiments = diaries.mapNotNull { it.sentiment?.value }
+            val variability = calculateSentimentVariability(sentiments)
+
+            AllDayStats(
+                variability = calculateStabilityScore(variability, 1.0),
+                averageSentimentByDayOfWeek = averageSentimentByDayOfWeek(diaries)
+            )
+        }
+    }
+
     private fun sentimentForPeriod(
         diaries: List<NoteDBO>,
     ) = diaries
@@ -29,33 +64,6 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
                 category = average.getCategory()
             )
         }
-
-    override suspend fun sentimentForPeriodFlow(
-        startDate: LocalDate,
-        endDate: LocalDate,
-    ): Flow<StatsByPeriod> {
-        return localNotesDataSource.getNotes().map { diaries ->
-            val filtered =
-                diaries.filter { diary -> diary.createdAt.let { it.date in startDate..endDate } == true }
-
-            StatsByPeriod(
-                sentimentForMonth = sentimentForPeriod(filtered),
-                frequencies = frequenciesForPeriod(filtered)
-            )
-        }
-    }
-
-    override suspend fun statsForAllDays(): Flow<AllDayStats> {
-        return localNotesDataSource.getNotes().map { diaries ->
-            val sentiments = diaries.mapNotNull { it.sentiment?.value }
-            val variability = calculateSentimentVariability(sentiments)
-
-            AllDayStats(
-                variability = calculateStabilityScore(variability, 1.0),
-                averageSentimentByDayOfWeek = averageSentimentByDayOfWeek(diaries)
-            )
-        }
-    }
 
     private fun frequenciesForPeriod(
         diaries: List<NoteDBO>,

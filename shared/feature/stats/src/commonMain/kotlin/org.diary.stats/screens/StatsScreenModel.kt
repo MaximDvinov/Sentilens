@@ -18,21 +18,15 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.Month
 import kotlinx.datetime.minus
 import kotlinx.datetime.number
 import org.diary.composeui.components.calendar.CalendarUtils.getDaysInMonth
 import org.diary.composeui.components.calendar.MonthWithYear
-import org.diary.composeui.components.calendar.minus
-import org.diary.composeui.components.calendar.plus
-import org.diary.data.stats.SentimentStatItemData
 import org.diary.data.stats.StatsRepository
 import org.diary.stats.models.SentimentStatItem
 import org.diary.stats.models.toStable
 import org.diary.utils.currentTimeZone
 import org.diary.utils.toDate
-import org.diary.utils.toDateTime
 
 
 @Stable
@@ -85,17 +79,14 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
             it.copy(selectedMonth = month)
         }
 
-        val startPeriod = month.minus(2)
-        val endPeriod = month.plus(2)
-
         job?.cancel()
 
         job = screenModelScope.launch {
             statsRepository.sentimentForPeriodFlow(
-                LocalDate(startPeriod.year, startPeriod.month, 1),
+                LocalDate(month.year, month.month, 1),
                 LocalDate(
-                    endPeriod.year, endPeriod.month,
-                    getDaysInMonth(endPeriod.month, endPeriod.year).size
+                    month.year, month.month,
+                    getDaysInMonth(month.month, month.year).size
                 )
             ).collect {
                 _state.update { oldState ->
