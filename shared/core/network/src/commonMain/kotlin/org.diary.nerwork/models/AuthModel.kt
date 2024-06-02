@@ -1,4 +1,4 @@
-package org.senti.web.models
+package org.diary.nerwork.models
 
 import kotlinx.serialization.Serializable
 

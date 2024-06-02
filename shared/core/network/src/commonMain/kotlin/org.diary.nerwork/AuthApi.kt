@@ -7,12 +7,12 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import org.senti.web.models.CreatedUserDTO
-import org.senti.web.models.LoginDataDTO
-import org.senti.web.models.RegisterDataDTO
-import org.senti.web.models.TokenDataDTO
+import org.diary.nerwork.models.CreatedUserDTO
+import org.diary.nerwork.models.LoginDataDTO
+import org.diary.nerwork.models.RegisterDataDTO
+import org.diary.nerwork.models.TokenDataDTO
 
-class AuthDataSource(private val client: HttpClient, private val settings: ObservableSettings) {
+class AuthApi(private val client: HttpClient, private val settings: ObservableSettings) {
     suspend fun register(value: RegisterDataDTO): Result<CreatedUserDTO> = runCatchingForApi {
         val result = client
             .post("/api/user/register") { setBody(value) }

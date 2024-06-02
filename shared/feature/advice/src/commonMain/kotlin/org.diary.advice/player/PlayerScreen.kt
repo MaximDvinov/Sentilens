@@ -52,8 +52,8 @@ import compose.icons.feathericons.SkipBack
 import compose.icons.feathericons.SkipForward
 import kotlinx.collections.immutable.ImmutableList
 import org.diary.advice.player.components.WaveAnimation
-import org.diary.advice.player.models.Track
-import org.diary.advice.player.models.TrackType
+import org.diary.advice.player.models.Music
+import org.diary.advice.player.models.MusicCategory
 import org.diary.composeui.NoRippleInteractionSource
 import org.diary.composeui.bounceClick
 import org.diary.composeui.components.ActionTopBar
@@ -101,7 +101,7 @@ fun PlayerContent(
     onNext: () -> Unit,
     onPrevious: () -> Unit,
     onChangePlaying: (Boolean) -> Unit,
-    onTrackSelect: (Track) -> Unit
+    onTrackSelect: (Music) -> Unit
 ) {
     val musicPlayerState = rememberMusicPlayerState(
         seek = state.progress, isResumed = state.isPlaying
@@ -113,14 +113,14 @@ fun PlayerContent(
         musicPlayerState.isResumed = state.isPlaying
     }
 
-    state.selectedTrack?.url?.let {
+    state.selectedMusic?.url?.let {
         MusicPlayer(url = it, state = musicPlayerState, onFinish = {
             onChangePlaying(false)
         })
     }
 
 
-    var isShowPlaylist by remember(state.selectedTrack) { mutableStateOf(state.selectedTrack == null) }
+    var isShowPlaylist by remember(state.selectedMusic) { mutableStateOf(state.selectedMusic == null) }
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         ActionTopBar(
@@ -168,19 +168,19 @@ private fun ColumnScope.CompactPlayer(
     state: PlayerState,
     isShowPlaylist: Boolean,
     modifier: Modifier,
-    onTrackSelect: (Track) -> Unit,
+    onTrackSelect: (Music) -> Unit,
     seekState: Progress,
     musicPlayerState: MusicPlayerState,
     onChangePlaying: (Boolean) -> Unit,
     onNext: () -> Unit,
     onPrevious: () -> Unit
 ) {
-    if (state.selectedTrack == null || isShowPlaylist) {
+    if (state.selectedMusic == null || isShowPlaylist) {
         Playlist(
             modifier = modifier,
             list = state.playlist,
             onClick = onTrackSelect,
-            selectedTrack = state.selectedTrack
+            selectedMusic = state.selectedMusic
         )
     } else {
         WaveAnimation(
@@ -195,8 +195,8 @@ private fun ColumnScope.CompactPlayer(
             onSliderSeek = {
                 musicPlayerState.seek = it
             },
-            title = state.selectedTrack.title,
-            type = state.selectedTrack.type
+            title = state.selectedMusic.title,
+            type = state.selectedMusic.category
         )
 
         ControlButton(
@@ -212,7 +212,7 @@ private fun ColumnScope.CompactPlayer(
 private fun ColumnScope.ExpandPlayer(
     state: PlayerState,
     modifier: Modifier,
-    onTrackSelect: (Track) -> Unit,
+    onTrackSelect: (Music) -> Unit,
     seekState: Progress,
     musicPlayerState: MusicPlayerState,
     onChangePlaying: (Boolean) -> Unit,
@@ -221,7 +221,7 @@ private fun ColumnScope.ExpandPlayer(
 ) {
     Row(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            if (state.selectedTrack != null) {
+            if (state.selectedMusic != null) {
                 WaveAnimation(
                     Modifier.zIndex(-10f)
                         .padding(start = 30.dp, top = 16.dp, end = 30.dp, bottom = 40.dp).weight(1f)
@@ -236,8 +236,8 @@ private fun ColumnScope.ExpandPlayer(
                     onSliderSeek = {
                         musicPlayerState.seek = it
                     },
-                    title = state.selectedTrack.title,
-                    type = state.selectedTrack.type
+                    title = state.selectedMusic.title,
+                    type = state.selectedMusic.category
                 )
 
                 ControlButton(
@@ -253,7 +253,7 @@ private fun ColumnScope.ExpandPlayer(
             modifier = Modifier.widthIn(max = 400.dp),
             list = state.playlist,
             onClick = onTrackSelect,
-            selectedTrack = state.selectedTrack
+            selectedMusic = state.selectedMusic
         )
     }
 }
@@ -265,7 +265,7 @@ fun MusicSlider(
     onSliderSeek: (Float) -> Unit = {},
     maxValue: Long,
     title: String,
-    type: TrackType
+    type: MusicCategory
 ) {
     val color = MaterialTheme.colors.onBackground
     Column(
@@ -275,7 +275,7 @@ fun MusicSlider(
     ) {
         Text(title, style = MaterialTheme.typography.h1)
         Spacer(modifier = Modifier.height(16.dp))
-        AnimatedVisibility(type == TrackType.FILE) {
+        AnimatedVisibility(type == MusicCategory.AUDIOFILE) {
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
@@ -295,7 +295,7 @@ fun MusicSlider(
             }
         }
 
-        AnimatedVisibility(progress > 0 && progress < maxValue && type == TrackType.FILE) {
+        AnimatedVisibility(progress > 0 && progress < maxValue && type == MusicCategory.AUDIOFILE) {
             Row(
                 Modifier.fillMaxWidth().padding(horizontal = 48.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -354,9 +354,9 @@ fun ControlButton(
 @Composable
 fun Playlist(
     modifier: Modifier,
-    list: ImmutableList<Track>,
-    selectedTrack: Track? = null,
-    onClick: (Track) -> Unit
+    list: ImmutableList<Music>,
+    selectedMusic: Music? = null,
+    onClick: (Music) -> Unit
 ) {
     LazyColumn(
         modifier,
@@ -372,14 +372,14 @@ fun Playlist(
                         onClick(it)
                     }, interactionSource = NoRippleInteractionSource(), indication = null),
                 it,
-                isSelected = it == selectedTrack
+                isSelected = it == selectedMusic
             )
         }
     }
 }
 
 @Composable
-fun PlaylistItem(modifier: Modifier, item: Track, isSelected: Boolean) {
+fun PlaylistItem(modifier: Modifier, item: Music, isSelected: Boolean) {
     val color by animateColorAsState(if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.background)
     val width by animateDpAsState(if (isSelected) 1.dp else 0.dp)
     Row(
@@ -392,7 +392,7 @@ fun PlaylistItem(modifier: Modifier, item: Track, isSelected: Boolean) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            if (item.type == TrackType.RADIO) FeatherIcons.Radio else FeatherIcons.Music, ""
+            if (item.category == MusicCategory.RADIO) FeatherIcons.Radio else FeatherIcons.Music, ""
         )
         Text(
             item.title,

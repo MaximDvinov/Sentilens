@@ -12,7 +12,7 @@ import org.diary.nerwork.models.NoteDTO
 import org.diary.nerwork.models.NoteWrite
 import org.diary.nerwork.models.SentimentDTO
 
-interface NetworkNotesDataSource {
+interface NotesApi {
     suspend fun getNotes(): Result<List<NoteDTO>>
 
     suspend fun createNote(value: NoteWrite): Result<NoteDTO>
@@ -26,7 +26,7 @@ interface NetworkNotesDataSource {
     suspend fun analyzeByText(text: AnalyzeText): Result<SentimentDTO>
 }
 
-class NetworkNotesDataSourceImpl(private val client: HttpClient) : NetworkNotesDataSource {
+class NotesApiImpl(private val client: HttpClient) : NotesApi {
     override suspend fun getNotes(): Result<List<NoteDTO>> = runCatchingForApi {
         client.get("/api/notes/").body()
     }

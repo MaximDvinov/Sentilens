@@ -3,7 +3,7 @@ package org.diary.data.diary
 import io.github.aakira.napier.Napier
 import org.diary.data.ApiResult
 import org.diary.database.datasources.LocalNotesDataSource
-import org.diary.nerwork.NetworkNotesDataSource
+import org.diary.nerwork.NotesApi
 import org.diary.data.models.toNote
 import org.diary.data.models.toNoteDBO
 import org.diary.data.toApiResult
@@ -18,11 +18,11 @@ interface SyncRepository {
 
 class SyncRepositoryImpl(
     private val localNotesDataSource: LocalNotesDataSource,
-    private val networkNotesDataSource: NetworkNotesDataSource,
+    private val notesApi: NotesApi,
 ) : SyncRepository {
     override suspend fun sync(): ApiResult<String> {
         val localeNotes = localNotesDataSource.getNotesSync()
-        val networkNotes = networkNotesDataSource.getNotes().toApiResult()
+        val networkNotes = notesApi.getNotes().toApiResult()
 
         if (networkNotes is ApiResult.Success) {
             updateNotesFromLocale(localeNotes, networkNotes)
@@ -49,7 +49,7 @@ class SyncRepositoryImpl(
             val localeNote = localeNotes.find { it.uuid == note.uuid }?.toNote()
             if (localeNote?.updatedAt != null && note.updatedAt != null) {
                 if (localeNote.updatedAt.compareTo(note.updatedAt!!) == 1) {
-                    val updated = networkNotesDataSource.updateNote(note.copy(isNew = false))
+                    val updated = notesApi.updateNote(note.copy(isNew = false))
                     Napier.wtf(tag = "updated") { "$updated" }
                 }
                 if (localeNote.updatedAt.compareTo(note.updatedAt!!) == -1) {
@@ -71,7 +71,7 @@ class SyncRepositoryImpl(
     ) {
         localeNotes.forEach { note ->
             if (note.isNew && !note.isDeleted) {
-                val created = networkNotesDataSource.createNote(
+                val created = notesApi.createNote(
                     NoteWrite(
                         title = note.title,
                         content = note.content,
@@ -90,7 +90,7 @@ class SyncRepositoryImpl(
 
             if (note.isDeleted) {
                 val deletedResult =
-                    networkNotesDataSource.deleteNote(note.uuid.toString()).toApiResult()
+                    notesApi.deleteNote(note.uuid.toString()).toApiResult()
                 if (deletedResult is ApiResult.Success) {
                     localNotesDataSource.finallyDeleteNote(note)
                 }

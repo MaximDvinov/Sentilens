@@ -6,7 +6,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
-import kotlinx.uuid.randomUUID
+import org.diary.data.advice.MusicCategoryData
+import org.diary.data.advice.MusicData
 import org.diary.data.auth.CreatedUserData
 import org.diary.data.auth.LoginData
 import org.diary.data.auth.RegisterData
@@ -19,13 +20,14 @@ import org.diary.database.models.SentimentCategoryDBO
 import org.diary.nerwork.models.NoteDTO
 import org.diary.database.models.SentimentDBO
 import org.diary.database.models.UserDataDBO
+import org.diary.nerwork.models.MusicCategoryDTO
+import org.diary.nerwork.models.MusicDTO
 import org.diary.nerwork.models.SentimentCategoryDTO
 import org.diary.nerwork.models.SentimentDTO
-import org.senti.web.models.CreatedUserDTO
-import org.senti.web.models.LoginDataDTO
-import org.senti.web.models.RegisterDataDTO
-import org.senti.web.models.TokenDataDTO
-import kotlin.random.Random
+import org.diary.nerwork.models.CreatedUserDTO
+import org.diary.nerwork.models.LoginDataDTO
+import org.diary.nerwork.models.RegisterDataDTO
+import org.diary.nerwork.models.TokenDataDTO
 
 fun NoteDBO.toNote() = NoteData(
     content = content,
@@ -236,3 +238,17 @@ fun LoginData.toDTO(): LoginDataDTO = LoginDataDTO(
     username = username,
     password = password
 )
+
+fun MusicDTO.toData(): MusicData = MusicData(
+    title = title,
+    category = category.toData(),
+    url = url
+)
+
+private fun MusicCategoryDTO.toData(): MusicCategoryData {
+    return when (this) {
+        MusicCategoryDTO.AUDIOFILE -> MusicCategoryData.AUDIOFILE
+        MusicCategoryDTO.RADIO -> MusicCategoryData.RADIO
+    }
+}
+

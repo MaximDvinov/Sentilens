@@ -14,7 +14,7 @@ import org.diary.data.models.toNoteDBO
 import org.diary.data.models.toNoteDTO
 import org.diary.data.toApiResult
 import org.diary.database.datasources.LocalNotesDataSource
-import org.diary.nerwork.NetworkNotesDataSource
+import org.diary.nerwork.NotesApi
 import org.diary.nerwork.models.NoteDTO
 import org.diary.nerwork.models.NoteWrite
 
@@ -35,7 +35,7 @@ interface NotesRepository {
 
 class NotesRepositoryImpl(
     private val localNotesDataSource: LocalNotesDataSource,
-    private val networkNotesDataSource: NetworkNotesDataSource,
+    private val notesApi: NotesApi,
 ) : NotesRepository {
     override fun getNotes(): Flow<List<NoteData>> {
         return localNotesDataSource.getNotes().map { list ->
@@ -47,7 +47,7 @@ class NotesRepositoryImpl(
         var createdNote: NoteData? =
             localNotesDataSource.createNotes(note.copy(isNew = true).toNoteDBO()).toNote()
 
-        val serverNote = networkNotesDataSource.createNote(
+        val serverNote = notesApi.createNote(
             NoteWrite(
                 title = createdNote?.title,
                 content = createdNote?.content,
@@ -65,7 +65,7 @@ class NotesRepositoryImpl(
     }
 
     override suspend fun createNote(note: NoteData): ApiResult<NoteData> {
-        val serverNote = networkNotesDataSource.createNote(
+        val serverNote = notesApi.createNote(
             NoteWrite(
                 title = note.title, content = note.content, uuid = note.uuid
             )
@@ -85,7 +85,7 @@ class NotesRepositoryImpl(
 
         var updatedNote = localNotesDataSource.updateNotes(note.toNoteDBO())
 
-        val serverNote = networkNotesDataSource.updateNote(note.toNoteDTO()).toApiResult()
+        val serverNote = notesApi.updateNote(note.toNoteDTO()).toApiResult()
 
         if (serverNote is ApiResult.Success) {
             updatedNote = localNotesDataSource.updateNotes(serverNote.data.toNoteDBO())
@@ -110,7 +110,7 @@ class NotesRepositoryImpl(
 
     override suspend fun deleteNote(note: NoteData) {
         localNotesDataSource.deleteNote(note.toNoteDBO())
-        val networkResult = networkNotesDataSource.deleteNote(note.uuid.toString()).toApiResult()
+        val networkResult = notesApi.deleteNote(note.uuid.toString()).toApiResult()
 
         if (networkResult is ApiResult.Success) {
             localNotesDataSource.finallyDeleteNote(note.toNoteDBO())

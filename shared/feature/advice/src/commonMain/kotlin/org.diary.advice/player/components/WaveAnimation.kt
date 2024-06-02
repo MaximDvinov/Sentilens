@@ -50,7 +50,7 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
     val windowSizeClass = calculateWindowSizeClass()
 
     val animatedAmplitude by animateFloatAsState(
-        if (!isPlaying) 0.1f else 1f, animationSpec = spring(stiffness = Spring.StiffnessLow)
+        if (!isPlaying) 0.2f else 1f, animationSpec = spring(stiffness = Spring.StiffnessLow)
     ) {
         isPlayingLocalState = false
     }
@@ -59,7 +59,7 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
         modifier = modifier.onSizeChanged { sizeWave = it.toSize() },
         contentAlignment = Alignment.Center
     ) {
-        var a by remember { mutableStateOf(0.05f) }
+        var a by remember { mutableStateOf(0.0f) }
 
         var wavePoints: List<Offset> by remember(sizeWave) {
             mutableStateOf(generateWavePoints(numPoints, 0.15f, 0f, a) { x, waveLength, a ->
@@ -78,22 +78,23 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
         }
 
         val del = 10f
+        val waveHeightK = if (getTypeDevice() == TypeDevice.MOBILE) 2f else 1f
 
         LaunchedEffect(isPlaying, sizeWave) {
             while (isPlaying || !isPlayingLocalState) {
                 wavePoints = generateWavePoints(
-                    numPoints, 0.14f, 60f * animatedAmplitude, a
+                    numPoints, 0.14f * waveHeightK, 80f * animatedAmplitude, a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * cos((x * sin(10f)) / del)
 
                 }
                 wavePoints2 = generateWavePoints(
-                    numPoints, 0.17f, 40f * animatedAmplitude, a
+                    numPoints, 0.17f * waveHeightK, 40f * animatedAmplitude, a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * sin(x / del)
                 }
                 wavePoints3 = generateWavePoints(
-                    numPoints, 0.20f, 30f * animatedAmplitude, a
+                    numPoints, 0.20f * waveHeightK, 30f * animatedAmplitude, a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * cos(x / del)
                 }

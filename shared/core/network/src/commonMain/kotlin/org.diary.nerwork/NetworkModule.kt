@@ -22,7 +22,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.senti.web.models.TokenDataDTO
+import org.diary.nerwork.models.TokenDataDTO
 
 const val BASE_HOST = "217.28.221.132"
 const val BASE_URL = "http://$BASE_HOST"
@@ -88,6 +88,7 @@ val networkModule = module {
         }
     }
 
-    singleOf(::NetworkNotesDataSourceImpl) bind NetworkNotesDataSource::class
-    singleOf(::AuthDataSource)
+    singleOf(::NotesApiImpl) bind NotesApi::class
+    singleOf(::AuthApi)
+    singleOf(::AdviceApi)
 }

@@ -12,7 +12,7 @@ import org.diary.data.toApiResult
 import org.diary.database.datasources.LocalNotesDataSource
 import org.diary.database.datasources.LocalUserDataSource
 import org.diary.nerwork.ACCESS
-import org.diary.nerwork.AuthDataSource
+import org.diary.nerwork.AuthApi
 import org.diary.nerwork.REFRESH
 
 interface UserRepository {
@@ -30,30 +30,30 @@ interface UserRepository {
 }
 
 class UserRepositoryImpl(
-    private val authDataSource: AuthDataSource,
+    private val authApi: AuthApi,
     private val userDataSource: LocalUserDataSource,
     private val diaryDataSource: LocalNotesDataSource,
     private val setting: ObservableSettings,
 ) : UserRepository {
     override suspend fun register(value: RegisterData) =
-        authDataSource.register(value.toDTO()).toApiResult().map { it.toData() }
+        authApi.register(value.toDTO()).toApiResult().map { it.toData() }
 
     override suspend fun login(value: LoginData) =
-        authDataSource.login(value.toDTO()).toApiResult().map { it.toData() }
+        authApi.login(value.toDTO()).toApiResult().map { it.toData() }
 
     override suspend fun isAuthenticated() = setting.get<String>(ACCESS)?.isNotEmpty() ?: false
     override suspend fun changePassword(oldPassword: String, newPassword: String): ApiResult<Unit> =
-        authDataSource.changePassword(oldPassword, newPassword).toApiResult()
+        authApi.changePassword(oldPassword, newPassword).toApiResult()
 
     override suspend fun changeEmail(email: String): ApiResult<CreatedUserData> =
-        authDataSource.changeUserData(email = email).toApiResult().map { it.toData() }
+        authApi.changeUserData(email = email).toApiResult().map { it.toData() }
 
 
     override suspend fun changeLogin(login: String): ApiResult<CreatedUserData> =
-        authDataSource.changeUserData(login = login).toApiResult().map { it.toData() }
+        authApi.changeUserData(login = login).toApiResult().map { it.toData() }
 
     override suspend fun deleteUser(): ApiResult<Unit> {
-        val result = authDataSource.deleteUser().toApiResult()
+        val result = authApi.deleteUser().toApiResult()
 
         if (result is ApiResult.Success) {
             clearUserData()
@@ -64,7 +64,7 @@ class UserRepositoryImpl(
 
 
     override suspend fun userData(): CreatedUserData? {
-        val result = authDataSource.userData().toApiResult().map { it.toData() }
+        val result = authApi.userData().toApiResult().map { it.toData() }
 
         if (result is ApiResult.Success) {
             userDataSource.upsertUserData(result.data.toDBO())

@@ -2,16 +2,25 @@ package org.diary.advice.player
 
 import androidx.compose.runtime.Stable
 import cafe.adriel.voyager.core.model.StateScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.update
-import org.diary.advice.player.models.Track
+import kotlinx.coroutines.launch
+import org.diary.advice.player.models.Music
+import org.diary.advice.player.models.toStable
+import org.diary.composeui.LoadState
+import org.diary.data.ApiResult
+import org.diary.data.advice.AdviceRepository
 
 @Stable
 data class PlayerState(
     val isPlaying: Boolean = false,
     val progress: Float = 0f,
-    val selectedTrack: Track? = null,
-    val playlist: ImmutableList<Track> = org.diary.advice.player.models.playlist,
+    val selectedMusic: Music? = null,
+    val playlist: ImmutableList<Music> = persistentListOf(),
+    val loadState: LoadState = LoadState.Loading
 )
 
 @Stable
@@ -20,7 +29,7 @@ sealed class PlayerIntent {
     data class ChangePlay(val isPlaying: Boolean) : PlayerIntent()
 
     @Stable
-    data class ChangeTrack(val track: Track) : PlayerIntent()
+    data class ChangeTrack(val music: Music) : PlayerIntent()
 
     @Stable
     data object Next : PlayerIntent()
@@ -29,14 +38,19 @@ sealed class PlayerIntent {
     data object Previous : PlayerIntent()
 }
 
-class PlayerScreenModel : StateScreenModel<PlayerState>(PlayerState()) {
+class PlayerScreenModel(private val adviceRepository: AdviceRepository) :
+    StateScreenModel<PlayerState>(PlayerState()) {
+
+    init {
+        getMusics()
+    }
 
     fun handle(intent: PlayerIntent) {
         when (intent) {
             is PlayerIntent.ChangePlay -> if (intent.isPlaying) play() else pause()
             is PlayerIntent.Next -> next()
             is PlayerIntent.Previous -> previous()
-            is PlayerIntent.ChangeTrack -> mutableState.update { it.copy(selectedTrack = intent.track) }
+            is PlayerIntent.ChangeTrack -> mutableState.update { it.copy(selectedMusic = intent.music) }
         }
     }
 
@@ -51,9 +65,9 @@ class PlayerScreenModel : StateScreenModel<PlayerState>(PlayerState()) {
     private fun next() {
         mutableState.update { oldState ->
             val next =
-                oldState.playlist.getOrNull(oldState.playlist.indexOf(oldState.selectedTrack) + 1)
+                oldState.playlist.getOrNull(oldState.playlist.indexOf(oldState.selectedMusic) + 1)
                     ?: oldState.playlist.first()
-            oldState.copy(selectedTrack = next)
+            oldState.copy(selectedMusic = next)
         }
     }
 
@@ -61,9 +75,30 @@ class PlayerScreenModel : StateScreenModel<PlayerState>(PlayerState()) {
         mutableState.update { oldState ->
             val previous =
                 oldState.playlist
-                    .getOrNull(oldState.playlist.indexOf(oldState.selectedTrack) - 1)
+                    .getOrNull(oldState.playlist.indexOf(oldState.selectedMusic) - 1)
                     ?: oldState.playlist.last()
-            oldState.copy(selectedTrack = previous)
+            oldState.copy(selectedMusic = previous)
         }
+    }
+
+    private fun getMusics() {
+        screenModelScope.launch {
+            val musics = adviceRepository.getMusics()
+
+            when (musics) {
+                is org.diary.data.ApiResult.Failure -> mutableState.update {
+                    it.copy(loadState = LoadState.Error(message = musics.message))
+                }
+
+                is org.diary.data.ApiResult.ServerError -> mutableState.update {
+                    it.copy(loadState = LoadState.Error(message = musics.message))
+                }
+
+                is org.diary.data.ApiResult.Success -> mutableState.update {
+                    it.copy(playlist = musics.data.map { it.toStable() }.toPersistentList())
+                }
+            }
+        }
+
     }
 }

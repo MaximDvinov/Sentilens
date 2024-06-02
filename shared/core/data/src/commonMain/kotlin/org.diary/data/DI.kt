@@ -8,6 +8,8 @@ import org.diary.data.diary.SyncRepository
 import org.diary.data.diary.SyncRepositoryImpl
 import org.diary.data.stats.StatsRepository
 import org.diary.data.stats.StatsRepositoryImpl
+import org.diary.data.advice.AdviceRepository
+import org.diary.data.advice.AdviceRepositoryImpl
 import org.diary.database.databaseModule
 import org.diary.nerwork.networkModule
 import org.koin.core.module.dsl.singleOf
@@ -21,4 +23,5 @@ val dataModule = module {
     singleOf(::UserRepositoryImpl) bind UserRepository::class
     singleOf(::UserRepositoryImpl) bind UserRepository::class
     singleOf(::StatsRepositoryImpl) bind StatsRepository::class
+    singleOf(::AdviceRepositoryImpl) bind AdviceRepository::class
 }
