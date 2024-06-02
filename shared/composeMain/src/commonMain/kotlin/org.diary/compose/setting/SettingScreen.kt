@@ -21,6 +21,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -43,6 +46,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.russhwolf.settings.ObservableSettings
 import compose.icons.FeatherIcons
+import compose.icons.feathericons.ArrowLeft
+import compose.icons.feathericons.ArrowRight
 import compose.icons.feathericons.Moon
 import compose.icons.feathericons.Sun
 import compose.icons.feathericons.Tablet
@@ -50,6 +55,7 @@ import org.diary.auth.pincode.PinCodeIntent
 import org.diary.compose.setting.DialogState.*
 import org.diary.composeui.LoadState
 import org.diary.composeui.bounceClick
+import org.diary.composeui.components.ActionTopBar
 import org.diary.composeui.components.ErrorSnackbar
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -215,6 +221,7 @@ fun SettingScreenModel.closeDialog() {
     processIntent(SettingScreenModel.Intent.OpenDialog(Closed))
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun SettingScreenContent(
     isDarkTheme: Boolean?,
@@ -223,47 +230,141 @@ fun SettingScreenContent(
     onBackClick: () -> Unit,
     onIntent: (SettingScreenModel.Intent) -> Unit,
 ) {
+    val screenSizeClass = calculateWindowSizeClass()
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
+        ActionTopBar(
             modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SecondaryIconButton(
-                onClick = onBackClick,
-            ) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Back")
-            }
+            title = "Настройки",
+            leftButtonIcon = FeatherIcons.ArrowLeft,
+            onClickLeft = onBackClick
+        )
 
-            Text(
-                "Настройки",
-                style = MaterialTheme.typography.h1,
-                color = MaterialTheme.colors.onBackground,
-                modifier = Modifier.weight(1f)
-            )
+        if (screenSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+            CompactSetting(state, onIntent, isDarkTheme, onChangeTheme)
+        } else {
+            ExpandedSetting(state, onIntent, isDarkTheme, onChangeTheme)
         }
 
-        Column(
-            modifier = Modifier.widthIn(max = 600.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            ProfileItem(
-                title = "Логин",
-                text = state.login,
-                onClick = {
-                    onIntent(SettingScreenModel.Intent.OpenDialog(ChangeLogin))
-                }
-            )
+    }
+}
 
-            ProfileItem(
-                title = "Эл. почта",
-                text = state.email,
-                onClick = {
-                    onIntent(SettingScreenModel.Intent.OpenDialog(ChangeEmail))
-                }
-            )
+@Composable
+private fun CompactSetting(
+    state: SettingScreenModel.UiState,
+    onIntent: (SettingScreenModel.Intent) -> Unit,
+    isDarkTheme: Boolean?,
+    onChangeTheme: (Boolean?) -> Unit
+) {
+    Column(
+        modifier = Modifier.padding(bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        ProfileItem(
+            title = "Логин",
+            text = state.login,
+            onClick = {
+                onIntent(SettingScreenModel.Intent.OpenDialog(ChangeLogin))
+            }
+        )
+
+        ProfileItem(
+            title = "Эл. почта",
+            text = state.email,
+            onClick = {
+                onIntent(SettingScreenModel.Intent.OpenDialog(ChangeEmail))
+            }
+        )
+
+        TitleIconButton(
+            modifier = Modifier.height(48.dp).fillMaxWidth(),
+            onClick = {
+                onIntent(SettingScreenModel.Intent.OpenDialog(ChangePassword))
+            },
+            title = "Изменить пароль",
+            icon = LeftArrow
+        )
+
+        TitleIconButton(
+            modifier = Modifier.height(48.dp).fillMaxWidth(),
+            onClick = {
+                onIntent(SettingScreenModel.Intent.OpenDialog(ChangePinCode))
+            },
+            title = if (state.isPinCodeSet) "Изменить пин-код" else "Установить пин-код",
+            icon = LeftArrow
+        )
+
+        ThemePicker(
+            modifier = Modifier.fillMaxWidth(),
+            isDarkTheme = isDarkTheme,
+            onChangeTheme = onChangeTheme
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        TitleIconButton(
+            modifier = Modifier.height(48.dp).fillMaxWidth(),
+            onClick = {
+                onIntent(SettingScreenModel.Intent.OpenDialog(ConfirmLogout))
+            },
+            title = "Выйти из приложения",
+            icon = LeftArrow
+        )
+
+        TitleIconButton(
+            modifier = Modifier.height(48.dp).fillMaxWidth(),
+            onClick = {
+                onIntent(SettingScreenModel.Intent.OpenDialog(ConfirmDeleteUser))
+            },
+            title = "Удалить аккаунт",
+            icon = LeftArrow,
+            color = MaterialTheme.colors.error
+        )
+
+    }
+}
+
+
+@Composable
+private fun ExpandedSetting(
+    state: SettingScreenModel.UiState,
+    onIntent: (SettingScreenModel.Intent) -> Unit,
+    isDarkTheme: Boolean?,
+    onChangeTheme: (Boolean?) -> Unit
+) {
+    Row(
+        modifier = Modifier.padding(bottom = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Column(
+            modifier = Modifier.weight(1f).padding(bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ProfileItem(
+                    modifier = Modifier.weight(1f).height(82.dp),
+                    title = "Логин",
+                    text = state.login,
+                    onClick = {
+                        onIntent(SettingScreenModel.Intent.OpenDialog(ChangeLogin))
+                    }
+                )
+
+                ProfileItem(
+                    modifier = Modifier.weight(1f).height(82.dp),
+                    title = "Эл. почта",
+                    text = state.email,
+                    onClick = {
+                        onIntent(SettingScreenModel.Intent.OpenDialog(ChangeEmail))
+                    }
+                )
+            }
 
             TitleIconButton(
                 modifier = Modifier.height(48.dp).fillMaxWidth(),
@@ -283,15 +384,18 @@ fun SettingScreenContent(
                 icon = LeftArrow
             )
 
+        }
+
+        Column(
+            modifier = Modifier.weight(1f).padding(bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
 
             ThemePicker(
                 modifier = Modifier.fillMaxWidth(),
                 isDarkTheme = isDarkTheme,
                 onChangeTheme = onChangeTheme
             )
-
-            Spacer(Modifier.weight(1f))
-
 
             TitleIconButton(
                 modifier = Modifier.height(48.dp).fillMaxWidth(),
@@ -311,7 +415,9 @@ fun SettingScreenContent(
                 icon = LeftArrow,
                 color = MaterialTheme.colors.error
             )
+
         }
+
     }
 }
 
@@ -329,7 +435,7 @@ fun ProfileItem(
             .clickable(onClick = onClick)
             .background(MaterialTheme.colors.secondary)
             .padding(horizontal = 16.dp, vertical = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row(modifier = Modifier.alpha(0.7f)) {
             Text(

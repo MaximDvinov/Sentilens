@@ -7,6 +7,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,8 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Path
@@ -26,12 +30,14 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import kotlinx.coroutines.delay
+import org.diary.composeui.isCompact
 import org.diary.utils.TypeDevice
 import org.diary.utils.getTypeDevice
 import kotlin.math.cos
 import kotlin.math.sin
 
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
     val color = MaterialTheme.colors.primary
@@ -41,11 +47,11 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
     var isPlayingLocalState by remember {
         mutableStateOf(true)
     }
+    val windowSizeClass = calculateWindowSizeClass()
 
     val animatedAmplitude by animateFloatAsState(
-        if (!isPlaying) 0.1f else 1f,
-        animationSpec = spring(stiffness = Spring.StiffnessLow)
-    ){
+        if (!isPlaying) 0.1f else 1f, animationSpec = spring(stiffness = Spring.StiffnessLow)
+    ) {
         isPlayingLocalState = false
     }
 
@@ -56,25 +62,19 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
         var a by remember { mutableStateOf(0.05f) }
 
         var wavePoints: List<Offset> by remember(sizeWave) {
-            mutableStateOf(
-                generateWavePoints(numPoints, 0.15f, 0f, a) { x, waveLength, a ->
-                    sin(x * waveLength + a) * cos((x * sin(10f)) / 12)
-                }
-            )
+            mutableStateOf(generateWavePoints(numPoints, 0.15f, 0f, a) { x, waveLength, a ->
+                sin(x * waveLength + a) * cos((x * sin(10f)) / 12)
+            })
         }
         var wavePoints2: List<Offset> by remember(sizeWave) {
-            mutableStateOf(
-                generateWavePoints(numPoints, 0.24f, 0f, a) { x, waveLength, a ->
-                    cos(x * waveLength + a) * sin(x / 11)
-                }
-            )
+            mutableStateOf(generateWavePoints(numPoints, 0.24f, 0f, a) { x, waveLength, a ->
+                cos(x * waveLength + a) * sin(x / 11)
+            })
         }
         var wavePoints3: List<Offset> by remember(sizeWave) {
-            mutableStateOf(
-                generateWavePoints(numPoints, 0.20f, 0f, a) { x, waveLength, a ->
-                    cos(x * waveLength + a) * cos(x / 10f)
-                }
-            )
+            mutableStateOf(generateWavePoints(numPoints, 0.20f, 0f, a) { x, waveLength, a ->
+                cos(x * waveLength + a) * cos(x / 10f)
+            })
         }
 
         val del = 10f
@@ -82,27 +82,18 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
         LaunchedEffect(isPlaying, sizeWave) {
             while (isPlaying || !isPlayingLocalState) {
                 wavePoints = generateWavePoints(
-                    numPoints,
-                    0.14f,
-                    60f * animatedAmplitude,
-                    a
+                    numPoints, 0.14f, 60f * animatedAmplitude, a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * cos((x * sin(10f)) / del)
 
                 }
                 wavePoints2 = generateWavePoints(
-                    numPoints,
-                    0.17f,
-                    40f * animatedAmplitude,
-                    a
+                    numPoints, 0.17f, 40f * animatedAmplitude, a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * sin(x / del)
                 }
                 wavePoints3 = generateWavePoints(
-                    numPoints,
-                    0.20f,
-                    30f * animatedAmplitude,
-                    a
+                    numPoints, 0.20f, 30f * animatedAmplitude, a
                 ) { x, waveLength, a ->
                     cos(x * waveLength + a) * cos(x / del)
                 }
@@ -112,62 +103,92 @@ fun WaveAnimation(modifier: Modifier, isPlaying: Boolean) {
         }
 
         Canvas(Modifier.fillMaxSize()) {
-            drawCircle(
-                Brush.radialGradient(listOf(colorBackground, colorBackground.copy(0.8f))),
-                sizeWave.width / 2
-            )
-            clipPath(Path().apply {
-                addOval(
-                    Rect(
-                        Offset(sizeWave.width / 2, sizeWave.height / 2),
-                        radius = sizeWave.width / 2
-                    )
-                )
-            }) {
-                wavePoints(
-                    listOf(Offset(0f, sizeWave.height)) + wavePoints.map {
-                        it.copy(y = it.y + sizeWave.height / 2)
-                    } + listOf(
-                        Offset(sizeWave.width, sizeWave.height),
-                        Offset(0f, sizeWave.height)
-                    ),
-                    color = color.copy(0.5f),
-                    strokeWidth = 5.dp.toPx()
-                )
-
-                wavePoints(
-                    listOf(Offset(0f, sizeWave.height)) + wavePoints2.map {
-                        it.copy(y = it.y + sizeWave.height / 2)
-                    } + listOf(
-                        Offset(sizeWave.width, sizeWave.height),
-                        Offset(0f, sizeWave.height)
-                    ),
-                    color = color.copy(0.8f),
-                    strokeWidth = 5.dp.toPx()
-                )
-
-                wavePoints(
-                    listOf(Offset(0f, sizeWave.height)) + wavePoints3.map {
-                        it.copy(y = it.y + sizeWave.height / 2)
-                    } + listOf(
-                        Offset(sizeWave.width, sizeWave.height),
-                        Offset(0f, sizeWave.height)
-                    ),
-                    color = color.copy(1f),
-                    strokeWidth = 5.dp.toPx()
-                )
+            if (windowSizeClass.isCompact()) {
                 drawCircle(
-                    Brush.radialGradient(
-                        listOf(
-                            colorBackground.copy(0.0f),
-                            colorBackground.copy(0.3f)
-                        )
-                    ),
-                    sizeWave.width / 2 + 300
+                    Brush.radialGradient(listOf(colorBackground, colorBackground.copy(0.8f))),
+                    sizeWave.width / 2
+                )
+            } else {
+                drawRoundRect(
+                    Brush.radialGradient(listOf(colorBackground, colorBackground.copy(0.8f))),
+                    size = sizeWave,
+                    cornerRadius = CornerRadius(sizeWave.width / 2, sizeWave.width / 2)
                 )
             }
 
-            drawCircle(color = color, radius = sizeWave.width / 2, style = Stroke(4.dp.toPx()))
+            clipPath(Path().apply {
+                if (windowSizeClass.isCompact()) {
+                    addOval(
+                        Rect(
+                            Offset(sizeWave.width / 2, sizeWave.height / 2),
+                            radius = sizeWave.width / 2
+                        )
+                    )
+                } else {
+                    addRoundRect(
+                        RoundRect(
+                            rect = Rect(
+                                Offset(sizeWave.width / 2, sizeWave.height / 2),
+                                radius = sizeWave.width / 2
+                            ),
+                            cornerRadius = CornerRadius(sizeWave.width / 2, sizeWave.width / 2)
+                        )
+                    )
+                }
+
+            }) {
+                wavePoints(listOf(Offset(0f, sizeWave.height * 2)) + wavePoints.map {
+                    it.copy(y = it.y + sizeWave.height / 2)
+                } + listOf(
+                    Offset(sizeWave.width, sizeWave.height * 2), Offset(0f, sizeWave.height * 2)
+                ), color = color.copy(0.5f), strokeWidth = 5.dp.toPx())
+
+                wavePoints(listOf(Offset(0f, sizeWave.height * 2)) + wavePoints2.map {
+                    it.copy(y = it.y + sizeWave.height / 2)
+                } + listOf(
+                    Offset(sizeWave.width, sizeWave.height * 2), Offset(0f, sizeWave.height * 2)
+                ), color = color.copy(0.8f), strokeWidth = 5.dp.toPx())
+
+                wavePoints(listOf(Offset(0f, sizeWave.height * 2)) + wavePoints3.map {
+                    it.copy(y = it.y + sizeWave.height / 2)
+                } + listOf(
+                    Offset(sizeWave.width, sizeWave.height * 2), Offset(0f, sizeWave.height * 2)
+                ), color = color.copy(1f), strokeWidth = 5.dp.toPx())
+
+                if (windowSizeClass.isCompact()) {
+                    drawCircle(
+                        Brush.radialGradient(
+                            listOf(
+                                colorBackground.copy(0.0f), colorBackground.copy(0.3f)
+                            )
+                        ), sizeWave.width / 2 + 300
+                    )
+                } else {
+                    drawRoundRect(
+                        Brush.radialGradient(
+                            listOf(
+                                colorBackground.copy(0.0f), colorBackground.copy(0.3f)
+                            )
+                        ),
+                        size = sizeWave,
+                        cornerRadius = CornerRadius(sizeWave.width / 2, sizeWave.width / 2)
+                    )
+                }
+
+            }
+
+            if (windowSizeClass.isCompact()) {
+                drawCircle(color = color, radius = sizeWave.width / 2, style = Stroke(4.dp.toPx()))
+            } else {
+                drawRoundRect(
+                    color = color,
+                    style = Stroke(4.dp.toPx()),
+                    size = sizeWave,
+                    cornerRadius = CornerRadius(sizeWave.width / 2, sizeWave.width / 2)
+                )
+            }
+
+
         }
     }
 

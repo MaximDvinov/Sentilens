@@ -30,4 +30,14 @@ val playlist = persistentListOf(
         url = "https://relax.stream.publicradio.org/relax.mp3",
         type = TrackType.RADIO
     ),
+    Track(
+        title = "Ambient music",
+        url = "https://stream03.pcradio.ru/rad_am-med",
+        type = TrackType.RADIO
+    ),
+    Track(
+        title = "Cassiopeia",
+        url = "https://stream03.pcradio.ru/cassiopeia_station-med",
+        type = TrackType.RADIO
+    )
 )

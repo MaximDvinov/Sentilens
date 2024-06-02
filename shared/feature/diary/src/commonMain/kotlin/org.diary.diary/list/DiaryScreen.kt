@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.koin.koinNavigatorScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import kotlinx.uuid.UUID
 import org.diary.composeui.LoadState
 import org.diary.composeui.PlatformBackHandler
 import org.diary.diary.list.onepane.OnePane
@@ -40,11 +41,13 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
                 InitialDiaryScreenState.CreateDiary -> screenModel.processIntent(
                     DiaryScreenModel.EditNoteIntent.CreateNote
                 )
+
                 InitialDiaryScreenState.Idle -> screenModel.processIntent(
                     DiaryScreenModel.EditNoteIntent.SelectNote(null)
                 )
+
                 is InitialDiaryScreenState.UpdateDiary -> screenModel.processIntent(
-                    DiaryScreenModel.EditNoteIntent.SelectNote(initialState.diaryId)
+                    DiaryScreenModel.EditNoteIntent.SelectNote(initialState.diaryId?.let { UUID(it) })
                 )
             }
         }
@@ -88,7 +91,11 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
                             if (initialState is InitialDiaryScreenState.CreateDiary || initialState is InitialDiaryScreenState.UpdateDiary) {
                                 navigator.pop()
                             } else {
-                                screenModel.processIntent(DiaryScreenModel.EditNoteIntent.SelectNote(null))
+                                screenModel.processIntent(
+                                    DiaryScreenModel.EditNoteIntent.SelectNote(
+                                        null
+                                    )
+                                )
                             }
                         },
                         onIntent = screenModel::processIntent,

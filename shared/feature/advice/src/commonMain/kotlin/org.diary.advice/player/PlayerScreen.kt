@@ -2,10 +2,14 @@ package org.diary.advice.player
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +17,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -23,10 +28,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
 import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinNavigatorScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -44,11 +54,15 @@ import kotlinx.collections.immutable.ImmutableList
 import org.diary.advice.player.components.WaveAnimation
 import org.diary.advice.player.models.Track
 import org.diary.advice.player.models.TrackType
+import org.diary.composeui.NoRippleInteractionSource
 import org.diary.composeui.bounceClick
 import org.diary.composeui.components.ActionTopBar
 import org.diary.composeui.components.SecondaryIconButton
+import org.diary.composeui.isCompact
 import org.diary.composeui.theme.defaultShape
 import org.diary.player.MusicPlayer
+import org.diary.player.MusicPlayerState
+import org.diary.player.Progress
 import org.diary.player.rememberMusicPlayerState
 import kotlin.math.max
 
@@ -78,6 +92,7 @@ class PlayerScreen : Screen {
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun PlayerContent(
     modifier: Modifier = Modifier,
@@ -91,6 +106,8 @@ fun PlayerContent(
     val musicPlayerState = rememberMusicPlayerState(
         seek = state.progress, isResumed = state.isPlaying
     )
+    val windowSizeClass = calculateWindowSizeClass()
+
     val seekState by musicPlayerState.progress
     LaunchedEffect(state) {
         musicPlayerState.isResumed = state.isPlaying
@@ -107,49 +124,138 @@ fun PlayerContent(
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         ActionTopBar(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp),
             title = "Плеер",
             leftButtonIcon = FeatherIcons.ArrowLeft,
             onClickLeft = onBack,
-            rightButtonIcon = FeatherIcons.List,
+            rightButtonIcon = if (windowSizeClass.isCompact()) FeatherIcons.List else null,
             onClickRight = {
                 isShowPlaylist = !isShowPlaylist
             }
         )
 
-        if (state.selectedTrack == null || isShowPlaylist) {
-            Playlist(
-                modifier = modifier,
-                list = state.playlist,
-                onClick = onTrackSelect
+
+        if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+            CompactPlayer(
+                state,
+                isShowPlaylist,
+                Modifier.fillMaxSize(),
+                onTrackSelect,
+                seekState,
+                musicPlayerState,
+                onChangePlaying,
+                onNext,
+                onPrevious
             )
         } else {
-            WaveAnimation(
-                Modifier.padding(30.dp).widthIn(max = 400.dp).aspectRatio(1f),
-                isPlaying = seekState.isPlaying
-            )
-
-            MusicSlider(
-                modifier = Modifier.weight(1f),
-                progress = seekState.fraction,
-                maxValue = seekState.timeMillis,
-                onSliderSeek = {
-                    musicPlayerState.seek = it
-                },
-                title = state.selectedTrack.title,
-                type = state.selectedTrack.type
-            )
-
-            ControlButton(
-                onChangePlaying = onChangePlaying,
-                onNext = onNext,
-                onPrevious = onPrevious,
-                isPlaying = state.isPlaying,
+            ExpandPlayer(
+                state,
+                Modifier.fillMaxSize(),
+                onTrackSelect,
+                seekState,
+                musicPlayerState,
+                onChangePlaying,
+                onNext,
+                onPrevious
             )
         }
     }
 
+}
 
+@Composable
+private fun ColumnScope.CompactPlayer(
+    state: PlayerState,
+    isShowPlaylist: Boolean,
+    modifier: Modifier,
+    onTrackSelect: (Track) -> Unit,
+    seekState: Progress,
+    musicPlayerState: MusicPlayerState,
+    onChangePlaying: (Boolean) -> Unit,
+    onNext: () -> Unit,
+    onPrevious: () -> Unit
+) {
+    if (state.selectedTrack == null || isShowPlaylist) {
+        Playlist(
+            modifier = modifier,
+            list = state.playlist,
+            onClick = onTrackSelect,
+            selectedTrack = state.selectedTrack
+        )
+    } else {
+        WaveAnimation(
+            Modifier.padding(30.dp).weight(1f).widthIn(max = 400.dp).aspectRatio(1f),
+            isPlaying = seekState.isPlaying
+        )
+
+        MusicSlider(
+            modifier = Modifier,
+            progress = seekState.fraction,
+            maxValue = seekState.timeMillis,
+            onSliderSeek = {
+                musicPlayerState.seek = it
+            },
+            title = state.selectedTrack.title,
+            type = state.selectedTrack.type
+        )
+
+        ControlButton(
+            onChangePlaying = onChangePlaying,
+            onNext = onNext,
+            onPrevious = onPrevious,
+            isPlaying = state.isPlaying,
+        )
+    }
+}
+
+@Composable
+private fun ColumnScope.ExpandPlayer(
+    state: PlayerState,
+    modifier: Modifier,
+    onTrackSelect: (Track) -> Unit,
+    seekState: Progress,
+    musicPlayerState: MusicPlayerState,
+    onChangePlaying: (Boolean) -> Unit,
+    onNext: () -> Unit,
+    onPrevious: () -> Unit
+) {
+    Row(modifier = modifier.fillMaxSize()) {
+        Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+            if (state.selectedTrack != null) {
+                WaveAnimation(
+                    Modifier.zIndex(-10f)
+                        .padding(start = 30.dp, top = 16.dp, end = 30.dp, bottom = 40.dp).weight(1f)
+                        .heightIn(max = 400.dp).fillMaxWidth(),
+                    isPlaying = seekState.isPlaying
+                )
+
+                MusicSlider(
+                    modifier = Modifier,
+                    progress = seekState.fraction,
+                    maxValue = seekState.timeMillis,
+                    onSliderSeek = {
+                        musicPlayerState.seek = it
+                    },
+                    title = state.selectedTrack.title,
+                    type = state.selectedTrack.type
+                )
+
+                ControlButton(
+                    onChangePlaying = onChangePlaying,
+                    onNext = onNext,
+                    onPrevious = onPrevious,
+                    isPlaying = state.isPlaying,
+                )
+            }
+        }
+
+        Playlist(
+            modifier = Modifier.widthIn(max = 400.dp),
+            list = state.playlist,
+            onClick = onTrackSelect,
+            selectedTrack = state.selectedTrack
+        )
+    }
 }
 
 @Composable
@@ -249,6 +355,7 @@ fun ControlButton(
 fun Playlist(
     modifier: Modifier,
     list: ImmutableList<Track>,
+    selectedTrack: Track? = null,
     onClick: (Track) -> Unit
 ) {
     LazyColumn(
@@ -263,16 +370,23 @@ fun Playlist(
                     .fillMaxWidth()
                     .clickable(onClick = {
                         onClick(it)
-                    }), it
+                    }, interactionSource = NoRippleInteractionSource(), indication = null),
+                it,
+                isSelected = it == selectedTrack
             )
         }
     }
 }
 
 @Composable
-fun PlaylistItem(modifier: Modifier, item: Track) {
+fun PlaylistItem(modifier: Modifier, item: Track, isSelected: Boolean) {
+    val color by animateColorAsState(if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.background)
+    val width by animateDpAsState(if (isSelected) 1.dp else 0.dp)
     Row(
-        modifier.background(MaterialTheme.colors.secondary, shape = defaultShape)
+        modifier
+            .border(width, color, defaultShape)
+            .clip(defaultShape)
+            .background(MaterialTheme.colors.secondary)
             .padding(vertical = 13.dp, horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -280,6 +394,9 @@ fun PlaylistItem(modifier: Modifier, item: Track) {
         Icon(
             if (item.type == TrackType.RADIO) FeatherIcons.Radio else FeatherIcons.Music, ""
         )
-        Text(item.title)
+        Text(
+            item.title,
+            style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
+        )
     }
 }

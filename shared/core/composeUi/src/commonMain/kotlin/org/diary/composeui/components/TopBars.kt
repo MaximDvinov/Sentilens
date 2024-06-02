@@ -24,6 +24,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -259,6 +262,7 @@ fun HomeTopBarExpanded(
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun ActionTopBar(
     modifier: Modifier = Modifier,
@@ -269,37 +273,76 @@ fun ActionTopBar(
     onClickRight: () -> Unit = {},
     textAlign: TextAlign = TextAlign.Center,
 ) {
-    Row(
-        modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (leftButtonIcon != null) {
-            SecondaryIconButton(
-                onClick = onClickLeft,
-                modifier = Modifier
-            ) {
-                Icon(leftButtonIcon, "")
+    val windowSizeClass = calculateWindowSizeClass()
+    if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+        Row(
+            modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (leftButtonIcon != null) {
+                SecondaryIconButton(
+                    onClick = onClickLeft,
+                    modifier = Modifier
+                ) {
+                    Icon(leftButtonIcon, "")
+                }
+            }
+
+
+            Text(
+                modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
+                text = title,
+                style = MaterialTheme.typography.h1,
+                color = MaterialTheme.colors.onSecondary,
+                textAlign = textAlign
+            )
+
+            if (rightButtonIcon != null) {
+                SecondaryIconButton(
+                    onClick = onClickRight,
+                    modifier = Modifier
+                ) {
+                    Icon(rightButtonIcon, "")
+                }
             }
         }
+    } else {
+        Row(
+            modifier
+                .fillMaxWidth()
+                .clip(defaultShape)
+                .background(MaterialTheme.colors.secondary)
+                .padding(start = 0.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (leftButtonIcon != null) {
+                SecondaryIconButton(
+                    onClick = onClickLeft,
+                    modifier = Modifier
+                ) {
+                    Icon(leftButtonIcon, "")
+                }
+            }
 
+            Text(
+                modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
+                text = title,
+                style = MaterialTheme.typography.h1,
+                color = MaterialTheme.colors.onSecondary,
+                textAlign = TextAlign.Start
+            )
 
-        Text(
-            modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
-            text = title,
-            style = MaterialTheme.typography.h1,
-            color = MaterialTheme.colors.onSecondary,
-            textAlign = textAlign
-        )
-
-        if (rightButtonIcon != null) {
-            SecondaryIconButton(
-                onClick = onClickRight,
-                modifier = Modifier
-            ) {
-                Icon(rightButtonIcon, "")
+            if (rightButtonIcon != null) {
+                SecondaryIconButton(
+                    onClick = onClickRight,
+                    modifier = Modifier
+                ) {
+                    Icon(rightButtonIcon, "")
+                }
             }
         }
     }
+
 }
 
 

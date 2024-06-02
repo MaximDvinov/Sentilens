@@ -62,7 +62,7 @@ fun Navigator.navigateToDiary(diary: Note) {
         ScreenRegistry.get(
             DiaryScreenProvider.DiaryScreen(
                 InitialDiaryScreenState.UpdateDiary(
-                    diaryId = diary.uuid
+                    diaryId = diary.uuid?.toString()
                 )
             )
         )
