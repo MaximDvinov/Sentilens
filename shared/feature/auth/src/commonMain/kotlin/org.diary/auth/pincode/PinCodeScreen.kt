@@ -44,6 +44,7 @@ import compose.icons.feathericons.Check
 import org.diary.composeui.bounceClick
 import org.diary.composeui.theme.defaultShape
 import org.diary.navigation.DiaryScreenProvider
+import org.diary.navigation.koinNavigatorScreenModel
 import kotlin.math.roundToInt
 
 class PinCodeScreen : Screen {
@@ -51,7 +52,7 @@ class PinCodeScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = navigator.koinNavigatorScreenModel<PinCodeScreenModel>()
+        val screenModel = koinNavigatorScreenModel<PinCodeScreenModel>(navigator)
         val homeScreen = rememberScreen(DiaryScreenProvider.HomeScreen)
         var pin by remember { mutableStateOf("") }
 

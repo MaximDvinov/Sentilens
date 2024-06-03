@@ -19,7 +19,7 @@ import org.diary.nerwork.models.NoteDTO
 import org.diary.nerwork.models.NoteWrite
 
 interface NotesRepository {
-    fun getNotes(): Flow<List<NoteData>>
+    suspend fun getNotes(): Flow<List<NoteData>>
 
     suspend fun createNoteAndAnalyze(note: NoteData): ApiResult<NoteData?>
 
@@ -37,7 +37,7 @@ class NotesRepositoryImpl(
     private val localNotesDataSource: LocalNotesDataSource,
     private val notesApi: NotesApi,
 ) : NotesRepository {
-    override fun getNotes(): Flow<List<NoteData>> {
+    override suspend fun getNotes(): Flow<List<NoteData>> {
         return localNotesDataSource.getNotes().map { list ->
             list.map { it.toNote() }.filter { !it.isDeleted }
         }

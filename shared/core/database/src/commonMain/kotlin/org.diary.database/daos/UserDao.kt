@@ -1,6 +1,7 @@
 package org.diary.database.daos
 
 import org.diary.database.SentilensDB
+import org.diary.database.SharedDatabase
 import org.diary.database.models.UserDataDBO
 import orgdiarydatabase.User
 
@@ -12,9 +13,9 @@ interface UserDao {
     suspend fun deleteUserData()
 }
 
-class UserDaoImpl(private val db: SentilensDB) : UserDao {
+class UserDaoImpl(private val db: SharedDatabase) : UserDao {
     override suspend fun getUserData(): UserDataDBO {
-        val result = db.userQueries.getUser().executeAsOneOrNull()
+        val result = db.getDatabase().userQueries.getUser().executeAsOneOrNull()
 
         return UserDataDBO(
             id = result?.id?.toInt(),
@@ -26,7 +27,7 @@ class UserDaoImpl(private val db: SentilensDB) : UserDao {
 
     override suspend fun upsertUserData(userData: UserDataDBO): UserDataDBO {
         val id = userData.id ?: return userData
-        db.userQueries.insertUser(
+        db.getDatabase().userQueries.insertUser(
             User(
                 id = id.toLong(),
                 username = userData.username,
@@ -39,7 +40,7 @@ class UserDaoImpl(private val db: SentilensDB) : UserDao {
     }
 
     override suspend fun deleteUserData() {
-        db.userQueries.delete()
+        db.getDatabase().userQueries.delete()
     }
 
 

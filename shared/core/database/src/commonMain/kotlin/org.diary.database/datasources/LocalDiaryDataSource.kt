@@ -6,7 +6,7 @@ import org.diary.database.daos.NoteDao
 import org.diary.database.models.NoteDBO
 
 class LocalDiaryDataSource(private val dao: NoteDao) : LocalNotesDataSource {
-    override fun getNotes(): Flow<List<NoteDBO>> = dao.getAllNotes()
+    override suspend fun getNotes(): Flow<List<NoteDBO>> = dao.getAllNotes()
 
     override suspend fun createNotes(note: NoteDBO): NoteDBO = dao.createNote(note)
 
@@ -15,7 +15,7 @@ class LocalDiaryDataSource(private val dao: NoteDao) : LocalNotesDataSource {
     override suspend fun deleteNote(note: NoteDBO) = dao.deleteNote(note)
     override suspend fun getNote(id: UUID): NoteDBO? = dao.getNote(id)
 
-    override fun getNotesSync(): List<NoteDBO> = dao.getAllNotesSync()
+    override suspend fun getNotesSync(): List<NoteDBO> = dao.getAllNotesSync()
 
     override suspend fun upsertNote(note: NoteDBO): NoteDBO? = dao.upsertNote(note)
 

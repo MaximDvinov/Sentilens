@@ -7,7 +7,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 
 actual class DriverFactory(private val context: Context) {
-    actual fun createDriver(): SqlDriver {
+    actual suspend fun createDriver(): SqlDriver {
         return AndroidSqliteDriver(SentilensDB.Schema.synchronous(), context, "test.db")
     }
 }

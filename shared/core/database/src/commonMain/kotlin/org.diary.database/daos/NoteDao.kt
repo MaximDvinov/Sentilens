@@ -1,47 +1,51 @@
 package org.diary.database.daos
 
+import app.cash.sqldelight.async.coroutines.awaitAsList
 import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.uuid.UUID
 import org.diary.database.SentilensDB
+import org.diary.database.SharedDatabase
 import org.diary.database.models.NoteDBO
 import org.diary.database.models.SentimentDBO
 import org.diary.database.models.getValue
 import orgdiarydatabase.Diary
 
 interface NoteDao {
-    fun getAllNotes(): Flow<List<NoteDBO>>
+    suspend fun getAllNotes(): Flow<List<NoteDBO>>
     suspend fun createNote(note: NoteDBO): NoteDBO
     suspend fun getNote(uuid: UUID): NoteDBO?
     suspend fun updateNote(note: NoteDBO): NoteDBO?
     suspend fun deleteNote(note: NoteDBO)
-    fun getAllNotesSync(): List<NoteDBO>
+    suspend fun getAllNotesSync(): List<NoteDBO>
     suspend fun upsertNote(note: NoteDBO): NoteDBO?
     suspend fun finallyDeleteNote(note: NoteDBO)
     suspend fun deleteAll()
 }
 
-class NoteDaoImpl(private val db: SentilensDB) : NoteDao {
-    override fun getAllNotes(): Flow<List<NoteDBO>> {
-        return db.diaryQueries.selectAll().asFlow().map { query ->
-            query.executeAsList().map {
-                it.toDBO()
+class NoteDaoImpl(private val db: SharedDatabase) : NoteDao {
+
+    override suspend fun getAllNotes(): Flow<List<NoteDBO>> {
+        return db.getDatabase().diaryQueries.selectAll().asFlow().mapToList(Dispatchers.Default)
+            .map {
+                it.map { it.toDBO() }
             }
-        }
     }
 
     override suspend fun createNote(note: NoteDBO): NoteDBO {
-        db.diaryQueries.insert(note.toEntity())
+        db.getDatabase().diaryQueries.insert(note.toEntity())
         return note
     }
 
     override suspend fun getNote(uuid: UUID): NoteDBO? {
-        return db.diaryQueries.getById(uuid).executeAsOneOrNull()?.toDBO()
+        return db.getDatabase().diaryQueries.getById(uuid).executeAsOneOrNull()?.toDBO()
     }
 
     override suspend fun updateNote(note: NoteDBO): NoteDBO? {
-        db.diaryQueries.updateById(
+        db.getDatabase().diaryQueries.updateById(
             uuid = note.uuid,
             title = note.title,
             content = note.content,
@@ -56,7 +60,7 @@ class NoteDaoImpl(private val db: SentilensDB) : NoteDao {
     }
 
     override suspend fun deleteNote(note: NoteDBO) {
-        db.diaryQueries.updateById(
+        db.getDatabase().diaryQueries.updateById(
             uuid = note.uuid,
             title = note.title,
             content = note.content,
@@ -69,25 +73,25 @@ class NoteDaoImpl(private val db: SentilensDB) : NoteDao {
         )
     }
 
-    override fun getAllNotesSync(): List<NoteDBO> {
-        return db.diaryQueries.selectAll().executeAsList().map {
+    override suspend fun getAllNotesSync(): List<NoteDBO> {
+        return db.getDatabase().diaryQueries.selectAll().awaitAsList().map {
             it.toDBO()
         }
     }
 
     override suspend fun upsertNote(note: NoteDBO): NoteDBO? {
-        db.diaryQueries.upsert(
+        db.getDatabase().diaryQueries.upsert(
             diary = note.toEntity()
         )
         return note
     }
 
     override suspend fun finallyDeleteNote(note: NoteDBO) {
-        db.diaryQueries.deleteById(note.uuid)
+        db.getDatabase().diaryQueries.deleteById(note.uuid)
     }
 
     override suspend fun deleteAll() {
-        db.diaryQueries.deleteAll()
+        db.getDatabase().diaryQueries.deleteAll()
     }
 
 }

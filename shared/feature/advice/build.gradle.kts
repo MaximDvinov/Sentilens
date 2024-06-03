@@ -48,6 +48,8 @@ kotlin {
                 implementation(project(":shared:core:composeUi"))
                 implementation(project(":shared:core:utils"))
                 implementation(project(":shared:feature:player"))
+                implementation(project(":shared:core:navigation"))
+
 
             }
         }

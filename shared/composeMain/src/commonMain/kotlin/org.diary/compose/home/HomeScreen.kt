@@ -19,6 +19,7 @@ import org.diary.composeui.LoadState
 import org.diary.composeui.components.ErrorSnackbar
 import org.diary.composeui.isCompact
 import org.diary.diary.list.DiaryScreenModel
+import org.diary.navigation.koinNavigatorScreenModel
 
 class HomeScreen : Screen {
 
@@ -28,7 +29,7 @@ class HomeScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val windowSizeClass = calculateWindowSizeClass()
 
-        val screenModel = navigator.koinNavigatorScreenModel<HomeScreenModel>()
+        val screenModel = koinNavigatorScreenModel<HomeScreenModel>(navigator)
         val state by screenModel.state.collectAsState()
 
         Box {

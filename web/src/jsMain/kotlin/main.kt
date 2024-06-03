@@ -4,9 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.CanvasBasedWindow
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SettingsListener
+import com.russhwolf.settings.get
 import kotlinx.browser.window
 import org.diary.compose.App
 import org.koin.core.context.startKoin
@@ -21,6 +24,7 @@ import org.w3c.dom.MediaQueryListEvent
 
 private lateinit var settingsListener: SettingsListener
 
+@OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     val koin = startKoin {
         modules(platformModule, commonModule)
@@ -29,10 +33,10 @@ fun main() {
     onWasmReady {
         screenRegistry()
 
-        BrowserViewportWindow("Sentilens") {
+        CanvasBasedWindow("Sentilens") {
             val settings: ObservableSettings by koin.inject()
             var isStartScreen by remember {
-                mutableStateOf(true)
+                mutableStateOf(settings.getStringOrNull("ACCESS").isNullOrBlank())
             }
 
             var isDarkTheme by remember {

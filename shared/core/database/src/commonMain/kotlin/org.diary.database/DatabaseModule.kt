@@ -1,5 +1,6 @@
 package org.diary.database
 
+import kotlinx.coroutines.internal.synchronized
 import org.diary.database.datasources.LocalDiaryDataSource
 import org.diary.database.datasources.LocalUserDataSource
 import org.diary.database.datasources.LocalUserDataSourceImpl
@@ -9,6 +10,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import kotlin.coroutines.coroutineContext
 
 expect fun platformDatabaseModule(): Module
 
@@ -21,6 +23,6 @@ val databaseModule = module {
     singleOf(::UserDaoImpl) bind UserDao::class
 
     single {
-        createDatabase(get())
+        SharedDatabase(get())
     }
 }

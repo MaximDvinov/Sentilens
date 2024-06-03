@@ -6,19 +6,25 @@ import app.cash.sqldelight.db.SqlDriver
 import orgdiarydatabase.Diary
 
 expect class DriverFactory {
-    fun createDriver(): SqlDriver
+    suspend fun createDriver(): SqlDriver
 }
 
-fun createDatabase(driverFactory: DriverFactory): SentilensDB {
-    val driver = driverFactory.createDriver()
-    val database = SentilensDB(
-        driver,
-        diaryAdapter = Diary.Adapter(
-            uuidAdapter = uuidAdapter,
-            createdAtAdapter = dateTimeAdapter,
-            updatedAtAdapter = dateTimeAdapter,
-            categoryAdapter = EnumColumnAdapter()
+class SharedDatabase(
+    private val driverFactory: DriverFactory
+) {
+    private var database: SentilensDB? = null
+    suspend fun getDatabase(): SentilensDB {
+        if (database != null) return database!!
+        database = SentilensDB(
+            driverFactory.createDriver(),
+            diaryAdapter = Diary.Adapter(
+                uuidAdapter = uuidAdapter,
+                createdAtAdapter = dateTimeAdapter,
+                updatedAtAdapter = dateTimeAdapter,
+                categoryAdapter = EnumColumnAdapter()
+            )
         )
-    )
-    return database
+        return database!!
+    }
 }
+

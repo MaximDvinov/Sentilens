@@ -65,6 +65,7 @@ import org.diary.composeui.icons.LeftArrow
 import org.diary.composeui.theme.defaultShape
 import org.diary.diary.list.DiaryScreenModel
 import org.diary.navigation.DiaryScreenProvider
+import org.diary.navigation.koinNavigatorScreenModel
 
 class SettingScreen : Screen, KoinComponent {
     override val key = uniqueScreenKey
@@ -74,7 +75,7 @@ class SettingScreen : Screen, KoinComponent {
         val settings: ObservableSettings by inject()
         val navigator = LocalNavigator.currentOrThrow
 
-        val screenModel = navigator.koinNavigatorScreenModel<SettingScreenModel>()
+        val screenModel = koinNavigatorScreenModel<SettingScreenModel>(navigator)
         val state by screenModel.state.collectAsState()
 
         val authScreen = rememberScreen(DiaryScreenProvider.LoginScreen())

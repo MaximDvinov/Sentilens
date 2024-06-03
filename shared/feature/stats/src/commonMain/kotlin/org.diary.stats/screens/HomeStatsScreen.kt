@@ -31,6 +31,7 @@ import org.diary.composeui.components.calendar.SentimentItem
 import org.diary.composeui.icons.Emoji
 import org.diary.composeui.isCompact
 import org.diary.composeui.theme.SentimentColor
+import org.diary.navigation.koinNavigatorScreenModel
 import org.diary.stats.screens.size.ScreenCompact
 import org.diary.stats.screens.size.ScreenExpanded
 
@@ -39,7 +40,7 @@ class HomeStatsScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = navigator.koinNavigatorScreenModel<StatsScreenModel>()
+        val screenModel = koinNavigatorScreenModel<StatsScreenModel>(navigator) //TODO: for web change
         val windowSizeClass = calculateWindowSizeClass()
 
         val state by screenModel.state.collectAsState()

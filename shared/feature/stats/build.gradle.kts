@@ -49,6 +49,7 @@ kotlin {
                 implementation(project(":shared:core:data"))
                 implementation(project(":shared:core:composeUi"))
                 implementation(project(":shared:core:utils"))
+                implementation(project(":shared:core:navigation"))
 
             }
         }

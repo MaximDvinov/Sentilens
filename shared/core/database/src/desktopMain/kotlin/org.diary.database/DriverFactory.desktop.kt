@@ -6,7 +6,7 @@ import ca.gosyer.appdirs.AppDirs
 import java.io.File
 
 actual class DriverFactory {
-    actual fun createDriver(): SqlDriver {
+    actual suspend fun createDriver(): SqlDriver {
         val path = File(AppDirs("Sentilens").getUserDataDir(), "Sentilens.db")
         if (!path.exists()) {
             File(path.parent).mkdirs()

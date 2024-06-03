@@ -23,6 +23,7 @@ import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import org.diary.auth.loadAnimation
 import org.diary.auth.pincode.PinCodeScreen
 import org.diary.navigation.DiaryScreenProvider
+import org.diary.navigation.koinNavigatorScreenModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -30,7 +31,7 @@ class SplashScreen : Screen, KoinComponent {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = navigator.koinNavigatorScreenModel<SplashScreenModel>()
+        val screenModel = koinNavigatorScreenModel<SplashScreenModel>(navigator)
         val event by screenModel.event.collectAsState(null)
         val loginScreen = rememberScreen(DiaryScreenProvider.LoginScreen())
         val homeScreen = rememberScreen(DiaryScreenProvider.HomeScreen)

@@ -22,6 +22,7 @@ import org.diary.composeui.components.ErrorSnackbar
 import org.diary.composeui.isCompact
 import org.diary.diary.list.twopane.TwoPane
 import org.diary.navigation.InitialDiaryScreenState
+import org.diary.navigation.koinNavigatorScreenModel
 
 
 class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
@@ -33,7 +34,7 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val windowSizeClass = calculateWindowSizeClass()
 
-        val screenModel = navigator.koinNavigatorScreenModel<DiaryScreenModel>()
+        val screenModel = koinNavigatorScreenModel<DiaryScreenModel>(navigator)
         val state by screenModel.state.collectAsState()
 
         LaunchedEffect(initialState) {
