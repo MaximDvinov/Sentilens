@@ -30,24 +30,11 @@ fun OnePane(
     onIntent: (Intent) -> Unit,
     initialState: InitialDiaryScreenState,
 ) {
-    var currentNote by remember {
-        mutableStateOf<Note?>(null)
-    }
 
     var scrollState = rememberLazyListState()
 
-    LaunchedEffect(editState) {
-        launch {
-            if (editState == null) {
-                delay(100)
-            }
-
-            currentNote = editState?.currentNote
-        }
-    }
-
     Crossfade(
-        editState != null || initialState == InitialDiaryScreenState.CreateDiary || initialState is InitialDiaryScreenState.UpdateDiary,
+        editState != null  || initialState == InitialDiaryScreenState.CreateDiary || initialState is InitialDiaryScreenState.UpdateDiary,
         animationSpec = tween(200)
     ) { isNote ->
         if (!isNote) {
@@ -62,7 +49,7 @@ fun OnePane(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize(),
-                currentNote = currentNote,
+                currentNote = editState?.currentNote,
                 onIntent = onIntent,
                 onClickBack = onClickBack,
                 loadState = editState?.loadState ?: LoadState.Idle,

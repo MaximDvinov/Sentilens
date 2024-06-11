@@ -5,9 +5,11 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.diary.composeui.Intent
+import org.diary.composeui.LoadState
 import org.diary.data.ApiResult
 import org.diary.data.diary.NotesRepository
 import org.diary.data.diary.SyncRepository
@@ -61,12 +63,20 @@ class HomeScreenModel(
             }
         }
 
-        sync()
+        screenModelScope.launch {
+            delay(50)
+
+            mutableState.update {
+                UiState.Loading(it.notes, it.variability)
+            }
+
+            loadNoteList()
+        }
     }
 
     fun processIntent(intent: Intent) {
         when (intent) {
-            is HomeIntent.LoadData -> sync()
+            is HomeIntent.LoadData -> screenModelScope.launch { loadNoteList() }
             is HomeIntent.CloseErrorMessage -> {
                 mutableState.update {
                     UiState.Success(it.notes, it.variability)
@@ -75,31 +85,29 @@ class HomeScreenModel(
         }
     }
 
-    private fun sync() {
-        screenModelScope.launch {
-            mutableState.update {
-                UiState.Loading(it.notes, it.variability)
+    private suspend fun loadNoteList() {
+        mutableState.update {
+            UiState.Loading(it.notes, it.variability)
+        }
+        when (val result = syncRepository.sync()) {
+            is ApiResult.Failure -> {
+                mutableState.update {
+                    UiState.Error(result.message, it.notes, it.variability)
+                }
             }
-            when (val result = syncRepository.sync()) {
-                is ApiResult.Failure -> {
-                    mutableState.update {
-                        UiState.Error(result.message, it.notes, it.variability)
-                    }
-                }
 
-                is ApiResult.ServerError -> {
-                    mutableState.update {
-                        UiState.Error(
-                            "${result.status} ${result.message}",
-                            it.notes, it.variability
-                        )
-                    }
+            is ApiResult.ServerError -> {
+                mutableState.update {
+                    UiState.Error(
+                        "${result.status} ${result.message}",
+                        it.notes, it.variability
+                    )
                 }
+            }
 
-                is ApiResult.Success -> {
-                    mutableState.update {
-                        UiState.Success(it.notes, it.variability)
-                    }
+            is ApiResult.Success -> {
+                mutableState.update {
+                    UiState.Success(it.notes, it.variability)
                 }
             }
         }

@@ -24,8 +24,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.diary.nerwork.models.TokenDataDTO
 
-const val BASE_HOST = "217.28.221.132"
-const val BASE_URL = "http://$BASE_HOST"
+const val BASE_HOST = "sentilens.ru"
+const val BASE_URL = "https://$BASE_HOST"
 const val ACCESS = "ACCESS"
 const val REFRESH = "REFRESH"
 

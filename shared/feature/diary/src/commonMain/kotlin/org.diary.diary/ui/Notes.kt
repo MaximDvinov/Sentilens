@@ -94,9 +94,9 @@ fun NotesList(
     ) {
         items(items = notes, contentType = { it }) {
             key(it.uuid) {
-                val color by animateColorAsState(remember(currentNote?.uuid) {
+                val color by animateColorAsState(
                     if (currentNote?.uuid == it.uuid) it.sentiment?.category.getSentimentColor() else colorSecondary
-                })
+                )
                 val width by animateDpAsState(if (currentNote?.uuid == it.uuid) 0.5.dp else 0.dp)
 
                 NoteItem(modifier = Modifier

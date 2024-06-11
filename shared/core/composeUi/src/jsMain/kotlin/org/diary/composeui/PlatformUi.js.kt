@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +26,9 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
+import kotlinx.browser.window
 import org.diary.composeui.theme.defaultShape
+import org.w3c.dom.events.Event
 
 
 @Composable
@@ -41,14 +44,16 @@ actual fun PlatformBackHandler(
     backHandlingEnabled: Boolean,
     onBack: () -> Unit,
 ) {
-    Box(modifier = Modifier.onPreviewKeyEvent {
-        if (it.key == Key.Escape) {
+    DisposableEffect(Unit){
+        val popStateListener: (Event) -> Unit = {
             onBack()
-            true
-        } else {
-            false
         }
-    })
+        window.addEventListener("popstate", popStateListener)
+        onDispose {
+            window.removeEventListener("popstate", popStateListener)
+        }
+    }
+
 }
 
 @Composable

@@ -9,6 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.koin.koinNavigatorScreenModel
@@ -25,7 +28,7 @@ import org.diary.navigation.InitialDiaryScreenState
 import org.diary.navigation.koinNavigatorScreenModel
 
 
-class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
+class DiaryScreen(private val _initialState: InitialDiaryScreenState) : Screen {
     override val key = uniqueScreenKey
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -36,9 +39,11 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
 
         val screenModel = koinNavigatorScreenModel<DiaryScreenModel>(navigator)
         val state by screenModel.state.collectAsState()
+        var initialState by remember(_initialState) { mutableStateOf(_initialState) }
 
-        LaunchedEffect(initialState) {
-            when (initialState) {
+        LaunchedEffect(_initialState) {
+            val tmpInitialState = _initialState
+            when (tmpInitialState) {
                 InitialDiaryScreenState.CreateDiary -> screenModel.processIntent(
                     DiaryScreenModel.EditNoteIntent.CreateNote
                 )
@@ -48,13 +53,16 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
                 )
 
                 is InitialDiaryScreenState.UpdateDiary -> screenModel.processIntent(
-                    DiaryScreenModel.EditNoteIntent.SelectNote(initialState.diaryId?.let { UUID(it) })
+                    DiaryScreenModel.EditNoteIntent.SelectNote(
+                        tmpInitialState.diaryId?.let { UUID(it) }
+                    )
                 )
             }
+            initialState = InitialDiaryScreenState.Idle
         }
 
         PlatformBackHandler(true) {
-            when (initialState) {
+            when (_initialState) {
                 InitialDiaryScreenState.CreateDiary -> {
                     navigator.pop()
                 }
@@ -89,13 +97,11 @@ class DiaryScreen(private val initialState: InitialDiaryScreenState) : Screen {
                         state = state.listNote,
                         editState = state.editNoteState,
                         onClickBack = {
-                            if (initialState is InitialDiaryScreenState.CreateDiary || initialState is InitialDiaryScreenState.UpdateDiary) {
+                            if (_initialState is InitialDiaryScreenState.CreateDiary || _initialState is InitialDiaryScreenState.UpdateDiary) {
                                 navigator.pop()
                             } else {
                                 screenModel.processIntent(
-                                    DiaryScreenModel.EditNoteIntent.SelectNote(
-                                        null
-                                    )
+                                    DiaryScreenModel.EditNoteIntent.SelectNote(null)
                                 )
                             }
                         },

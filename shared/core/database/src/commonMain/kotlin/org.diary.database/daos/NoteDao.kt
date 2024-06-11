@@ -29,10 +29,9 @@ interface NoteDao {
 class NoteDaoImpl(private val db: SharedDatabase) : NoteDao {
 
     override suspend fun getAllNotes(): Flow<List<NoteDBO>> {
-        return db.getDatabase().diaryQueries.selectAll().asFlow().mapToList(Dispatchers.Default)
-            .map {
-                it.map { it.toDBO() }
-            }
+        return db.getDatabase().diaryQueries.selectAllNotDeleted().asFlow()
+            .mapToList(Dispatchers.Default)
+            .map { it.map { it.toDBO() } }
     }
 
     override suspend fun createNote(note: NoteDBO): NoteDBO {

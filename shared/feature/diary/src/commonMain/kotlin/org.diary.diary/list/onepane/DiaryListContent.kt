@@ -77,8 +77,6 @@ fun NotesListContent(
                 val delta = available.y
                 totalScrollOffsetPx += delta
 
-                Napier.log(LogLevel.INFO, tag = "total scroll", message = "$totalScrollOffsetPx")
-
                 return Offset.Zero
             }
         }

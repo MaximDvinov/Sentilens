@@ -61,7 +61,6 @@ fun CompactHomeContent(
         ), animationSpec = tween(if (refreshState.progress > 0) 0 else 300)
     )
 
-
     Box {
         LoadIndicator(state is HomeScreenModel.UiState.Loading, offset, refreshState)
 

@@ -40,7 +40,7 @@ class HomeStatsScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = koinNavigatorScreenModel<StatsScreenModel>(navigator) //TODO: for web change
+        val screenModel = koinNavigatorScreenModel<StatsScreenModel>(navigator)
         val windowSizeClass = calculateWindowSizeClass()
 
         val state by screenModel.state.collectAsState()

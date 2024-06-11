@@ -53,7 +53,7 @@ fun SentimentInMonth(
         mutableStateOf<LocalDate?>(null)
     }
 
-    val histogramItems by remember(days) {
+    val histogramItems by remember(items) {
         derivedStateOf {
             days.mapIndexed { index, date ->
                 val value = items[date]

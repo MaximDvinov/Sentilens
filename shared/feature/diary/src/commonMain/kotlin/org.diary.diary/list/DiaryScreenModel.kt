@@ -100,7 +100,6 @@ class DiaryScreenModel(
             }
 
             loadNoteList()
-
         }
     }
 
@@ -199,9 +198,7 @@ class DiaryScreenModel(
 
     private suspend fun deleteNote(currentNote: Note?) {
         if (currentNote?.uuid == mutableState.value.editNoteState?.currentNote?.uuid) mutableState.update {
-            it.copy(
-                editNoteState = null
-            )
+            it.copy(editNoteState = null)
         }
 
         if (currentNote != null) {

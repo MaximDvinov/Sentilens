@@ -9,6 +9,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -91,7 +92,7 @@ class StatsScreenModel(private val statsRepository: StatsRepository) : ScreenMod
                 _state.update { oldState ->
                     oldState.copy(
                         sentimentForMonth = it.sentimentForMonth.mapValues { it.value.toStable() }
-                            .toImmutableMap(),
+                            .toPersistentMap(),
                         frequencies = it.frequencies.map { it.toStable() }.toPersistentList()
                     )
                 }

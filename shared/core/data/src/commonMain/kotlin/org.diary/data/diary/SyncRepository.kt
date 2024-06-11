@@ -91,7 +91,7 @@ class SyncRepositoryImpl(
             if (note.isDeleted) {
                 val deletedResult =
                     notesApi.deleteNote(note.uuid.toString()).toApiResult()
-                if (deletedResult is ApiResult.Success) {
+                if (deletedResult is ApiResult.Success || (deletedResult is ApiResult.ServerError && deletedResult.status == 404)) {
                     localNotesDataSource.finallyDeleteNote(note)
                 }
             }
