@@ -48,6 +48,7 @@ fun CompactHomeContent(
     val statsScreen = rememberScreen(DiaryScreenProvider.HomeStatsScreen)
     val playerScreen = rememberScreen(DiaryScreenProvider.PlayerScreen)
     val breathScreen = rememberScreen(DiaryScreenProvider.BreathScreen)
+    val advicesScreen = rememberScreen(DiaryScreenProvider.AdviceScreen)
 
     val refreshState = rememberPullRefreshState(
         state is HomeScreenModel.UiState.Loading, onRefresh = {
@@ -62,7 +63,7 @@ fun CompactHomeContent(
     )
 
     Box {
-        LoadIndicator(state is HomeScreenModel.UiState.Loading, offset, refreshState)
+        LoadIndicator(state is HomeScreenModel.UiState.Loading, offset, refreshState = refreshState)
 
         Box(modifier.pullRefresh(refreshState).padding(top = offset)) {
             LazyColumn(
@@ -80,7 +81,10 @@ fun CompactHomeContent(
                 }
 
                 item {
-                    Actions(onRecommendationClick = {},
+                    Actions(
+                        onRecommendationClick = {
+                            navigator.push(advicesScreen)
+                        },
                         onMusicClick = {
                             navigator.push(playerScreen)
                         },
@@ -89,7 +93,8 @@ fun CompactHomeContent(
                         },
                         onStatsClick = {
                             navigator.push(statsScreen)
-                        }, state.variability)
+                        }, state.variability
+                    )
                 }
 
 

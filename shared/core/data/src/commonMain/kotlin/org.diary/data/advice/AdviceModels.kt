@@ -10,3 +10,11 @@ enum class MusicCategoryData {
     AUDIOFILE,
     RADIO
 }
+
+data class RecommendationsData(
+    val title: String,
+    val content: String,
+    val url: String,
+    val image: String,
+    val id: Int
+)

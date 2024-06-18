@@ -15,9 +15,9 @@ data class Sentiment(
 
 @Stable
 enum class SentimentCategory(val value: String, val color: Color, val icon: ImageVector) {
-    @Stable terrible("Ужасно", SentimentColor.TERRIBLE.value, Emoji.Terrible),
-    @Stable bad("Плохо", SentimentColor.BAD.value, Emoji.Bad),
-    @Stable neutral("Так себе", SentimentColor.NEUTRAL.value, Emoji.Neutral),
-    @Stable good("Хорошо", SentimentColor.GOOD.value, Emoji.Good),
-    @Stable awesome("Супер", SentimentColor.GREAT.value, Emoji.Great),
+    @Stable terrible("Ужасное", SentimentColor.TERRIBLE.value, Emoji.Terrible),
+    @Stable bad("Плохое", SentimentColor.BAD.value, Emoji.Bad),
+    @Stable neutral("Обычное", SentimentColor.NEUTRAL.value, Emoji.Neutral),
+    @Stable good("Хорошее", SentimentColor.GOOD.value, Emoji.Good),
+    @Stable awesome("Отличное", SentimentColor.GREAT.value, Emoji.Great),
 }

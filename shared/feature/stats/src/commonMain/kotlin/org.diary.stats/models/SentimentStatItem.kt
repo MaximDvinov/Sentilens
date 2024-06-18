@@ -23,11 +23,11 @@ fun SentimentStatItemData.toStable(): SentimentStatItem {
 
 @Stable
 enum class SentimentCategory(val value: String, val color: Color, val icon: ImageVector) {
-    @Stable TERRIBLE("Ужасно", SentimentColor.TERRIBLE.value, Emoji.Terrible),
-    @Stable BAD("Плохо", SentimentColor.BAD.value, Emoji.Bad),
-    @Stable NEUTRAL("Так себе", SentimentColor.NEUTRAL.value, Emoji.Neutral),
-    @Stable GOOD("Хорошо", SentimentColor.GOOD.value, Emoji.Good),
-    @Stable AWESOME("Супер", SentimentColor.GREAT.value, Emoji.Great),
+    @Stable TERRIBLE("Ужасное", SentimentColor.TERRIBLE.value, Emoji.Terrible),
+    @Stable BAD("Плохое", SentimentColor.BAD.value, Emoji.Bad),
+    @Stable NEUTRAL("Обычное", SentimentColor.NEUTRAL.value, Emoji.Neutral),
+    @Stable GOOD("Хорошее", SentimentColor.GOOD.value, Emoji.Good),
+    @Stable AWESOME("Отличное", SentimentColor.GREAT.value, Emoji.Great),
 }
 
 fun SentimentCategoryData.toStable() = when (this) {

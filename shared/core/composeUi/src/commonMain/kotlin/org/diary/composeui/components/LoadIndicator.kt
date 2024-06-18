@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 fun LoadIndicator(
     isLoad: Boolean,
     offset: Dp,
+    text: String = "Синхронизация",
+    text2: String = "Синхронизировать",
     refreshState: PullRefreshState
 ) {
     AnimatedContent(isLoad, Modifier.fillMaxWidth()) {
@@ -40,7 +42,7 @@ fun LoadIndicator(
                 Text(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.caption,
-                    text = if (it) "Синхронизация" else "Синхронизировать",
+                    text = if (it) text else text2,
                     color = MaterialTheme.colors.onBackground.copy(0.3f),
                 )
             }

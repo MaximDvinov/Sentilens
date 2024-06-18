@@ -60,6 +60,7 @@ import org.diary.composeui.components.ActionTopBar
 import org.diary.composeui.components.SecondaryIconButton
 import org.diary.composeui.isCompact
 import org.diary.composeui.theme.defaultShape
+import org.diary.navigation.koinNavigatorScreenModel
 import org.diary.player.MusicPlayer
 import org.diary.player.MusicPlayerState
 import org.diary.player.Progress
@@ -71,7 +72,7 @@ class PlayerScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val playerModel = navigator.koinNavigatorScreenModel<PlayerScreenModel>()
+        val playerModel = koinNavigatorScreenModel<PlayerScreenModel>(navigator)
         val state by playerModel.state.collectAsState()
 
         PlayerContent(modifier = Modifier.fillMaxSize(),

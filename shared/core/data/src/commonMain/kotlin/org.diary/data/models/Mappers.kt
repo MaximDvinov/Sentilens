@@ -8,6 +8,7 @@ import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
 import org.diary.data.advice.MusicCategoryData
 import org.diary.data.advice.MusicData
+import org.diary.data.advice.RecommendationsData
 import org.diary.data.auth.CreatedUserData
 import org.diary.data.auth.LoginData
 import org.diary.data.auth.RegisterData
@@ -26,6 +27,7 @@ import org.diary.nerwork.models.SentimentCategoryDTO
 import org.diary.nerwork.models.SentimentDTO
 import org.diary.nerwork.models.CreatedUserDTO
 import org.diary.nerwork.models.LoginDataDTO
+import org.diary.nerwork.models.RecommendationsDTO
 import org.diary.nerwork.models.RegisterDataDTO
 import org.diary.nerwork.models.TokenDataDTO
 
@@ -60,6 +62,16 @@ private fun SentimentDTO.toSentiment(): SentimentData {
         category = category?.toDTO(),
         value = value,
         advice = advice
+    )
+}
+
+internal fun RecommendationsDTO.toData(): RecommendationsData {
+    return RecommendationsData(
+        title = title,
+        content = content,
+        url = url,
+        image = image,
+        id = id
     )
 }
 

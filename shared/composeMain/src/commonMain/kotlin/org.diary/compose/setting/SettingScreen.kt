@@ -66,6 +66,8 @@ import org.diary.composeui.theme.defaultShape
 import org.diary.diary.list.DiaryScreenModel
 import org.diary.navigation.DiaryScreenProvider
 import org.diary.navigation.koinNavigatorScreenModel
+import org.diary.utils.TypeDevice
+import org.diary.utils.getTypeDevice
 
 class SettingScreen : Screen, KoinComponent {
     override val key = uniqueScreenKey
@@ -240,7 +242,8 @@ fun SettingScreenContent(
             modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
             title = "Настройки",
             leftButtonIcon = FeatherIcons.ArrowLeft,
-            onClickLeft = onBackClick
+            onClickLeft = onBackClick,
+            textAlign = TextAlign.Left
         )
 
         if (screenSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
@@ -488,15 +491,16 @@ fun ThemePicker(
                 onChangeTheme(true)
             }
         )
-        ThemeItem(
-            modifier = Modifier.weight(1f),
-            icon = FeatherIcons.Tablet,
-            title = "Системная",
-            isDarkTheme = isDarkTheme == null,
-            onChangeTheme = {
-                onChangeTheme(null)
-            }
-        )
+        if (getTypeDevice() == TypeDevice.MOBILE)
+            ThemeItem(
+                modifier = Modifier.weight(1f),
+                icon = FeatherIcons.Tablet,
+                title = "Системная",
+                isDarkTheme = isDarkTheme == null,
+                onChangeTheme = {
+                    onChangeTheme(null)
+                }
+            )
     }
 }
 

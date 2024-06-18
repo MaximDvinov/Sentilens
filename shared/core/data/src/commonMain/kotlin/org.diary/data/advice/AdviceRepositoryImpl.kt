@@ -7,6 +7,12 @@ import org.diary.nerwork.AdviceApi
 
 class AdviceRepositoryImpl(private val api: AdviceApi) : AdviceRepository {
     override suspend fun getMusics(): ApiResult<List<MusicData>> {
-        return api.getMusics().map { it.map { it.toData() } }.toApiResult()
+        return api.getMusics().map { list -> list.map { it.toData() } }.toApiResult()
+    }
+
+    override suspend fun getAdvices(): ApiResult<List<RecommendationsData>> {
+        return api.getRecommendations().map {
+            list -> list.map { it.toData() }
+        }.toApiResult()
     }
 }

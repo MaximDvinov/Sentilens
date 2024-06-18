@@ -66,7 +66,7 @@ fun NotesListContent(
         ), animationSpec = tween(if (refreshState.progress > 0) 0 else 300)
     )
 
-    LoadIndicator(state.loadState == LoadState.Loading, offset, refreshState)
+    LoadIndicator(state.loadState == LoadState.Loading, offset, refreshState = refreshState)
 
     var totalScrollOffsetPx = remember { 0f }
 

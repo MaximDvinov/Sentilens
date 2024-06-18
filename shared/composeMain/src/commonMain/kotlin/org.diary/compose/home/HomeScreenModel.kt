@@ -23,6 +23,7 @@ class HomeScreenModel(
     private val statsRepository: StatsRepository,
 ) :
     StateScreenModel<HomeScreenModel.UiState>(UiState.Idle) {
+
     sealed class UiState(val notes: ImmutableList<Note>, val variability: Int? = null) {
         data object Idle : UiState(persistentListOf())
         data class Loading(val oldNotes: ImmutableList<Note>, val oldVariability: Int?) :
@@ -48,7 +49,7 @@ class HomeScreenModel(
             diaryUseCase.getNotes().collect { newList ->
                 mutableState.update {
                     UiState.Success(
-                        newList.map { it.toUiNote() }.take(10).toPersistentList(),
+                        newList.map { it.toUiNote() }.take(15).toPersistentList(),
                         it.variability
                     )
                 }

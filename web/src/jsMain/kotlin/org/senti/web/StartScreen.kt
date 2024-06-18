@@ -89,46 +89,10 @@ fun StartScreenContent(onClick: () -> Unit) {
                 )
             }
 
-            if (sizeScreen.widthSizeClass == WindowWidthSizeClass.Compact) {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    VersionButton(windowIcon, "Windows") {
-                        openLink(
-                            null,
-                            url = "https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensWindows.msi"
-                        )
-                    }
-
-                    VersionButton(androidIcon, "Android") {
-                        openLink(
-                            null,
-                            "https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensAndroid.apk"
-                        )
-                    }
-
-                    VersionButton(webIcon, "Web (alpha)", onClick = {
-                        showDialog = true
-                    })
-                }
-            } else {
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    VersionButton(windowIcon, "Windows") {
-                        openLink(
-                            null,
-                            "https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensWindows.msi"
-                        )
-                    }
-
-                    VersionButton(androidIcon, "Android") {
-                        openLink(
-                            null,
-                            "https://github.com/MaximDvinov/Sentilens/releases/download/1.0.0/SentilensAndroid.apk"
-                        )
-                    }
-
-                    VersionButton(webIcon, "Web (alpha)", onClick = {
-                        showDialog = true
-                    })
-                }
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                VersionButton(webIcon, "Web (alpha)", onClick = {
+                    showDialog = true
+                })
             }
 
 

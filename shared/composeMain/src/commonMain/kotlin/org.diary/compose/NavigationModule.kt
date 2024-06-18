@@ -3,6 +3,7 @@ package org.diary.compose
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import cafe.adriel.voyager.core.registry.screenModule
 import org.diary.advice.breath.BreathScreen
+import org.diary.advice.list.AdvicesScreen
 import org.diary.auth.login.LoginScreen
 import org.diary.auth.pincode.PinCodeScreen
 import org.diary.auth.registration.RegistrationScreen
@@ -45,6 +46,9 @@ val navigationModule = screenModule {
     }
     register<DiaryScreenProvider.PinCodeScreen> {
         PinCodeScreen()
+    }
+    register<DiaryScreenProvider.AdviceScreen> {
+        AdvicesScreen()
     }
 }
 

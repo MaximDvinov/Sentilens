@@ -294,18 +294,8 @@ fun ConfirmDialog(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                SecondaryButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = onDismiss
-                ) {
-                    Text(
-                        "Отмена",
-                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSecondary)
-                    )
-                }
-
                 PrimaryButton(modifier = Modifier.weight(1f), onClick = onConfirm) {
-                    Text("Подтвердить", style = MaterialTheme.typography.body1)
+                    Text("Хорошо", style = MaterialTheme.typography.body1)
                 }
             }
         }

@@ -34,6 +34,7 @@ fun ExpandHomeContent(
     val playerScreen = rememberScreen(DiaryScreenProvider.PlayerScreen)
     val breathScreen = rememberScreen(DiaryScreenProvider.BreathScreen)
     val setting = rememberScreen(DiaryScreenProvider.SettingScreen)
+    val advicesScreen = rememberScreen(DiaryScreenProvider.AdviceScreen)
 
     Column(modifier) {
         HomeTopBarExpanded(
@@ -61,7 +62,9 @@ fun ExpandHomeContent(
                 ) {
                     item {
                         Actions(
-                            onRecommendationClick = {},
+                            onRecommendationClick = {
+                                navigator.push(advicesScreen)
+                            },
                             onMusicClick = {
                                 navigator.push(playerScreen)
                             },

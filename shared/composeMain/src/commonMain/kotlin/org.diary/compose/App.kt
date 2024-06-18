@@ -10,12 +10,13 @@ import org.diary.auth.splash.SplashScreen
 
 
 @Composable
-fun App() {
+fun App(initNavigator: (Navigator) -> Unit = {}) {
     Surface(
         color = Color.Transparent,
         contentColor = MaterialTheme.colors.onBackground
     ) {
-        Navigator(SplashScreen()){
+        Navigator(SplashScreen()) {
+            initNavigator(it)
             FadeTransition(it)
         }
     }

@@ -1,6 +1,7 @@
 package org.diary.database.daos
 
 import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,7 @@ class NoteDaoImpl(private val db: SharedDatabase) : NoteDao {
     }
 
     override suspend fun getNote(uuid: UUID): NoteDBO? {
-        return db.getDatabase().diaryQueries.getById(uuid).executeAsOneOrNull()?.toDBO()
+        return db.getDatabase().diaryQueries.getById(uuid).awaitAsOneOrNull()?.toDBO()
     }
 
     override suspend fun updateNote(note: NoteDBO): NoteDBO? {

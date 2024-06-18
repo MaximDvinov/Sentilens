@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import org.diary.composeui.bounceClick
 import org.diary.composeui.theme.defaultShape
 import org.diary.stats.components.SentimentVariability
+import org.diary.utils.TypeDevice
+import org.diary.utils.getTypeDevice
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import sentilens.shared.composemain.generated.resources.Res
@@ -65,14 +67,18 @@ fun Actions(
                     onClick = it
                 )
             }
-            onMusicClick?.let {
-                ActionButton(
-                    modifier = Modifier.weight(1f),
-                    icon = painterResource(Res.drawable.music_icon),
-                    text = "Музыка",
-                    onClick = it
-                )
-            }
+
+
+                onMusicClick?.let {
+                    ActionButton(
+                        modifier = Modifier.weight(1f),
+                        icon = painterResource(Res.drawable.music_icon),
+                        text = "Музыка",
+                        onClick = it
+                    )
+                }
+
+
             onBreathClick?.let {
                 ActionButton(
                     modifier = Modifier.weight(1f),

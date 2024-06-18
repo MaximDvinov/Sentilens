@@ -39,8 +39,8 @@ val tagColor = Color(0xFF3A281D)
 enum class SentimentColor(val value: Color) {
     TERRIBLE(Color(0xFFA28FFF)),
     BAD(Color(0xFFFF824D)),
-    NEUTRAL(Color(0xFF916247)),
-    GOOD(Color(0xFFFFCF5C)),
+    NEUTRAL(Color(0xFFFFCF5C)),
+    GOOD(Color(0xFF5CB1FF)),
     GREAT(Color(0xFF9AB168)),
     UNKNOWN(Color(0xFF8F8F8F))
 }

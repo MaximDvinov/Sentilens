@@ -44,6 +44,8 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.napier)
 
+                implementation("media.kamel:kamel-image:0.9.5")
+
                 implementation(project(":shared:core:data"))
                 implementation(project(":shared:core:composeUi"))
                 implementation(project(":shared:core:utils"))

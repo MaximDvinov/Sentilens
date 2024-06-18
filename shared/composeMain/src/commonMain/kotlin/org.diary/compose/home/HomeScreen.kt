@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -31,6 +32,13 @@ class HomeScreen : Screen {
 
         val screenModel = koinNavigatorScreenModel<HomeScreenModel>(navigator)
         val state by screenModel.state.collectAsState()
+
+        LaunchedEffect(Unit) {
+            if (state.notes.isEmpty()){
+                screenModel.processIntent(HomeScreenModel.HomeIntent.LoadData)
+            }
+
+        }
 
         Box {
             if (state is HomeScreenModel.UiState.Error) {

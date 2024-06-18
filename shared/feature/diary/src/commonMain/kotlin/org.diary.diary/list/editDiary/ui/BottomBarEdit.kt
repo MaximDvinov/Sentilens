@@ -12,6 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Save
@@ -45,8 +48,23 @@ fun BottomBarEdit(
                     Box(modifier = Modifier) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
-                            text = sentiment?.category?.value ?: "",
-                            style = MaterialTheme.typography.body1.copy(color = Color.White)
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    style = MaterialTheme.typography.body1.copy(
+                                        color = Color.White.copy(
+                                            0.4f
+                                        )
+                                    ).toSpanStyle()
+                                ) {
+                                    append("настроение: ")
+                                }
+                                withStyle(
+                                    style = MaterialTheme.typography.body1.copy(color = Color.White)
+                                        .toSpanStyle()
+                                ) {
+                                    append(sentiment?.category?.value?.toLowerCase() ?: "")
+                                }
+                            },
                         )
                     }
                 }
