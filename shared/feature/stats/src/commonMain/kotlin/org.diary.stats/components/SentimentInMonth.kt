@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
@@ -49,11 +51,11 @@ fun SentimentInMonth(
             CalendarUtils.getDaysInMonth(selectedPeriod.month, selectedPeriod.year)
         }
     }
-    var selectedDay by remember {
+    var selectedDay by remember(selectedPeriod) {
         mutableStateOf<LocalDate?>(null)
     }
 
-    val histogramItems by remember(items) {
+    val histogramItems by remember(items, selectedPeriod) {
         derivedStateOf {
             days.mapIndexed { index, date ->
                 val value = items[date]
@@ -98,12 +100,13 @@ fun SentimentInMonth(
             Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier,
                 text = LocalDate(selectedPeriod.year, selectedPeriod.month, 1).dateMonthFormat(),
-                style = MaterialTheme.typography.subtitle1.copy(
+                style = MaterialTheme.typography.caption.copy(
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colors.onSecondary.copy(0.6f)
                 )
@@ -118,10 +121,12 @@ fun SentimentInMonth(
                         color = MaterialTheme.colors.onSecondary
                     )
                 )
+            } else {
+                Spacer(Modifier.weight(1f))
             }
 
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier,
                 text = remember(selectedPeriod) {
                     LocalDate(
                         selectedPeriod.year,
@@ -129,7 +134,7 @@ fun SentimentInMonth(
                         days.size
                     ).dateMonthFormat()
                 },
-                style = MaterialTheme.typography.subtitle1.copy(
+                style = MaterialTheme.typography.caption.copy(
                     textAlign = TextAlign.End,
                     color = MaterialTheme.colors.onSecondary.copy(0.6f)
                 )

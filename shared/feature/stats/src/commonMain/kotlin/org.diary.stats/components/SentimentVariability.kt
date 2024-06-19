@@ -1,5 +1,6 @@
 package org.diary.stats.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -20,15 +22,16 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.diary.composeui.theme.SentimentColor
 
 @Composable
 fun SentimentVariability(
     modifier: Modifier,
     variability: Int?,
     strokeWidth: Dp = 8.dp,
-    textStyle: TextStyle = MaterialTheme.typography.h1,
+    textStyle: TextStyle = MaterialTheme.typography.h1.copy(MaterialTheme.colors.onSecondary),
 ) {
-    val color = MaterialTheme.colors.primary
+    val color = animateColorAsState(getColorPie(variability), label = "Color")
     val textMeasurer = rememberTextMeasurer()
 
     Row(
@@ -38,7 +41,7 @@ fun SentimentVariability(
     ) {
         VariabilityPie(
             modifier = Modifier.size(84.dp),
-            color = color,
+            color = color.value,
             strokeWidth = strokeWidth,
             variability = variability,
             textMeasurer = textMeasurer,
@@ -47,9 +50,24 @@ fun SentimentVariability(
 
         Column(Modifier.weight(1f)) {
             Text(text = "Стабильность", style = MaterialTheme.typography.h2)
-            Text(text = "Чем выше число, тем более сбалансированным человеком вы являетесь", style = MaterialTheme.typography.caption)
+            Text(
+                text = "Чем выше число, тем более сбалансированным человеком вы являетесь",
+                style = MaterialTheme.typography.caption
+            )
         }
 
+    }
+}
+
+
+private fun getColorPie(variability: Int?): Color {
+    return when (variability) {
+        in 0..20 -> SentimentColor.TERRIBLE.value
+        in 21..40 -> SentimentColor.BAD.value
+        in 41..60 -> SentimentColor.NEUTRAL.value
+        in 61..80 -> SentimentColor.GOOD.value
+        in 81..100 -> SentimentColor.GREAT.value
+        else -> SentimentColor.TERRIBLE.value
     }
 }
 

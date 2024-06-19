@@ -57,7 +57,7 @@ sqldelight {
     databases {
         create("SentilensDB") {
             packageName.set("org.diary.database")
-            generateAsync.set(true)
+            generateAsync.set(false)
         }
     }
 }

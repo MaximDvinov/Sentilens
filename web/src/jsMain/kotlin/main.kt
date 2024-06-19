@@ -51,28 +51,6 @@ fun main() {
                 )
             }
 
-            LaunchedEffect(Unit) {
-                window.addEventListener("unload", EventListener { event ->
-                    if (event.currentTarget.asDynamic().performance as Boolean && event.currentTarget.asDynamic().performance.navigation as Boolean) {
-                        if (event.currentTarget.asDynamic().performance.navigation.type === PerformanceNavigation.TYPE_RELOAD) {
-
-
-                        } else if (event.currentTarget.asDynamic().performance.navigation.type === PerformanceNavigation.TYPE_BACK_FORWARD) {
-                            // The user clicked the browser's back button
-                            console.log("back button clicked")
-                        }
-                    } else {
-                        if (event.asDynamic().clientX < 40 && event.asDynamic().clientY < 0) {
-                            // The user clicked the browser's back button
-                            console.log("back button clicked")
-                        } else {
-                            // The user refreshed the page
-
-                        }
-                    }
-                });
-            }
-
             window.matchMedia("(prefers-color-scheme: dark)").addListener { e ->
                 isDarkTheme = e.unsafeCast<MediaQueryListEvent>().matches
             }

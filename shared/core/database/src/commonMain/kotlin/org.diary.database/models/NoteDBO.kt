@@ -23,15 +23,21 @@ data class SentimentDBO(
 )
 
 fun SentimentDBO.getValue(): Float? {
-    val tmp = (category?.ordinal?.div(4f))
-    return tmp
+    if (category == SentimentCategoryDBO.unknown) {
+        return null
+    }
+    return (category?.ordinal?.div(4f))
 }
 
-fun SentimentCategoryDBO.getValue(): Float {
-    val tmp = (ordinal.div(4f))
-    return tmp
+fun SentimentCategoryDBO.getValue(): Float? {
+    if (this == SentimentCategoryDBO.unknown) {
+        return null
+    }
+    return (ordinal.div(4f))
 }
 
 enum class SentimentCategoryDBO(value: String) {
-    terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер")
+    terrible("Ужасно"), bad("Плохо"), neutral("Так себе"), good("Хорошо"), awesome("Супер"), unknown(
+        "Неизвестно"
+    )
 }

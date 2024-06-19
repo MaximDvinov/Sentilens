@@ -84,9 +84,7 @@ class LoginScreen(val username: String? = null, val password: String? = null) : 
                 currentPassword = password,
                 onPasswordChanged = { password: String ->
                     screenModel.processIntent(
-                        LoginScreenModel.Intent.OnPasswordChanged(
-                            password
-                        )
+                        LoginScreenModel.Intent.OnPasswordChanged(password)
                     )
                 },
                 onUsernameChanged = { username: String ->
@@ -164,8 +162,9 @@ private fun LoginFields(
                 text = username ?: "",
                 placeholder = "Логин",
                 onTextChange = {
-                    setUsername(it)
-                    onUsernameChanged(it)
+                    val trimmed = it.trim()
+                    setUsername(trimmed)
+                    onUsernameChanged(trimmed)
                 },
                 keyboardType = KeyboardType.Text,
                 nextFocus = {

@@ -25,7 +25,7 @@ SELECT *
 FROM diary WHERE isDeleted = 0 ORDER BY updatedAt DESC;
 
 insert:
-INSERT INTO diary(uuid, title, content, createdAt, updatedAt, category, advice, isNew, isDeleted)
+INSERT OR IGNORE INTO diary(uuid, title, content, createdAt, updatedAt, category, advice, isNew, isDeleted)
 VALUES ?;
 
 deleteById:

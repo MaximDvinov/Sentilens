@@ -33,13 +33,6 @@ class HomeScreen : Screen {
         val screenModel = koinNavigatorScreenModel<HomeScreenModel>(navigator)
         val state by screenModel.state.collectAsState()
 
-        LaunchedEffect(Unit) {
-            if (state.notes.isEmpty()){
-                screenModel.processIntent(HomeScreenModel.HomeIntent.LoadData)
-            }
-
-        }
-
         Box {
             if (state is HomeScreenModel.UiState.Error) {
                 ErrorSnackbar(error = (state as HomeScreenModel.UiState.Error).error,

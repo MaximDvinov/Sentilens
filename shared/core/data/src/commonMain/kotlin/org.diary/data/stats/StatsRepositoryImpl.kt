@@ -11,6 +11,7 @@ import org.diary.data.diary.SentimentCategoryData
 import org.diary.data.models.toSentiment
 import org.diary.database.datasources.LocalNotesDataSource
 import org.diary.database.models.NoteDBO
+import org.diary.database.models.SentimentCategoryDBO
 import kotlin.math.sqrt
 
 class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource) :
@@ -24,7 +25,10 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
             val startPeriodTmp = startDate.minus(DatePeriod(months = 2))
             val endPeriodTmp = endDate.plus(DatePeriod(months = 2))
             val filtered =
-                diaries.filter { diary -> diary.createdAt.date in startPeriodTmp..endPeriodTmp }
+                diaries.filter { diary ->
+                    diary.createdAt.date in startPeriodTmp..endPeriodTmp
+                            && (diary.sentiment?.category != null || diary.sentiment?.category != SentimentCategoryDBO.unknown)
+                }
 
             StatsByPeriod(
                 sentimentForMonth = sentimentForPeriod(filtered),
@@ -37,7 +41,9 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
 
     override suspend fun statsForAllDays(): Flow<AllDayStats> {
         return localNotesDataSource.getNotes().map { diaries ->
-            val sentiments = diaries.mapNotNull { it.sentiment?.value }
+            val sentiments = diaries.filter { diary ->
+                (diary.sentiment?.category != null || diary.sentiment?.category != SentimentCategoryDBO.unknown)
+            }.mapNotNull { it.sentiment?.value }
             val variability = calculateSentimentVariability(sentiments)
 
             AllDayStats(
@@ -57,8 +63,8 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
                 ?.copy(value = if (diary.sentiment?.value != 0f) diary.sentiment?.value else 0.1f)
         }
         .groupBy { it.first.date }
-        .mapValues {
-            val average = it.value.mapNotNull { it.second?.value }.average()
+        .mapValues { (date, list) ->
+            val average = list.mapNotNull { it.second?.value }.average()
 
             return@mapValues SentimentStatItemData(
                 value = average,
@@ -138,7 +144,7 @@ class StatsRepositoryImpl(private val localNotesDataSource: LocalNotesDataSource
 
     private fun calculateStabilityScore(variability: Double, maxVariability: Double): Int {
         val normalizedVariability = variability / maxVariability
-        return ((1 - normalizedVariability) * 100).toInt()
+        return ((1 - normalizedVariability * 2) * 100).toInt()
     }
 
     private fun Double.getCategory(): SentimentCategoryData? {

@@ -23,5 +23,5 @@ data class SentimentData(
 )
 
 enum class SentimentCategoryData(val value: String) {
-    TERRIBLE("Ужасно"), BAD("Плохо"), NEUTRAL("Так себе"), GOOD("Хорошо"), AWESOME("Супер")
+    TERRIBLE("Ужасно"), BAD("Плохо"), NEUTRAL("Так себе"), GOOD("Хорошо"), AWESOME("Супер"), UNKNOWN("Неизвестно");
 }

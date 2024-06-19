@@ -35,5 +35,4 @@ script.onload = function() {
 
 window.onload = function() {
     loadingScreen.remove();
-
 };

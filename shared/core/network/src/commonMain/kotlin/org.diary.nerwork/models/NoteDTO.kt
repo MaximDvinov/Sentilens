@@ -27,7 +27,7 @@ data class SentimentDTO(
 )
 
 enum class SentimentCategoryDTO(value: String) {
-    TERRIBLE("Ужасно"), BAD("Плохо"), NEUTRAL("Так себе"), GOOD("Хорошо"), AWESOME("Супер")
+    TERRIBLE("Ужасно"), BAD("Плохо"), NEUTRAL("Так себе"), GOOD("Хорошо"), AWESOME("Супер"), UNKNOWN("Неизвестно");
 }
 
 @Serializable

@@ -20,4 +20,5 @@ enum class SentimentCategory(val value: String, val color: Color, val icon: Imag
     @Stable neutral("Обычное", SentimentColor.NEUTRAL.value, Emoji.Neutral),
     @Stable good("Хорошее", SentimentColor.GOOD.value, Emoji.Good),
     @Stable awesome("Отличное", SentimentColor.GREAT.value, Emoji.Great),
+    @Stable unknown("Неизвестное", SentimentColor.UNKNOWN.value, Emoji.Unknown),
 }

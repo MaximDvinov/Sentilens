@@ -32,6 +32,7 @@ private fun SentimentCategoryData.toStable(): SentimentCategory {
         SentimentCategoryData.NEUTRAL -> SentimentCategory.neutral
         SentimentCategoryData.GOOD -> SentimentCategory.good
         SentimentCategoryData.AWESOME -> SentimentCategory.awesome
+        SentimentCategoryData.UNKNOWN -> SentimentCategory.unknown
     }
 }
 
@@ -59,5 +60,6 @@ private fun SentimentCategory.toData(): SentimentCategoryData {
         SentimentCategory.neutral -> SentimentCategoryData.NEUTRAL
         SentimentCategory.good -> SentimentCategoryData.GOOD
         SentimentCategory.awesome -> SentimentCategoryData.AWESOME
+        SentimentCategory.unknown -> SentimentCategoryData.UNKNOWN
     }
 }

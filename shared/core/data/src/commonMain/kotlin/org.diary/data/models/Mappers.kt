@@ -82,6 +82,7 @@ private fun SentimentCategoryDTO.toDTO(): SentimentCategoryData {
         SentimentCategoryDTO.NEUTRAL -> SentimentCategoryData.NEUTRAL
         SentimentCategoryDTO.GOOD -> SentimentCategoryData.GOOD
         SentimentCategoryDTO.AWESOME -> SentimentCategoryData.AWESOME
+        SentimentCategoryDTO.UNKNOWN -> SentimentCategoryData.UNKNOWN
     }
 }
 
@@ -111,6 +112,7 @@ private fun SentimentCategoryData.toDTO(): SentimentCategoryDTO {
         SentimentCategoryData.NEUTRAL -> SentimentCategoryDTO.NEUTRAL
         SentimentCategoryData.GOOD -> SentimentCategoryDTO.GOOD
         SentimentCategoryData.AWESOME -> SentimentCategoryDTO.AWESOME
+        SentimentCategoryData.UNKNOWN -> SentimentCategoryDTO.UNKNOWN
     }
 }
 
@@ -137,6 +139,7 @@ private fun SentimentCategoryDBO.toData(): SentimentCategoryData {
         SentimentCategoryDBO.neutral -> SentimentCategoryData.NEUTRAL
         SentimentCategoryDBO.good -> SentimentCategoryData.GOOD
         SentimentCategoryDBO.awesome -> SentimentCategoryData.AWESOME
+        SentimentCategoryDBO.unknown -> SentimentCategoryData.UNKNOWN
     }
 }
 
@@ -183,6 +186,7 @@ private fun SentimentCategoryData.toDBO(): SentimentCategoryDBO {
         SentimentCategoryData.NEUTRAL -> SentimentCategoryDBO.neutral
         SentimentCategoryData.GOOD -> SentimentCategoryDBO.good
         SentimentCategoryData.AWESOME -> SentimentCategoryDBO.awesome
+        SentimentCategoryData.UNKNOWN -> SentimentCategoryDBO.unknown
 
     }
 }
@@ -202,6 +206,7 @@ private fun SentimentCategoryDTO.toDBO(): SentimentCategoryDBO {
         SentimentCategoryDTO.NEUTRAL -> SentimentCategoryDBO.neutral
         SentimentCategoryDTO.GOOD -> SentimentCategoryDBO.good
         SentimentCategoryDTO.AWESOME -> SentimentCategoryDBO.awesome
+        SentimentCategoryDTO.UNKNOWN -> SentimentCategoryDBO.unknown
     }
 }
 

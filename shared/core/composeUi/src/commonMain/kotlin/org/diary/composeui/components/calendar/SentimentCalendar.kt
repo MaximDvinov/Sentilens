@@ -57,12 +57,12 @@ import org.diary.utils.monthFormatFull
 @Stable
 @Immutable
 data class SentimentItem(
-    val icon: @Composable () -> Unit,
-    val color: Color = primary,
+    @Stable val icon: @Composable () -> Unit,
+    @Stable val color: Color = primary,
 )
 
 @Stable
-val pageCount = 2400
+val pageCount = 240
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -141,15 +141,17 @@ fun SentimentCalendar(
                 contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
                 key = { it }
             ) {
-                val days = remember(it) {
-                    val selected = initialPeriod.plus(it - pageCount / 2)
-                    CalendarUtils.getDaysInMonth(
-                        selected.month, selected.year
-                    ).map { date ->
-                        DateItem(
-                            date, sentiment = items[date]
-                        )
-                    }.toImmutableList()
+                val days by remember(it) {
+                    derivedStateOf {
+                        val selected = initialPeriod.plus(it - pageCount / 2)
+                        CalendarUtils.getDaysInMonth(
+                            selected.month, selected.year
+                        ).map { date ->
+                            DateItem(
+                                date, sentiment = items[date]
+                            )
+                        }.toImmutableList()
+                    }
                 }
 
                 CalendarGrid(days, selectedDate, onSelectDate)
@@ -180,7 +182,7 @@ private fun CalendarGrid(
             Column {}
         }
 
-        items(days) { item ->
+        items(days, key = { it.date.toEpochDays() }, contentType = { it.date }) { item ->
             val isSelected by remember(item) {
                 derivedStateOf {
                     selectedDate == item.date

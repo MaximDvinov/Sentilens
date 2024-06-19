@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +20,8 @@ import org.diary.composeui.theme.SentimentColor
 import org.diary.composeui.theme.sixDpShape
 
 @Stable
-data class DateItem(val date: LocalDate, val sentiment: SentimentItem?)
+@Immutable
+data class DateItem(@Stable val date: LocalDate, val sentiment: SentimentItem?)
 
 @Composable
 fun DateItem(modifier: Modifier = Modifier, data: DateItem) {

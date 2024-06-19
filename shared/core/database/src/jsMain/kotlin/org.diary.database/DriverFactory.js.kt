@@ -1,5 +1,6 @@
 package org.diary.database
 
+
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import co.touchlab.stately.concurrency.synchronize
@@ -12,7 +13,7 @@ actual class DriverFactory() {
                 js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")
             )
         ).also {
-            SentilensDB.Schema.create(it).await()
+            SentilensDB.Schema
         }
     }
 }

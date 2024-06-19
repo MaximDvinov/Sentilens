@@ -221,7 +221,8 @@ fun SentimentCategory?.getSentimentColor(): Color = when (this) {
     SentimentCategory.neutral -> SentimentColor.NEUTRAL.value
     SentimentCategory.good -> SentimentColor.GOOD.value
     SentimentCategory.awesome -> SentimentColor.GREAT.value
-    null -> SentimentColor.NEUTRAL.value
+    SentimentCategory.unknown -> SentimentColor.UNKNOWN.value
+    null -> SentimentColor.UNKNOWN.value
 }
 
 

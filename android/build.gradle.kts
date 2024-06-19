@@ -14,8 +14,8 @@ android {
         targetSdk = 34
 
         applicationId = "org.diary.sentilens"
-        versionCode = 2
-        versionName = "0.1.1"
+        versionCode = 3
+        versionName = "1.2.0"
 
         setProperty("archivesBaseName", "sentilens-$versionName")
     }

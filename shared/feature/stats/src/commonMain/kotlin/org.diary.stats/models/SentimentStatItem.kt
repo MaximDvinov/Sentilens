@@ -28,6 +28,7 @@ enum class SentimentCategory(val value: String, val color: Color, val icon: Imag
     @Stable NEUTRAL("Обычное", SentimentColor.NEUTRAL.value, Emoji.Neutral),
     @Stable GOOD("Хорошее", SentimentColor.GOOD.value, Emoji.Good),
     @Stable AWESOME("Отличное", SentimentColor.GREAT.value, Emoji.Great),
+    @Stable UNKNOWN("Неизвестное", SentimentColor.UNKNOWN.value, Emoji.Unknown),
 }
 
 fun SentimentCategoryData.toStable() = when (this) {
@@ -36,4 +37,5 @@ fun SentimentCategoryData.toStable() = when (this) {
     SentimentCategoryData.NEUTRAL -> SentimentCategory.NEUTRAL
     SentimentCategoryData.GOOD -> SentimentCategory.GOOD
     SentimentCategoryData.AWESOME -> SentimentCategory.AWESOME
+    SentimentCategoryData.UNKNOWN -> SentimentCategory.UNKNOWN
 }

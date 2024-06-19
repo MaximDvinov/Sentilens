@@ -33,9 +33,19 @@ compose.desktop {
         mainClass = "MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "sentilens"
-            packageVersion = "1.0.0"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "Sentilens"
+            packageVersion = "1.2.0"
+            windows{
+                iconFile.set(project.file("src/main/resources/icon.ico"))
+                dirChooser = true
+                perUserInstall = true
+                menuGroup = "start-menu-group"
+                upgradeUuid = "83a83fae-51a3-47f7-9522-68fed67f2497"
+            }
+
+            includeAllModules = true
+
         }
     }
 }
